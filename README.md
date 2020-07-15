@@ -2,7 +2,10 @@ Flutter 学习
 
 # flutter 开发快捷键
 
+## 1、android studio 
 
+- hot reload 功能, 快捷键  `command + \`
+- hot restart功能, 快捷键 `shift + command + \` 
 
 
 
@@ -2144,9 +2147,374 @@ main(List<String> args){
 
 
 
-# 七、Dart 中库的使用
+# 七、Dart 中模块(库)的使用
 
 
+
+## 1、Dart 模块(库)的介绍
+
+在 Dart 中, 你可以导入一个库来使用它所提供的功能,库的使用可以使代码的重用性得到提高, 并且可以更好的组合代码.**默认情况下, 一个`dart` 文件就是一个模块(或者库文件), 即使你没有使用`library` 关键字声明** 
+
+>  最早的时候我们一般使用`library` 关键字来声明一个模块(或者库文件) 但是现在我们一般没有这样做了. 现在不用`library` 也是可以的. 
+
+
+
+## 2、Dart 中库的导入
+
+我们在Dart开发中, 免不了会使用别人提供的库文件, 这时我们就需要将别人写好的`dart` 文件导入到我们的项目中, 这时我们就要使用 **import** 关键字来导入依赖文件, 具体使用情景主要有三种如下: 
+
+- 直接使用 `import '模块路径';` 导入对应的模块并使用
+- 使用 `as` 给导入的库取别名, 防止被导入的模块中有类名或者方法名与当前自己编写的dart 代码冲突
+- 导出模块时使用关键字`hide` 隐藏部分 或者 关键字 `show` 导出部分
+- 使用关键字 `export` 将多个子模块, 组合成一个大的模块, 供外部使用
+
+
+
+
+
+### 1、直接导入模块(库) 使用
+
+- 我们在使用Dart写代码时, 你会发现一个东西: 我们并没有定义过**List、Map  等等**  , 但是我们是可以直接在我们的代码中使用**List、Map 等类的**且不用导入 ,  说明想**List、Map** 这些类都是Dart系统内部帮我们定义的. 
+
+- 当我们在使用Dart内部帮我们定义的类时, 按道理说我们是需要导入对应的模块的, 但是实际开发中我们并没有导入, 原因很简单, 像**List、Map** 这些类是在dart的核心库里`dart:core`面的. 我们在使用Dart 核心库里面的类时是不需要导入的, 直接使用即可. dart系统默认导入.  
+
+- 当我们在使用非核心库或者其他库时, 我们都需要导入对应的模块并使用, 如下;
+
+  ```
+  import 'dart:库名字';
+  ```
+
+- 比如: 我们要使用 dart 库中的数据输出就需要导入 `import 'dart:io';` , 如果我们需要使用线程(使用隔离空间) 就需要导入 `import 'dart:isolate';`, 再或者我们使用异步就需要导入 `import 'dart:async';` 或者我们使用数学方的库就需要导入 `import 'dart:math';`,
+
+  以上这些就是我们使用 dart 系统模块(库) 时的导入方式. 
+
+  > 其实, 我们在编写 dart代码时, 有时候并不需要 知道我们要使用的类 在哪个模块里面, 并不需要每次都手动导入, 像vscode 开发工具, 一般都有自动提示导入功能, 这样借助工具我们就可以很容易的导入对应的库文件并使用了. 
+
+  ![Snip20200712_6](images/Snip20200712_6.png) 
+
+  ![Snip20200712_5](images/Snip20200712_5.png) 
+
+  
+
+### 2、使用`as` 关键字给导入的模块取别名
+
+- 通常情况下我们使用 `import '模块名';` 导入对应的模块时时可以直接使用的, 如下图示:
+
+  - 左侧是我们自定义的模块, 模块名为`tool/MathTool.dart` 
+
+  - 右侧是我们书写的 dart 代码, 需要使用到左侧的模块.
+
+    ![Snip20200712_7](images/Snip20200712_7.png) 
+
+- 但是, 在有些时候, 我们导入的模块内的 类名或者方法名 与我们自己书写的类名或者方法名冲突(导入模块内的类名或方法名与外部正在书写的类名或者方法名相同), 这是我们不能直接使用导入的模块, 为了解决这种命名冲突的问题, 我们在导入指定的模块时, 可以使用关键字`as` 给被导入的模块起别名, 避免模块内外命名冲突, 如下图:
+
+  ![Snip20200712_8](images/Snip20200712_8.png) 
+
+  为了解决使用时 模块命名冲突, 我们使用 `as` 关键字给导入的模块取别名
+
+  ![Snip20200712_9](images/Snip20200712_9.png) 
+
+
+
+###  3、hide 隐藏部分, show 导出部分
+
+默认情况下我们使用 `import '模块路径';` 或者 `import '模块路径' as 别名` 这两种方式导出的是模块内部所有的方法和属性, 但是有时候我们不希望将模块内的所有方法和属性全部导出, 仅仅是想导出一部分, 这时我们要怎么做呢? 
+
+这时, 我们可以使用关键字, **show** 来导出部分内容, 或者使用关键字**hide** 来隐藏一部分. 具体示例如下;
+
+- 我们定义了一个模块: `tool/MathTool.dart'
+
+  ```
+  int sumInt(int a, int b){
+    return a + b;
+  }
+   
+  double sumDouble(double a, double b){
+    return a + b;
+  }
+  
+  num sumNum(num a, num b){
+    return a + b;
+  }
+  ```
+
+  - **使用关键字 show, 导出模块中的部分内容** 如下:
+
+    ```
+    // 只导出模块中的 sumInt 和 sumDouble , 其它的隐藏
+    import 'tool/MathTool.dart' show sumInt, sumDouble;
+    ```
+
+  - **使用关键字 hide, 隐藏模块中的部分内容** 如下:
+
+    ```
+    // 隐藏模块中的部 sumInt 和 sumDouble, 其它的全部导出
+    import 'tool/MathTool.dart' hide sumInt, sumDouble;
+    ```
+
+    
+
+### 3、export 关键字
+
+有这么一种需求, 我们有个dateFormat工具类, 这个工具类中有很多功能, 而这些功能又是分文件写在不同的dart文件中的, 如果我们在另外的一个dart文件中想要使用 dateFormat 里面的所有功能的话, 我们就需要在使用的地方挨个 导入dateFormat 中其它的模块文件: 如下
+
+```
+// dateFormat 目录下有很多的子模块
+
+dateFormat1.dart 文件
+// dateFormat1 文件 具体实现
+
+dateFormat2.dart 文件
+// dateFormat2 文件 具体实现
+
+dateFormat3.dart 文件
+// dateFormat3 文件 具体实现
+
+
+// 如果我们想要在 下面这个 test.dart 文件中用到 dateFormat1、dateFormat2、dateFormat2我们
+// 就需要在test.dart 中挨个导入, 如下;
+import 'dateFormat1.dart';
+import 'dateFormat2.dart';
+import 'dateFormat2.dart';
+
+这样的话就很麻烦
+```
+
+为了解决在使用的地方重复的导入很多文件, 我们可以使用 **export** 关键字将一个子模块导入到一个大模块中, 外面在使用时, 只需要导入一个大模块即可, 如下
+
+```
+// 新建一个 dateFormat.dart 文件, 将dateFormat 中的其它小的子模块全部导这个大模块文件中
+
+// 以下是dateFormat.dart 中的内容
+export 'dateFormat1.dart';
+export 'dateFormat2.dart';
+export 'dateFormat2.dart';
+```
+
+这样我们在外面使用就简单了, 只需要导入一句
+
+```
+// 以下是 test.dart 中的文件内容
+import 'dateFormat.dart';
+
+// 下面就可以直接使用 dateFormat1 dateFormat2 dateFormat3  中提供的模块内容了
+// 不需要再挨个导入
+```
+
+
+
+## 3、dart 中的私有成员
+
+在Dart中没有其它语言中 `private` `protected` `public`  这些访问控制的关键字, 默认情况下 dart 文件中的所有的方法, 类都是公开的.
+
+但是有时候, 我们在一个dart 文件中编写的有些`方法` `成员` `类` 这些我们确实不希望外部访问, 只是作为当前模块内部访问的, 这时我们可以在对应的表示前面加上下划线`_`, 这样, 带下划线`_` 前缀的`方法` `成员` `类` 就只能在当前模块(当前dart文件内)访问了, 外部无法访问
+
+![Snip20200713_12](images/Snip20200713_12.png)
+
+
+
+## 4、Dart 中第三方模块的使用
+
+在dart中使用第三方的库和node中使用第三方的库很像.
+
+**Flutter 或者 dart 的第三方库都在`pub.dev` 这地址** .
+
+在Flutter 或者 dart 开发中想要找 第三方库, 直接在 `pub.dev` 这个地址下搜索即可. 搜索到对应的第三方库后, 你会看到对应的安装下载以及使用方法和步骤.
+
+
+
+想要在 Dart 中使用第三方的 dart 库, 主要有以下几个步骤:
+
+- 1、在项目中创建一个`pubspec.yaml` 文件, 并在文件描述第三方库信息
+
+  > 其实, `pubspec.yaml` 这个文件就是dart开发中用来管理第三方库的一个配置管理文件.(一个第三方库描述文件), 如下图:
+
+![Snip20200713_13](images/Snip20200713_13.png) 
+
+- 使用 命令终端下载第三方库, 以下命令二选一
+
+  - `pub get` 命令
+  - `flutter pub get` 命令
+
+- 导入第三方库到你的Dart 中
+
+  ```
+  import 'package:http/http.dart';
+  ```
+
+- 在 Dart 文件中使用第三方库即可
+
+
+
+
+
+# 八、Flutter 开发
+
+
+
+
+
+## 1、flutter项目的创建
+
+我们在开发时创建flutter项目工程主要有两种方式:
+
+- 通过开发工具创建 
+
+  ![Snip20200713_15](images/Snip20200713_15.png) 
+
+  一般来说, 我很少使用工具来创建flutter项目, 因为使用工具会生成一些额外和工具相关的莫名其妙的文件等, 导致项目不是很纯洁, 所以我再开发flutter时, 一般选择使用命令行来创建项目. 
+
+  
+
+- 通过终端命令创建
+
+  通过命令创建flutter项目非常的简单, 在终端输入命令即可.
+
+  ```
+  // 错误命令 flutter create helloWorld
+  flutter create hello_flutter			// 正确命令
+  ```
+
+> **注意**:
+>
+> 1、flutter 项目的名称不要包含特殊符号, 另外不支持驼峰命名, 也可以理解为flutter项目名称不支持特殊符号和大写字母.
+>
+> 2、使用终端命令创建好flutter命令后, 使用对应的工具直接打开即可(vscode 或者 android studio)
+>
+> 3、顺便提示一下, 在创建flutter项目时好像要下载一些文件, 因此要保证电脑能上网.
+
+
+
+## 2、打开flutter项目
+
+打开flutter项目, 主要有两种方式:
+
+- 使用命令终端运行flutter项目
+- 使用开发工具打开flutter项目
+
+### 1、使用终端命令打开flutter项目
+
+其实, 当我们在使用终端吗命令后, 在终端已经提示了, 我们其实是可以使用终端命令运行我们的项目的, 这个完全没问题
+
+```
+// 使用终端命令 运行 flutter 项目
+cd flutter项目目录
+flutter run 
+```
+
+> 补充:
+>
+> 如果在使用终端命令 运行 flutter项目时提示: `No supported devices connected.` 说明当前没有设备, 打开电脑模拟器后再执行 `flutter run` 命令即可正常运行flutter项目
+
+- 打开iOS模拟器
+
+  打开Xcode -> 选择Xcode -> Open Developer Tool -> Simulator
+
+  - 如果想要切换模拟器
+
+    选择模拟器 -> HardWare -> Device -> 选择对应版本的模拟器即可
+
+### 2、使用开发工具打开flutter项目
+
+一般来说, 我们可以使用 `vscode` 和 `android studio` 开发工具来打开flutter项目. 
+
+我一般使用`android studio` 打开flutter项目多一点, 所以下面我们说一下使用`android studio` 打开flutter的流程
+
+- 启动 `android studio`
+
+- 选择`Open an existsinng Android Studio project` 
+
+  然后跟着指示选择对应的flutter的工程目录即可打开flutter项目
+
+  ![Snip20200714_16](images/Snip20200714_16.png) 
+
+> 补充:
+>
+> 只要是使用工具打开`flutter` 项目, 不论是`vscode` 还是`android studio` . 在使用之前必须要安装`flutter 和 dart` 插件, 这个是前提条件, 如何安装, 百度一下即可.
+>
+> 如果不装这两个插件是没有办法打开和开发flutter的. 
+
+
+
+## 3、flutter 工程目录介绍
+
+- `.dart_tool` 目录主要存储的是我们Flutter项目中Dart 依赖的一些第三方库信息. 不需要手动配置和修改
+- `.idea` 目录, 因为Android Studio 是google 基于`IDEA` 开发的,因此项目中默认有这个`.idea` 目录, 我们不用管它.
+- `android` 目录就是我们的android项目的代码
+- `ios`目录就是我们的ios项目的代码
+
+- `lib` 目录就是我们非常重要的flutter源代码的目录, 以后我们开发flutter所有的代码都写在这个`lib` 目录里面. 
+- `test` 目录就是我们做测试的目录
+- `.gitignore` 是做git项目管理的忽略文件, 如果我们在做git提交时如果不想提交, 就在这个文件里配置就可以了
+- `.metadata` 文件, 是对我们的flutter 项目版本做记录的, 不需要手动修改. 
+- `pubspec.yaml` 是用来管理第三库依赖的描述文件, 用来说明我们的项目需要安装怎样的第三方依赖库
+- `.packages` 和 `pubspec.lock` 文件是我们安装第三方依赖后自动生成的第三方描述文件, 其中`pubspec.lock` 主要记录的是已经安装的第三方依赖的具体版本信息, 保证项目多次安装时, 安装同样版本的依赖.
+- `README.md` 是用来写一些项目的描述信息. 
+
+> 整个flutter项目的目录结构, 其实还以包含很多其它的内容, 目前先介绍这些常用的目录和文件, 其余的后续再补充. 
+
+
+
+## 4、使用android studio 运行flutter项目
+
+我们在使用 android studio 运行flutter项目时, 主要分为三步:
+
+1、选择并打开指定的模拟器(ios  或 android 模拟器)
+
+2、选择一个已经打开的模拟器(iOS 或 android)作为启动模拟器
+
+3、选择run图标运行flutter程序
+
+![Snip20200715_2](images/Snip20200715_2.png)  
+
+
+
+![Snip20200715_5](images/Snip20200715_5.png) 
+
+
+
+![Snip20200715_6](images/Snip20200715_6.png) 
+
+
+
+## 5、flutter 项目的启动
+
+在flutter开发中项目的启动主要分为两种: **冷启动和热启动** . 具体呢有可以划分为三种操作: **冷启动、热重启、热重载** 
+
+
+
+### 1、flutter冷启动和热启动
+
+
+
+- **冷启动** 
+
+  所谓冷启动, 就是这个flutter项目完全没有启动,从0开始启动, 这个过程我们就称为冷启动. 	冷启动意味着, 我们整个flutter的框架包括我们自己写的flutter代码全部都是从0开始启动的. 这个过程非常的慢.根据你电脑的配置不同启动花销的时间也不同, 可能1~5分钟不等. 
+
+- **热启动**
+
+  当我们的flutter项目已经启动了, 我们修改了一些代码, 想要立马看到修改的效果, 一种方式是结束当前的程序运行后再冷启动, 另一种是直接热启动
+
+
+
+### 2、flutter 冷启动 热重启 热重载
+
+在我们使用`vscode` 或者 `android studio` 开发flutter项目时, 经常会用到 **hot restart 和 hot reload** 这两个功能. 
+
+![Snip20200715_8](images/Snip20200715_8.png) 
+
+- hot reload 功能, 快捷键  `command + \`
+- hot restart功能, 快捷键 `shift + command + \` 
+
+下面我们来简单的介绍一下, 热重载(hot reload)  和 热重启(hot restart) 他们之间的关系和区别
+
+其实我们在运行一个flutter项目的时候有三种方式:
+
+1、冷启动
+
+2、热重启
+
+3、热重载
 
 
 
