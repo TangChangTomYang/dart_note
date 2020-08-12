@@ -1,11 +1,17 @@
-Flutter 学习
+ Flutter 学习
 
 # flutter 开发快捷键
 
 ## 1、android studio 
 
 - hot reload 功能, 快捷键  `command + \`
-- hot restart功能, 快捷键 `shift + command + \` 
+- hot restart功能, 快捷键  `shift + command + \` 
+- 创建StatelessWidget 类, 快捷键 `stless` 后回车
+- 创建StatefulWidget 类, 快捷键 `stful` 后回车
+- 在android Studio 中, 如果你想要快速给已经编写好的widget包裹一个其它的Widget 的话可以使用快捷键 windows:(`alt + enter`), Mac:(`option + enter`)
+- 在flutter中查找, 抽象类具体的子类: `option` + `command` + `b` 
+
+
 
 
 
@@ -2362,7 +2368,7 @@ import 'dateFormat.dart';
 
   ![Snip20200713_15](images/Snip20200713_15.png) 
 
-  一般来说, 我很少使用工具来创建flutter项目, 因为使用工具会生成一些额外和工具相关的莫名其妙的文件等, 导致项目不是很纯洁, 所以我再开发flutter时, 一般选择使用命令行来创建项目. 
+  一般来说, 我很少使用工具来创建flutter项目, 因为使用工具会生成一些额外和工具相关的莫名其妙的文件等, 导致项目不是很纯洁, 所以我在开发flutter时, 一般选择使用命令行来创建项目. 
 
   
 
@@ -2374,14 +2380,14 @@ import 'dateFormat.dart';
   // 错误命令 flutter create helloWorld
   flutter create hello_flutter			// 正确命令
   ```
-
-> **注意**:
->
-> 1、flutter 项目的名称不要包含特殊符号, 另外不支持驼峰命名, 也可以理解为flutter项目名称不支持特殊符号和大写字母.
->
-> 2、使用终端命令创建好flutter命令后, 使用对应的工具直接打开即可(vscode 或者 android studio)
->
-> 3、顺便提示一下, 在创建flutter项目时好像要下载一些文件, 因此要保证电脑能上网.
+  
+  > **注意**:
+  >
+  > 1、flutter 项目的名称不要包含特殊符号, 另外不支持驼峰命名, 也可以理解为flutter项目名称不支持特殊符号和大写字母.
+  >
+  > 2、使用终端命令创建好flutter命令后, 使用对应的工具直接打开即可(vscode 或者 android studio)
+  >
+  > 3、顺便提示一下, 在创建flutter项目时好像要下载一些文件, 因此要保证电脑能上网.
 
 
 
@@ -2394,7 +2400,7 @@ import 'dateFormat.dart';
 
 ### 1、使用终端命令打开flutter项目
 
-其实, 当我们在使用终端吗命令后, 在终端已经提示了, 我们其实是可以使用终端命令运行我们的项目的, 这个完全没问题
+其实, 当我们在使用终端命令创建flutter项目完成后, 在终端上已经提示了, 使用终端命令运行我们的项目, 这个完全没问题
 
 ```
 // 使用终端命令 运行 flutter 项目
@@ -2414,6 +2420,8 @@ flutter run
 
     选择模拟器 -> HardWare -> Device -> 选择对应版本的模拟器即可
 
+
+
 ### 2、使用开发工具打开flutter项目
 
 一般来说, 我们可以使用 `vscode` 和 `android studio` 开发工具来打开flutter项目. 
@@ -2427,16 +2435,18 @@ flutter run
   然后跟着指示选择对应的flutter的工程目录即可打开flutter项目
 
   ![Snip20200714_16](images/Snip20200714_16.png) 
-
-> 补充:
->
-> 只要是使用工具打开`flutter` 项目, 不论是`vscode` 还是`android studio` . 在使用之前必须要安装`flutter 和 dart` 插件, 这个是前提条件, 如何安装, 百度一下即可.
->
-> 如果不装这两个插件是没有办法打开和开发flutter的. 
+  
+  > 补充:
+  >
+  > 只要是使用工具打开`flutter` 项目, 不论是`vscode` 还是`android studio` . 在使用之前必须要安装`flutter 和 dart` 插件, 这个是前提条件, 如何安装, 百度一下即可.
+  >
+  > 如果不装这两个插件是没有办法打开和开发flutter的. 
 
 
 
 ## 3、flutter 工程目录介绍
+
+![Snip20200729_1](images/Snip20200729_1.png) 
 
 - `.dart_tool` 目录主要存储的是我们Flutter项目中Dart 依赖的一些第三方库信息. 不需要手动配置和修改
 - `.idea` 目录, 因为Android Studio 是google 基于`IDEA` 开发的,因此项目中默认有这个`.idea` 目录, 我们不用管它.
@@ -2447,7 +2457,7 @@ flutter run
 - `test` 目录就是我们做测试的目录
 - `.gitignore` 是做git项目管理的忽略文件, 如果我们在做git提交时如果不想提交, 就在这个文件里配置就可以了
 - `.metadata` 文件, 是对我们的flutter 项目版本做记录的, 不需要手动修改. 
-- `pubspec.yaml` 是用来管理第三库依赖的描述文件, 用来说明我们的项目需要安装怎样的第三方依赖库
+- `pubspec.yaml` 是用来管理第三库依赖的描述文件, 用来说明我们的项目需要安装怎样的第三方依赖库. 后续开发过程中会用到
 - `.packages` 和 `pubspec.lock` 文件是我们安装第三方依赖后自动生成的第三方描述文件, 其中`pubspec.lock` 主要记录的是已经安装的第三方依赖的具体版本信息, 保证项目多次安装时, 安装同样版本的依赖.
 - `README.md` 是用来写一些项目的描述信息. 
 
@@ -2479,13 +2489,15 @@ flutter run
 
 ## 5、flutter 项目的启动
 
-在flutter开发中项目的启动主要分为两种: **冷启动和热启动** . 具体呢有可以划分为三种操作: **冷启动、热重启、热重载** 
+在flutter开发中项目的启动主要分为两种: **冷启动和热启动** .
+
+ 具体呢又可以划分为三种操作: 
+
+**冷启动、热重启、热重载** 
 
 
 
 ### 1、flutter冷启动和热启动
-
-
 
 - **冷启动** 
 
@@ -2493,7 +2505,7 @@ flutter run
 
 - **热启动**
 
-  当我们的flutter项目已经启动了, 我们修改了一些代码, 想要立马看到修改的效果, 一种方式是结束当前的程序运行后再冷启动, 另一种是直接热启动
+  当我们的flutter项目已经启动了, 我们修改了一些代码, 想要立马看到修改的效果, 一种方式是结束当前的程序运行后再冷启动, 另一种就是直接热启动
 
 
 
@@ -2506,15 +2518,1120 @@ flutter run
 - hot reload 功能, 快捷键  `command + \`
 - hot restart功能, 快捷键 `shift + command + \` 
 
-下面我们来简单的介绍一下, 热重载(hot reload)  和 热重启(hot restart) 他们之间的关系和区别
+**下面我们来简单的介绍一下, 热重载(hot reload)  和 热重启(hot restart) 他们之间的关系和区别** 
 
 其实我们在运行一个flutter项目的时候有三种方式:
 
 1、冷启动
 
-2、热重启
+- 当前的项目完全没有启动, 从0开始启动. 所有的flutter框架的代码和我们自己写的代码都是从0开始启动加载的. 耗时长.
 
-3、热重载
+2、热重启 (快捷键 shift + command + `\`)
+
+- 当我们执行热重启后, flutter会重新运行我们整个 flutter app 的. 换句话说执行热重启后我们的flutter app 是从0开始运行的. 热重启比冷启动执行时间要短的多.
+
+  > **注意:** 
+  >
+  > 虽然, 冷启动和热重启, 整个flutter app 都是从0开始运行的, 但是不要把他们搞混了, 冷启动是完完全全的从0开始启动app, 而 热重启是对已经启动的app 进行从0运行, 没有运行过得app 是不能直接热重启的. 
+
+3、热重载 (快捷键 command + `\`)
+
+- hot  reload 热重载, 最主要是执行build 方法.  如果修改的内容不是在 `build` 方法里面, 这时热重载是不生效的.  换句话说, 当我们按下 command + `\` 时, flutter 会重新制定build 方法, 如果我们修改的内容在build 方法里面, 那么被修改的内容就会被呈现, 否则没反应.
+
+### 3、冷启动、热重启、热重载总结
+
+- flutter app完全没有启动过, 需要启动就使用冷启动. 
+- flutter app 已经启动了, 想要让app 再次从0开始启动一遍,可以选则再次冷启动, 也可以选择热重启, 如果希望快一点看到效果就选择热重启否则就冷启动.
+- 如果flutter app 已经运行, 我们修改了 build 方法内的内容, 想要快速看到效果就可以选择热重载. 
+
+
+
+## 6、第一个flutter 项目
+
+![Snip20200729_2](images/Snip20200729_2.png) 
+
+```
+import 'package:flutter/material.dart';
+
+main(List<String> args){
+  runApp(
+      Center(
+        child: Text(
+          'hello flutter',
+          textDirection:TextDirection.ltr,
+          style: TextStyle(
+              fontSize: 50,
+              // 注意: 此处是Colors 不是Color. 
+              // 比如: orange 就是Colors 中的一个静态属性
+              color: Colors.orange,
+              backgroundColor:Colors.red
+          ),
+        ),
+      )
+  );
+}
+```
+
+> ```v
+> 1. dart 代码的入口 是main函数, main函数是整个Dart 应用程序的入口
+> 2. main 函数可以没有参数, 也可以有参数, 参数是一个 List 类型, eg: List<String> args
+> 3. flutter 在启动后, 我们应当首先调用 runApp() 这个全局函数
+> 	3.1. 我们在 main 函数中运行 runApp() 全局函数时, 一般我们选择的是 'package:flutter/material.dart' 模块中的 runApp,不要选择错了
+> 4. 在flutter 中万物皆 widget, 所有的东西都是widget
+> 5. 在flutter 中, Widget不能直接使用, 因为Widget是一个抽象类.
+> ```
+
+到这里的话, 我们最简单的flutter 项目就开发完了.
+
+
+
+# 九、material设计风格
+
+
+
+## 1、什么是material 风格
+
+- material 是google公司推行的一套`设计风格` , 或者叫做` 设计语言` `设计规范` 等. 
+- 在material 里面有非常多的设计规范, 比如: `颜色` 、`文字的排版`、`填充` 等. 
+- 在flutter中, 高度集成了`material风格的 widget`
+- 在我们的应用中, 我们可以直接使用这些widget来创建我们的应用. (后面我们会用到很多, 里面有些关键的widget我们是必须掌握才能开发flutter的)
+
+**补充:**
+
+widget 到底是什么东西?
+
+- 我们学习flutter, 从一开始就可以有一个基本的认识: **flutter中万物皆是widget**
+- 在我们iOS或者Android开发中, 我们界面有很多种类的划分: 应用(Application)、视图控制器(viewController)、活动(Activity)、视图(View)、按钮(button)等等
+- 但是在Flutter开发中, 这些都是不同类型的 widget而已.
+- 也就是说, 我们整个应用内程序中, **所看到的内容** 几乎都是widget, 甚至**内边距设置** 我们也要使用一个叫`PaddingWidget` 来设置.
+
+
+
+## 2、第一个material App
+
+```
+import 'package:flutter/material.dart';
+
+main(List<String> args){
+  print('----程序启动了');
+
+  runApp(
+    MaterialApp(
+      home: Center(
+        child: Text(
+          'hello material app',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            backgroundColor: Colors.red
+          ),
+        ),
+      ),
+    )
+  );
+}
+```
+
+> ```
+> /**
+>  * 通常我们开发 flutter项目时, 整个流程是这样
+>  * 1. 先在 main 方法中运行 runApp 方法.
+>  * 2. 在runApp 方法中, 我们直接传入一个 MaterialApp , 就是告诉程序我们要运行一个 material风格的 app
+>  * 3. 在 MaterialApp 中有个home参数, 直接传入我们要显示的widget 即可
+>  * 4. 这样我们的 material 风格的app 就运行了
+>  * 5. 在material App 中因为已近设置了 方向, 因此后续我们 就不用再单独在 子widget 中在设置排版方向了
+>  *
+>  * 总结:
+>  * 我们使用MaterialApp 包裹我们所有的子widget, 或则说我们在 runApp 中运行MaterialApp 其实就是告诉
+>  * 系统, 我们整个app 都采用material 风格开发, 后面我们很多东西就沿用material 风格了, 就不需要再单独设置.
+>  */
+> ```
+
+![materialApp01](images/materialApp01.png)  
+
+## 3、第二个Material 风格的 app
+
+```
+import 'package:flutter/material.dart';
+
+main(List<String> args){
+
+  runApp(
+      MaterialApp(
+        debugShowCheckedModeBanner: false ,     // 不显示右上角的debug 图标
+        home: Scaffold(
+          appBar:AppBar(
+            title: Text(
+              '我是标题',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20
+              ),
+            ),
+            backgroundColor: Colors.lightBlue,
+          ) ,
+          body: Center(
+            child: Text(
+              'material scaffold app',
+              style: TextStyle(
+                  color: Colors.white,
+                  backgroundColor: Colors.cyan,
+                  fontSize: 30
+              ),
+            ),
+          ),
+        ),
+      )
+  );
+
+}
+```
+
+> ```
+> /**
+>  * Scaffold  翻译过来的话就是脚手架
+>  *
+>  * 1. 脚手架一个主要的功能就是帮助我们快速的搭建页面
+>  * 2. 在Scaffold 中, 我们最主要的就是传入2个参数,  appBar 和 body
+>  * 其中appBar 就是类似于我们iOS中的导航 nav, 而 body 就有点类似于我们controller 中
+>  * 要显示的控制器的view
+>  * 3. 其中 appBar 是一个需要继承自PreferredSizeWidget 的widget, 但是PreferredSizeWidget 是一个
+>  * 抽象类, 不能实例化, 一般我们使用它的子类 AppBar 或者  TabBar
+>  *
+>  *
+>  */
+> ```
+
+![](images/scaffoldApp.png) 
+
+
+
+
+
+
+
+## 4、Material app 重构
+
+这个章节, 我们主要是要对我们之前写的Material App 进行结构上的重构, 让我们写的代码更结构化, 这样便于我们后续的维护和开发, 以及各个版本迭代
+
+-  app 抽取
+
+  ```
+  import 'package:flutter/material.dart';
+  main(List<String> args){
+    runApp(YRApp());
+  }
+  ```
+
+  从上面来看, 我们把整个app 都抽到一个叫 YRApp 的类里面, 这样 main 方法就清晰了, 里面只需要 runApp 就行了, 具体 run 的是那个app , 我们只需要按照规范把YRApp 在其他地方写好就行了, main 不需要再关心其它逻辑, 这样职责就清晰了, main 方法只需要 runApp 就好
+
+- YRHomePage 抽取
+
+  ```
+  class YRHomepage extends StatelessWidget{
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: homePageAppBar() ,
+        body: YRHomePageBody()
+      );
+  
+    }
+  
+    AppBar homePageAppBar(){
+      return AppBar(
+        title: Text(
+          '我是标题',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 20
+          ),
+        ),
+        backgroundColor: Colors.green,
+      );
+    }
+  }
+  ```
+
+- YRHomePageBody 抽取
+
+  ```
+  class YRHomePageBody extends StatelessWidget{
+    @override
+    Widget build(BuildContext context) {
+      return Center(
+        child: Text(
+          'YRHomeage',
+          style: TextStyle(
+              color: Colors.white,
+              backgroundColor: Colors.cyan,
+              fontSize: 30
+          ),
+        ),
+      );
+    }
+  }
+  ```
+
+  
+
+
+
+​	
+
+
+
+# 十、StatelessWidget & StatefulWidget
+
+
+
+## 1、StatelessWidget 介绍
+
+StatelessWidget 通常被称作一种没有状态state(也可以理解为data) 需要维护的Widget
+
+- 它们的数据通常是直接写死的(放在widget中的数据, 必须被定义为final), 为什么定义在StatelessWidget 中的数据必须定义为final, 我们在后面的章节中会介绍.
+- StatelessWidget中的数据通常是从父widget(parent widget) 中传入的, 而且一旦传入就不能被改变了. 
+- StatelessWidget 中的数据也可以从InheritedWidget 中获取, 这个在后面也会将
+
+## 2、创建继承自StatelessWidget 的widget
+
+很简单, 一般来说只需两步:
+
+- 定义一个类, 继承自StatelessWidget
+
+- 重写StatelessWidget 的 build 方法, 返回自己想要显示的widget 即可. 
+
+  ```
+  class YRHomePage extends StatelessWidget{
+  
+    @override
+    Widget build(BuildContext context) {
+      
+      return Center(
+        child: Text(
+          '自定义widget, 继承自StatelessWidget',
+          style: TextStyle(
+              color: Colors.white,
+              backgroundColor: Colors.red
+          ),
+        ),
+      );
+    }
+  }
+  ```
+
+## 3、build 方法的解释
+
+
+
+- 当flutter 在拿到我们自己创建的继承自StatelessWidget的类创建实例时就会调用它里面重写的 build 方法, 渲染里面返回的widget
+
+- 我们需要在 build 方法中告诉flutter, 我们自己定义的widget 希望渲染什么元素, 比如一个Text Widget 等等. 
+
+- StatelessWidget 是没有办法主动执行 build方法的, 当我们的数据发生变化的时候, build方法会被重新调用
+
+  > 在我们的flutter开发中, 一般来说, 我们是不会且也不会主动的调用widget 中的build 方法的, 一般都是用来让系统自己调用的. 
+
+
+
+## 4、build 方法在什么情况下被执行
+
+
+
+- 当我们的StatelessWidget是第一次插入到Widget 树中时, 也就是第一次被创建时
+- 当我们的父Widget (parent widget) 发生改变的时候, 子Widget 会被重新构建
+- 如果我们的Widget依赖InheritedWidget 的数据, InheritedWidget 中的数据发生变化的时候会被调用. 
+
+> 其实,当我们在 执行 热重载的时候, build 方法就会被再次调用, 重新绘制页面, 这也就是为甚么说, hot reload 时, 只有build 中的修改会被改变. 
+
+
+
+## 5、StatelessWidget 中的@immutable 注解
+
+前面我们将我StatelessWidget 是没有状态的, 现在我们来说一下StatelessWidget 中的@immutable 注解. 
+
+- 首先, 注解这个东西是flutter中才有的, 在Dart 中是没有这一说法, `注解`这个东西涉及到Dart的元编程, 我们这里不讲
+
+- 在flutter官方中是这样定义 Widget类的, 如下图:
+
+  ![Snip20200805_2](images/Snip20200805_2.png) 
+
+  注意到没有, 在前面有个 `@immutable` 注解
+
+- 当我们在被`@immutable` 注解 注解的类或是继承自被`@immutable` 注解的类中定义非`final` 修饰的属性(成员变量)时, 代码就会报错, 提示如下错误:
+
+  ![Snip20200805_4](images/Snip20200805_4.png) 
+
+  这个就是官方给我们的错误提示, 意思就是说被@immutable注解或者是继承自被@immutable 注解的类, 所有的成员变量必须是 final 的, 即成员变量必须是常量,  因为是常量, 所以成员属性的值一旦确定就不能变, 这也就是为什么, 我们说StatelessWidget 是没有状态的不能修改状态的原因, 因为属性压根不能变, 是常量
+  
+- 官方对于 `@immutable` 有做解释, 具体看这里: https://api.flutter.dev/flutter/meta/immutable-constant.html
+
+
+
+
+
+## 6、flutter 中Widget 知识补充那个
+
+- 在flutter开发中所有的Widget都是不能定义状态的, 因为 Widget 类是被`@immutable` 注解的.
+
+- 因此不论是继承自StatelessWidget 还是继承自StatefullWidget 都是不能定义状态的, 这个结论很重要, 很重要.
+
+- 以下的写法都是错误的
+
+  ```
+  class YRLessWidget extends StatelessWidget{
+    String name; // 此处错误, 必须是final 修饰的变量
+  }
+  
+  ```
+
+  ```
+  class YRFullWidget extends StatefulWidget{
+    String name; // 错误写法, 此处必须是final 修饰
+  }
+  ```
+
+
+
+## 7、同意协议demo
+
+```
+import 'package:flutter/material.dart';
+
+main(List<String> args){
+  runApp(YRApp());
+}
+
+class YRApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+    	// 不显示右上角的debug 图标
+      debugShowCheckedModeBanner: false ,     
+      home: YRHomepage()
+    );
+  }
+}
+
+class YRHomepage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: homePageAppBar() ,
+      body: YRHomePageBody()
+    ); 
+  }
+
+  AppBar homePageAppBar(){
+    return AppBar(
+      title: Text(
+        '我是标题',
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 20
+        ),
+      ),
+      backgroundColor: Colors.green,
+    );
+  }
+}
+
+class YRHomePageBody extends StatefulWidget{
+
+  @override
+  State<StatefulWidget> createState() {
+    // 创建一个我们自己实现的 State, YRHomePageBodyState
+    return YRHomePageBodyState();
+  }
+}
+
+class YRHomePageBodyState extends State<YRHomePageBody>{
+
+  var  flag = true;
+  @override
+  Widget build(BuildContext context) {
+
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+              value: flag,
+              onChanged: (value){
+                setState(() {
+                  flag = value;
+                });
+              }),
+          Text(
+            "同意协议",
+            style: TextStyle(
+              color: Colors.white,
+              backgroundColor: Colors.cyan,
+              fontSize: 40
+            ),
+          )
+
+        ],
+      ),
+    );
+  }
+}
+```
+
+![](images/tongyixiyi.png) 
+
+> **说明**
+>
+> 在Material App 中, 一个Scaffold 就相当于是我们iOS中的一个UIViewController, 在Scaffold 中主要有 appBar 和 body, 其中 appBar 就相当于是我们的导航条 navBar, 而 body 就相当于是UIViewController 中的View 主要用来展示页面内容. 		 
+>
+> 也类似于Android 中的Activity 
+
+
+
+## 8、StatefullWidget 回顾
+
+我们在自定义继承自StatefullWidget 类的类的时候发现, 其实, 我们需要定义两个类, 一个类继承自StatefullWidget 一个类继自State
+
+其中, 继承自State的类是用来管理记录状态的, 因为继承自Widget的类是没有状态的. 		
+
+```
+class HomePage extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return HomePageState();
+  }
+}
+
+class HomePageState extends State<HomePage>{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Center(
+      child: Text(
+        """ 自定义继承自StatefulWidget 的类需要自己创建2个类
+        一个是继承自 StatefulWidget 的类
+        一个是继承自 State的类, 继承自State的类用来记录状态 """
+      ) ,
+    );
+  }
+}
+```
+
+
+
+
+
+## 9、StatelessWidget 简单案例
+
+
+
+- 最终案例效果
+
+  ![](images/column1.png)  ![](images/listview1.png) 
+
+  ```
+  示例代码1:
+  import 'package:flutter/material.dart';
+  main(){
+    runApp(YRStatelessApp());
+  }
+  
+  class YRStatelessApp extends StatelessWidget{
+    @override
+    Widget build(BuildContext context) {
+  
+      return MaterialApp(
+        debugShowCheckedModeBanner: true,
+        home: YRStatelessAppHome(),
+      );
+    }
+  }
+  
+  
+  class YRStatelessAppHome extends StatelessWidget{
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('我是标题'),
+        ),
+        body: ProductPage(),
+      ) ;
+    }
+  }
+  
+  class ProductPage extends StatelessWidget{
+    final String imageUrl1 = "https://tva1.sinaimg.cn/large/006y8mN6gy1g72j6nk1d4j30u00k0n0j.jpg";
+    final String imageUrl2 = "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imm9u5zj30u00k0adf.jpg";
+    final String imageUrl3 = "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imqlouhj30u00k00v0.jpg";
+    @override
+    Widget build(BuildContext context) {
+      return Column(
+        children: <Widget>[
+          ProductPagetem('apple1',
+              'apple1 描述apple1 描述apple1 描述apple1',
+              imageUrl1
+          ),
+          ProductPagetem('apple2',
+              'apple2 描述apple2 apple2 描述apple2',
+              imageUrl2
+          ),
+          ProductPagetem('apple1dsf',
+              'apple3 描述apple3 apple2 描述apple3',
+              imageUrl3
+          ),
+  
+        ],
+      );
+    }
+  }
+  
+  
+  class  ProductPagetem extends StatelessWidget{
+  
+    final String title;
+    final String desc;
+    final String imageUrl;
+  
+    final titleStyle = TextStyle(color: Colors.orange, fontSize: 30);
+    final descStyle = TextStyle(color: Colors.green, fontSize: 20);
+  
+    ProductPagetem(
+        this.title,
+        this.desc,
+        this.imageUrl
+        );
+  
+    @override
+    Widget build(BuildContext context) {
+      return  Column(
+        children: <Widget>[
+          Text(
+            this.title,
+            style: titleStyle,
+          ),
+          SizedBox( // 使用SizeBox 可以做垂直和水平方向上的间距
+              height: 8
+          ),
+          Text(
+            this.desc,
+            style: descStyle,
+          ),
+          Image.network(this.imageUrl)
+        ],
+      );
+    }
+  }
+  ```
+
+  
+
+  ```
+  // 示例代码2: 
+  import 'package:flutter/material.dart';
+  main(){
+    runApp(YRStatelessApp());
+  }
+  
+  class YRStatelessApp extends StatelessWidget{
+    @override
+    Widget build(BuildContext context) {
+  
+      return MaterialApp(
+        debugShowCheckedModeBanner: true,
+        home: YRStatelessAppHome(),
+      );
+    }
+  }
+  
+  
+  class YRStatelessAppHome extends StatelessWidget{
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('我是标题'),
+        ),
+        body: ProductPage(),
+      ) ;
+    }
+  }
+  
+  class ProductPage extends StatelessWidget{
+    final String imageUrl1 = "https://tva1.sinaimg.cn/large/006y8mN6gy1g72j6nk1d4j30u00k0n0j.jpg";
+    final String imageUrl2 = "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imm9u5zj30u00k0adf.jpg";
+    final String imageUrl3 = "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imqlouhj30u00k00v0.jpg";
+    @override
+    Widget build(BuildContext context) {
+      return ListView(
+        children: <Widget>[
+          ProductPagetem('apple1',
+              'apple1 描述apple1 描述apple1 描述apple1',
+              imageUrl1
+          ),
+          ProductPagetem('apple2',
+              'apple2 描述apple2 apple2 描述apple2',
+              imageUrl2
+          ),
+          ProductPagetem('apple1dsf',
+              'apple3 描述apple3 apple2 描述apple3',
+              imageUrl3
+          ),
+  
+        ],
+      );
+    }
+  }
+  
+  
+  class  ProductPagetem extends StatelessWidget{
+  
+    final String title;
+    final String desc;
+    final String imageUrl;
+  
+    final titleStyle = TextStyle(color: Colors.orange, fontSize: 30);
+    final descStyle = TextStyle(color: Colors.green, fontSize: 20);
+  
+    ProductPagetem(
+        this.title,
+        this.desc,
+        this.imageUrl
+        );
+  
+    @override
+    Widget build(BuildContext context) {
+      return  Column(
+        children: <Widget>[
+          Text(
+            this.title,
+            style: titleStyle,
+          ),
+          SizedBox( // 使用SizeBox 可以做垂直和水平方向上的间距
+              height: 8
+          ),
+          Text(
+            this.desc,
+            style: descStyle,
+          ),
+          Image.network(this.imageUrl)
+        ],
+      );
+    }
+  }
+  ```
+
+
+
+### 示例分析:
+
+**为什么示例一的代码 会出现黄条的页面呢?**
+
+- 在flutter的布局中 子widget只知道自己的大小, 然后父widget对子widget显示的位置进行调整. 而父widget 发现子widget 超出了自己的安全区域, 到时就会报黄条的错误, 说子widget 越界了.` relayoutboundary 错误`
+- 在flutter开发中, 只要是你的内容, 超出了父widget可以显示的区域, 且你没有将超出元素的父元素设置为可滚动的元素, 那么就会报比较经典的,, 也就是说flutter中的内容只能在安全区域显示.
+- Column 这个Widget是不可以滚动的, 我们可以使用ListView 这个Widget 代替,ListView 也是一个Widget, 当ListView 这个Widget内的内容超出了自己的范围, 那么ListView 的内容就是可以滚动的了
+
+
+
+## 10、StatelessWidget 案例二
+
+设置Widget之间的间距
+
+设置Widget的内边距
+
+设置Widget的垂直对齐方式, 以及水平对齐方式
+
+### 1、设置Widget 之间的间距
+
+> 使用SizeBox 这个Widget 可以设置上下Widget之间的间距, 也可以设置左右Widget 之间的间距
+
+- 在iOS 开发中, 我们设置上下两个View之间的间距, 调整View的Y值即可, 在安卓或者前端开发中设置上下两个元素之间的间距, 我们设置Margin即可, 但是在我们的flutter开发中, 设置上下两个Widget 之间的间距时与iOS 、安卓、前端中的方式都不一样 , 在flutter中设置两个Widget之间的间距有很多种方法, 大概有4~5中, 但是这里我们可以使用在两个Widget之间插入一个Widget来实现. 
+- 这里我们介绍,使用SizeBox这个widget 来实现连个Widget之间的间距
+
+```
+class ProductItem extends StatelessWidget{
+  final String title;
+  final String desc;
+  final String imageUrl;
+  
+  ProductItem(this.title, this.desc, this.imageUrl);
+  
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Column(
+      children: <Widget>[
+        Text(this.title),
+        SizedBox(height: 10),  // 设置一个上下为10 的间距
+        Text(this.desc),
+        SizedBox(height: 10),  // 设置一个上下为10 的间距
+        Image.network(this.imageUrl)
+      ],
+    );
+  }
+}
+```
+
+
+
+### 2、设置Widget的边框和内边距
+
+> 在flutter 中, 我们可以通过Container 这个Widget来给其它的Widget设置边框和内边距. 
+>
+> 在flutter开发中, 我们可以通过给Container这个Widget来给其它的Widget设置内边距
+
+- 在flutter开发中, 我们不直接像在iOS 或者安卓 或者前端中直接给设置边框和内边距. 
+- 在flutter开发中我们可以给其它的Widget增加一个Container容器Widget, 将其它Widget包裹在理面, 然后通过Container 的decoration 属性给Widget设置边框和内边距
+- 在flutter开发中, 如果我们想要给一个Widget增加内边距, 这时我们就可以考虑使用一个Container将对应的Widget包裹, 然后设置Container 的Padding 属性即可.
+
+> 说明:
+>
+> 1、Container 这个Widget中的Decoration 属性是装饰的意思, 是一个`Decoration` 类型(抽象类), 不能直接使用, 一般我们使用它的子类`BoxDecoration` 来设置边框以及背景色等, 
+>
+> 2、需要注意的是, 其实在Container中除了可以通过 `decoration ` 属性来装饰我们的Container, 也可以直接使用哪个Container中的color属性来直接设置Container的背景色, 但是 `color` 属性和 `decoration` 属性只能选择一个不能同时用
+>
+> 3、Container 中的`padding` 属性虽然可以用来设置内边距, 但是因为`padding` 属性是`EdgeInsetsGeometry` 类型(抽象类) , 不能直接使用呢, 一般我们使用哪个`EdgeInsets` 子类
+
+
+
+```
+class  ProductItem extends StatelessWidget{
+
+  final String title;
+  final String desc;
+  final String imageUrl;
+  
+  final titleStyle = TextStyle(color: Colors.orange, fontSize: 30);
+  final descStyle = TextStyle(color: Colors.green, fontSize: 20);
+
+  ProductItem(this.title, this.desc, this.imageUrl);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
+
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.green,
+          width: 10
+        ),
+        color: Colors.white
+      ),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: <Widget>[
+          Text(
+            this.title,
+            style: titleStyle,
+          ),
+          SizedBox( // 使用SizeBox 可以做垂直和水平方向上的间距
+              height: 8
+          ),
+          Text(
+            this.desc,
+            style: descStyle,
+          ),
+          Image.network(this.imageUrl)
+        ],
+      ),
+    );
+  }
+}
+
+```
+
+![Snip20200807_1](images/Snip20200807_1.png) 
+
+
+
+### 3、设置水平和垂直对齐方式
+
+在flutter中的布局和前端中Flex布局很像
+
+在flex布局中没有严格的水平布局和垂直布局的概念, 也就是说在flex 布局中是没有严格意义的水平轴和垂直轴的概念.
+
+在flex布局中只有**主轴 和 交叉轴** , 有的地方也叫做 **主轴 和 侧轴** , 的概念, 我习惯上将这两个轴叫做**主轴 和 侧轴** .
+
+主轴和侧轴始终代表两个垂直的方向, 主轴代表的方向可以是水平的也可以竖直的, 当然侧轴代表的方向也可以是水平的或者是竖直的, 具体的方向需要根据特定的环境来定. 
+
+
+
+- 主轴的排列方式主要有以下几种:
+
+  ```
+  enum MainAxisAlignment {
+    start,
+    end,
+    center, 
+    spaceBetween,
+    spaceAround,
+    spaceEvenly,
+  }
+  ```
+
+- 侧轴的排列方式主要有以下几种:
+
+  ```
+  enum CrossAxisAlignment {
+    start,
+  	end,
+  	center,
+    stretch,
+    baseline,
+  }
+  ```
+
+
+
+
+# 十一、生命周期
+
+## 1、StatefulWidget 的生命周期
+
+
+
+### 1、生命周期的理解
+
+什么是生命周期?
+
+- 客户端开发: 在iOS开发中我们需要知道UIViewController 从创建到销毁的整个过程,
+
+  android开发中, 我们要知道Activity从创建到销毁的整个过程, 以便在不同的生命周期方法中完成不同的操作.
+
+- 前端开发中, Vue、React开发中, 组件也都有自己的生命周期, 在不同的生命周期中我们可以做不同的操作/
+
+flutter中Widget 的生命周期:
+
+- StatelessWidget 可以由父Widget直接传入值, 并调用构造方法来构造, 整个过程非常的简单
+- 而, StatefulWidget需要通过State来管理其数据, 并且还要监控状态的改变决定是否重新build整个Widget
+- 所以, 在flutter开发中, 我们主要讨论StatefulWidget的生命周期, 也就是它从创建到销毁的整个过程.
+
+> 对于我们开发者来说, 生命周期有什么样的意义:
+>
+> 1、初始化一些变量、 数据、状态
+>
+> 2、发送网络请求
+>
+> 3、监听组件的监听事件
+>
+> 4、管理内存
+
+```
+// 因为在StatelessWidget 中, 只有一个构造函数和 build 方法
+// StatelessWidget一旦创建出来就定了, 所以我们一般很少说StatelessWidget的生命周期
+class YRHomeContent extends StatelessWidget{
+  final String content;
+
+  YRHomeContent(this.content);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Text(content);
+  }
+}
+```
+
+
+
+
+
+### 2、生命周期的简单版
+
+> 在这个版本中, 我们讲解那些常用的方法和回调, 下个版本中我们解释一些比较复杂的方法和回调
+
+
+
+那么StatefulWidget有那些生命周期的回调呢? 他们分别在什么情况下执行呢? 
+
+- 在下图中, 灰色的部分是flutter内部操作的, 我们并不需要去手动设置它
+- 白色的部分, 表示我们可以去监听 或者 可以 手动调用
+
+我们知道一个StatefulWidget本身包含两个类组成: `StatefulWidget` 和 `State` , 我们对他们分开进行总结, 如下: 
+
+![Snip20200811_2](images/Snip20200811_2.png) 
+
+```
+import 'package:flutter/material.dart';
+
+main(){
+  runApp(YRCounterApp());
+}
+
+class YRCounterApp extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('我是标题'),
+        ), 
+      body: ChangeFlag(),
+      )
+
+    );
+  }
+}
+
+class ChangeFlag extends StatefulWidget {
+  @override
+  _ChangeFlagState createState() => _ChangeFlagState();
+}
+
+class _ChangeFlagState extends State<ChangeFlag> {
+  int flag = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          RaisedButton(
+            child: Text('change flag: $flag'),
+            onPressed: (){
+              setState(() {
+                flag = (flag == 1 ? 0 : 1);
+              });
+            },
+          ),
+          HomeContent()
+        ],
+      ),
+    );
+  }
+}
+
+
+class HomeContent extends StatefulWidget {
+
+  HomeContent(){
+    print('1. 调用 statefulWidget 的构造方法');
+  }
+  @override
+  _HomeContentState createState(){
+    print('2. 调用 StatefulWidget 的 createState 方法');
+    return _HomeContentState();
+  }
+}
+
+class _HomeContentState extends State<HomeContent> {
+
+  int _count = 0;
+
+  _HomeContentState(){
+    print('3. 调用 State 的构造方法');
+  }
+
+  // 注意, 自定义initState 方法时, 必须调父类的 initState方法
+  @override
+  void initState() {
+    print('4. 调用 state 的initState 方法');
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    print('5. 调用 state 的 build 方法');
+    return Container(
+      width: 500,
+      height: 100,
+      color: Colors.cyan,
+      child: RaisedButton(
+        child: Text('点解+, 当前计数: $_count'),
+        onPressed: (){
+          print('点击了+');
+          setState(() {
+            _count++;
+          });
+        },
+      ),
+    );
+  }
+
+  // 自定义dispose 方法, 必须调父类的 dispose 方法
+  @override
+  void dispose() {
+    print('6. 调用 state 类的  dispose 方法');
+    super.dispose();
+  }
+
+  // 自定义 didChangeDependencies 方法, 必须调用父类的didChangeDependencies
+  @override
+  void didChangeDependencies() {
+    print(' 调用 state 类的  didChangeDependencies 方法');
+    super.didChangeDependencies();
+  }
+
+  // 自定义 didUpdateWidget 方法, 必须调父类的 didUpdateWidget
+  @override
+  void didUpdateWidget(HomeContent oldWidget) {
+    print(' 调用 state 类的 didUpdateWidget 方法');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  // 自定义 setState 方法, 必须调用父类的 setState 方法
+  @override
+  void setState(fn) {
+    print('调用 State 类的 setState 方法');
+    super.setState(fn);
+  }
+}
+```
+
+从上面的代码及流程图, 我们可以发现 `StatefulWidget` 主要有9个生命周期方法
+
+- 1、`StatefulWidget` 中的构造方法
+
+  > 构造方法主要用来创建和初始化StatefulWidget 对象
+
+- 2、`StatefulWidget` 中的createState方法
+
+  > createState 方法主要用来创建一个State实例对象, 来维护StatefulWidget对象
+  >
+  > 其次, 在调用对应的createState 方法的同时, 执行State类中的相关方法
+
+- 3、`State` 中的 构造方法
+
+  > 构造State实例对象
+
+- 4、`State` 中的 `initState` 方法, 重写时必须调父类的 initState 方法
+
+  > 在执行 initState 方法时, 我们通常会做一些数据初始化操作, 或者肯能也会发送一些网络请求等等
+
+- 5、`State`中的 didChangeDependencies 方法
+
+  > didChangeDependencies 这个生命周期的方法, 在两种情况下会调用
+  >
+  > 情况1: 当`State` 类中的 `initState` 方法被调用后, 会调用 didChangeDependencies 方法
+  >
+  > 情况2: 当从其它对象中中依赖的一些数据发生变化的时候会再次调用 didChangeDependencies方法,  比如: 我们前面有提到的 `inheritedWidget` , 一旦 didChangeDependencies 方法被调用后, 就后重新调用 State 中的 build 方法
+  >
+  > 这里我们可以大致介绍下, 什么是inheritedWidget, 首先inherited 是继承的意思, 我们前面有提到过其实Widget可以理解为是一个配置, inheritedWidget 可以理解为是可以及成果的Widget, 一般我们在做数据共享的时候会用到. 比如: 我们几个不同的Widget在显示同一个数据状态时就可以使用
+
+- 6、`State` 中的 build 方法
+
+- 7、`State` 中的   `setState` 方法
+
+  > 一旦调用 State 中的setState 方法, 就会调用 Element的 markNeedsBuild 方法, 标记需要 build,然后就会重新调用State 中的build 方法, 对widget中的内容进行重新绘制, 最终达到更新页面的目的
+  >
+  > 换句话说, State中的setState 的本质就是给对应的Element 做 needbuild 的标记, 等到下一帧的时候调用build方法重新构建widget, 刷新页面的目的
+
+- 8、`State` 中的 `didUpdateWidget` 方法
+
+  > 当父Widget发生改变的时候, 就会调用子Widget 的didUpdateWidget 方法, 当子widget 的didUpdateWidget  方法, 然后子Widget 接着就会调用build 方法重build自己的Widget, 达到页面变化的效果
+
+- 9、`State` 中的 dispose 方法, 重写时必须调用父类的 dispose 方法. 
+
+
+
+> 以上, 就是我们StatefulWidget 的一个比较完整的生命周期的流程
+>
+> 大家需要对这个流程很熟悉, 才能真正的掌握flutter开发的正确姿势. 
+>
+> 如果你对flutter的生命周期都不清楚, 那你就不会掌握代码的运行逻辑, 会出问题的
 
 
 
