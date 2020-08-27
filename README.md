@@ -1,17 +1,76 @@
- Flutter 学习
+ n Flutter 学习
 
 # flutter 开发快捷键
 
 ## 1、android studio 
 
 - hot reload 功能, 快捷键  `command + \`
+
 - hot restart功能, 快捷键  `shift + command + \` 
+
 - 创建StatelessWidget 类, 快捷键 `stless` 后回车
+
 - 创建StatefulWidget 类, 快捷键 `stful` 后回车
+
 - 在android Studio 中, 如果你想要快速给已经编写好的widget包裹一个其它的Widget 的话可以使用快捷键 windows:(`alt + enter`), Mac:(`option + enter`)
+
 - 在flutter中查找, 抽象类具体的子类: `option` + `command` + `b` 
 
+- 将StatelessWidget 转换为StatefulWidget的快捷键: `option` + `enter` 	
 
+  > 我们可以发现, 给一个Widget 包裹一个Container 的快捷键 和 将一个StatelessWidget 转换为StatefulWidget的快捷键 也是`option` + `enter` ,  也就是说, 在 android Studio 中, 相同的快捷键作用在不同的地方(代码上)效果是不同的, 这个需要注意一下.
+
+- 关闭当前 激活的文件页面, 快捷键: `command` + `w`
+
+- 格式化快捷键 `command` + `option` + `L` 
+
+- 快速折叠所有代码,快捷键: `command` + `shift`+ `-` 
+
+- 快速展开所有代码,快捷键: `command` + `shift`+ `+` 
+
+- 快速折叠 当前段代码,快捷键: `command`  + `-` 
+
+- 快速展开 当前段代码,快捷键: `command` + `+` 
+
+- 上下挪动代码,快捷键 `option` + `shift` + `上下键` 
+
+- 复制当前行代码快捷键 `command` + `d`
+
+- 当前文件替换内容, 快捷键 `command` + `shift` + `R` 
+
+- 将StateLessWidget 转为 StatefulWidget, 快捷键, `option`   + `enter` 
+
+- 抽取一段代码为一个方法, 快捷键 `command` + `option` + `m` 
+
+
+
+
+
+## flutter 帮助网站
+
+- 官方文档
+
+  flutter.dev
+
+- 中文网站
+
+  flutter.cn
+
+
+
+## 2、设置修改 android studio 快捷键
+
+`android studio` -> `preferences` -> `keymap`  然后在搜索框 搜索对应的快捷键即可.
+
+因为android studio 可以被用作很多语言的开发, 比如: java, kotlin, flutter 等, 因此很有可能同一个快捷键和其它语言冲突, 造成快捷键失效, 因此这时我们要学会解决 android studio 中快捷键冲突的问题.
+
+
+
+我们可以通过选中 某一个快捷键, 然后再右键选择 `add keyboard shortcut` 添加一个快捷键, 然后在弹出的快捷键弹窗中看当前快捷键是否有冲突, 示例如下:
+
+
+
+![Snip20200813_5](images/Snip20200813_5.png)  ![Snip20200813_6](images/Snip20200813_6.png) 
 
 
 
@@ -3436,7 +3495,7 @@ class YRHomeContent extends StatelessWidget{
 
 
 
-### 2、生命周期的简单版
+### 2、生命周期的---简单版
 
 > 在这个版本中, 我们讲解那些常用的方法和回调, 下个版本中我们解释一些比较复杂的方法和回调
 
@@ -3613,6 +3672,8 @@ class _HomeContentState extends State<HomeContent> {
 
 - 6、`State` 中的 build 方法
 
+  > 这个方法主要是为StatefulWidget 构建widget
+
 - 7、`State` 中的   `setState` 方法
 
   > 一旦调用 State 中的setState 方法, 就会调用 Element的 markNeedsBuild 方法, 标记需要 build,然后就会重新调用State 中的build 方法, 对widget中的内容进行重新绘制, 最终达到更新页面的目的
@@ -3622,6 +3683,10 @@ class _HomeContentState extends State<HomeContent> {
 - 8、`State` 中的 `didUpdateWidget` 方法
 
   > 当父Widget发生改变的时候, 就会调用子Widget 的didUpdateWidget 方法, 当子widget 的didUpdateWidget  方法, 然后子Widget 接着就会调用build 方法重build自己的Widget, 达到页面变化的效果
+  >
+  > 其实从`didUpdateWidget` 的名称中, 我们可以知道, 这个方法是Widget被更新的意思, 其实原理是这样的:
+  >
+  > -  一句话, StatefulWidget 被创建后会被对应的一个State持有(管理), 这个State只会创建和销毁一次, 但是State持有的Widget可能会变化. 当父widget 重新调用build 后, 就会调用持有子Widget的State的 didUpdateWidget方法, 接着State中就会重新在调用build 方法重新构建子Widget, didUpdateWidget的目的是让子Widget对应的State重新指向一个新的Widget
 
 - 9、`State` 中的 dispose 方法, 重写时必须调用父类的 dispose 方法. 
 
@@ -3632,6 +3697,2650 @@ class _HomeContentState extends State<HomeContent> {
 > 大家需要对这个流程很熟悉, 才能真正的掌握flutter开发的正确姿势. 
 >
 > 如果你对flutter的生命周期都不清楚, 那你就不会掌握代码的运行逻辑, 会出问题的
+
+
+
+
+
+### 3、生命周期的---复杂版
+
+![Snip20200811_2](images/Snip20200811_2.png) 
+
+我们在前面学习生命周期简单版的时候, 上图中灰色的几个生命周期函数是没有学习的, 下面我们来学习一下其它的几个生命周期函数:
+
+`mounted` `dirty State` `clean state` 
+
+
+
+- `mounted` 是State中内置的一个属性`(get 属性)`, 事实上我们不了解它开发也是没有问题的, 但是如果你想要深入的学习, 会对State的机制有更加深刻的理解. 
+
+  - 很多资料中是没有提到这个属性的, 但是我这里把它列出来, 是内部设置的, 不需要我们手动进行修改
+
+    ![Snip20200812_4](images/Snip20200812_4.png)
+
+    > 从上面的截图, 我们可以知道, 
+    >
+    > 在我们创建了一个 State, 在State执行 initState 方法之前, frameWork(即我们的flutter框架)会通过一个`BuildContext` 挂在这个属性, 这个mouted 属性最主要的功能就是记录一个`_Element` 这个属性是否为空, 如果`_Element` 不为空就表示你当前是处于`mounted` 挂在状态, 否则就处于非挂载状态(销毁状态)
+
+- `dirty state` 的含义是脏的 state 的意思
+
+  - 它实际上是通过一个Element的东西(我们后面会学习Element的绘制原理) 的属性来标记的
+
+  - 将它标记为dirty, 会等待下一次的重绘检查, 强制调用 build 方法来构建我们的Widget
+
+    > 后面我们会写一篇关于StatelessWidget 和 StatefulWidget的区别的文章, 讲解一下在开发中我们如何选择StatelessWidget和StatefulWidget
+
+- `clean state` 的含义是干净的 state
+
+  - 它表示当前build 出来的widget, 下一次重绘检查时不需要重新build	
+
+
+
+
+
+# 十二、基础Widget
+
+
+
+基础Widget: `文本` 、`按钮` 、`图片`、`输入框` 
+
+
+
+## 1、 编程范式
+
+### 1、编程范式的理解
+
+**编程范式** 对于初学编程的人来说是一个虚无缥缈的东西, 但是确实我们日常开发中都在默认的遵循的一些**模式 和 方法**
+
+- 比如: 我们常用的`面向对象编程` 就是一种编程范式, 与之对应的或者结合开发的包括:`面向过程编程`、`函数式编程` 、`面向协议编程` 
+- 另外还有两个对应的编程范式: `命令式编程`  和 `声明式编程`
+  - **命令式编程**: 命令式编程非常好理解, 就是一步步给计算机命令(指令), 告诉它我们要做的事情
+  - **生命式编程**: 声明式编绳与命令式编程不同, 声明式编程通常是描述目标的性质,比如: 
+    - 你应该是什么样式的
+    - 你依赖那些状态(数据), 并且当依赖的状态(数据) 发生变化的时候, 我们通过某些方式通知目标作出相应的变化(改变)
+
+> 因为我们flutter的 编程范式 与 iOS 和 android 的编程范式是不一样的, iOS 和 android 一般任然采用的命令式更多, 而flutter中一般采用的是声明式的, 只有在 编程方式上有了大概的理解后, 这样我们在flutter开发中才会有正确的思维方式以及思考方向
+
+
+
+想我们平时用到的 `Vue` `React` 就是属于声明式的框架, 我们要实现功能时, 找到对应的组件, 配置对应的参数(描述)即可, 我们不需要知道里面的实现细节. 像我们在iOS 和android 开发中我们就需要了解更多的细节一步步实现
+
+### 2、flutter的编程范式
+
+从2009年(数据来自维基百科), 声明式编程就开始流行起来, 并且在`Vue` 、`React` 、包括iOS中的`SwiftUI` 以及`flutter` 项目中都采用了声明式编程.
+
+
+
+现在我们开开发一个需求:
+
+实现一个 hello world, 之后又修改成 hello flutter
+
+- 如果我们采用命令式编程, 伪代码应该是这样的
+
+  ```
+  final text = new Text();
+  var title = "Hello world";
+  text.setContent(title);
+  
+  // 修改数据
+  title = "hello flutter";
+  text.setContent(title);
+  ```
+
+- 声明式编程 , 我们通常维护一套数据集
+
+  - 这个数据可以来自自己的父类、来自自身State管理、来自inheritedWidget、来自同一的状态管理的地方
+
+  - 总之, 我们知道有这么一个数据集, 并且告诉flutter这些数据集在哪里使用
+
+    ```
+    var title = "hello world";
+    Text(title); // 告诉Text widget 内部显示的就是 title中的内容
+    
+    // 修改数据
+    title = "hello flutter";
+    // 通知重新 build widget 即可, 他在build 的时候自动的就取到了新数据
+    setState((){
+    	
+    })
+    ```
+
+
+
+> 一定要对声明式编程有个理解, 这样在 后续flutter 开发中才会更得心应手. 
+
+
+
+
+
+## 2、文本Widget (待完善)
+
+在 Android 中, 我们使用的是 TextView, 在iOS  中我们使用UILabel来显示文本
+
+在flutter中, 我们使用`Text` 组件来控制文本如何展示.
+
+### 1、Text 的使用 (普通文本)
+
+在flutter中, 我们可以将文本的控制显示分成两类:
+
+- **控制文本 布局的参数**: 
+
+  - 如文本对齐的方式 `textAlign` 、文本排版方向`textDirection` 、文本显示最大行数`maxLines`、文本的截断规则`overflow` 等等, 这些都是构造函数中的参数. 
+
+- **控制文本 样式的参数**: 
+
+  - 如字体的名称`fontFamily` 、字体大小`fontSize` 、文本颜色`color` 、文本阴影`shadows` 等等, 这些参数被统一封装到了构造函数中的参数`style` 中. 
+
+```
+ const Text(
+    this.data, {
+    Key key,
+    this.style,					// 显示额样式, 比如字体大小, 颜色, 背景
+    this.strutStyle,
+    this.textAlign,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.overflow,
+    this.textScaleFactor,
+    this.maxLines,
+    this.semanticsLabel,
+    this.textWidthBasis,
+    this.textHeightBehavior,
+  })
+```
+
+Text widget就是用于显示最基础的文本, 相当于我们iOS 中的UILabel 或者 android 中的TextView, 使用很简单. 只有一个必选参数用于接收要显示的字符串, 这里就不再敖述了
+
+#### 1、Text Demo1
+
+```
+class TextContentDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Container 有个特点是, 设置了宽高信息就按具体的宽高信息来显示, 否则按照父组件的大小展示
+    // 给Container组件提供宽高信息的方式有很多: 比如: 设置宽高属性width,height 或者约束Constraints, 或者设置
+    // child 属性, 这些都算是给Container提供宽高信息
+    return Container(
+      color: Colors.pink,
+      child: Text(
+        "《定风波》 苏轼 \n莫听穿林打叶声，何妨吟啸且徐行。\n竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。",
+        style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+            backgroundColor: Colors.orange    // Text 的背景色, 这个最好别用, 容易出现字体大小背景色不好看的样式
+        ),
+      ),
+    );
+  }
+}
+```
+
+![](images/textdm1.png) 
+
+
+
+#### 2、TextDemo e2
+
+```
+class TextContentDemo2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Container 有个特点是, 设置了宽高信息就按具体的宽高信息来显示, 否则按照父组件的大小展示
+    // 给Container组件提供宽高信息的方式有很多: 比如: 设置宽高属性width,height 或者约束Constraints, 或者设置
+    // child 属性, 这些都算是给Container提供宽高信息
+    return Container(
+      color: Colors.pink,
+      width: double.infinity,
+      height: 100,
+      child: Text(
+          "《定风波》 苏轼 \n莫听穿林打叶声，何妨吟啸且徐行。\n竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。",
+        style: TextStyle(
+          fontSize: 30,
+          color: Colors.white,
+          backgroundColor: Colors.orange    // Text 的背景色, 这个最好别用, 容易出现字体大小背景色不好看的样式
+        ),
+        maxLines: 3,    // 最大显示行数, 如果要显示的行数不确定就不设置, 没有像iOS中的0就是显示任意行数
+        textAlign: TextAlign.right,   // 只有当Text的父组件的宽度超过自己时才会有效果
+        overflow: TextOverflow.fade,
+
+      ),
+    );
+  }
+}
+```
+
+![](images/textdm2.png) 
+
+
+
+
+
+### 2、Text.rich 富文本展示
+
+前面展示的文本，我们都应用了相同的样式，如果我们希望给他们不同的样式呢？
+
+- 比如《定风波》我希望字体更大一点，并且是黑色字体，并且有加粗效果；
+- 比如 苏轼 我希望是红色字体；
+
+如果希望展示这种混合样式，那么我们可以利用分片来进行操作（在Android中，我们可以使用SpannableString，在iOS中，我们可以使用NSAttributedString完成，了解即可）
+
+
+
+#### 1、Text.rich 的简单使用
+
+```
+class TextRichDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: "《定风波》", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black)),
+            TextSpan(text: "苏轼", style: TextStyle(fontSize: 18, color: Colors.redAccent)),
+            TextSpan(text: "\n莫听穿林打叶声，何妨吟啸且徐行。\n竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。")
+        ],
+      )
+      ),
+
+    );
+  }
+}
+```
+
+![](images/textrichdm1.png )  
+
+
+
+#### 3、Text.Rich 图文示例
+
+先来一个示例效果:
+
+![Textrich](images/Textrich.png) 
+
+在来一段示例代码:
+
+```
+mport 'package:flutter/material.dart';
+main(List<String> args){
+  runApp(YRApp());
+}
+
+
+class YRApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: true,
+      home: HomePage()
+    );
+  }
+}
+
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('我是标题'),
+      ) ,
+      body: TextContent(),
+    ) ;
+  }
+}
+
+
+
+class TextContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        // 普通文本使用 Text 这个Widget即可
+        Text(
+          '我是普通文本',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+            backgroundColor: Colors.green
+          ),
+        ),
+
+        // 富文本需要使用 Text.rich
+        Text.rich(
+          TextSpan(
+            text: '我是富文本的文字\n',
+            children:[
+              TextSpan(
+                  text:'我是富文本的富文本文字\n'
+              ),
+              WidgetSpan(
+                child: Icon(Icons.favorite, color: Colors.red, size: 30,)
+              )
+
+            ]
+          ),
+          textAlign: TextAlign.right,
+          style: TextStyle(
+            backgroundColor: Colors.orange
+          ),
+
+        ),
+
+      ],
+    );
+  }
+}
+
+```
+
+最后来个总结:
+
+> ```
+> 简单说:
+> - 如果我们想要显示一段纯文本, 使用Text 这个Widget即可
+> - 如果我们想要显示一段富文本, 就使用 Text.rich()
+> 
+> 在Text.rich()  中有个 InlineSpan 类型的必选参数, 也就是说如果我们要显示富文本, 就必须把富文本的文字图片等包装成InlineSpan 类型的Widget
+> 
+> 然而 InlineSpan 是抽象类我们不能直接使用, 通过快捷键 `option+command+b` 我们发现抽象类
+> InlineSpan 有两个实现类 TextSpan 和 WidgetSpan, 也就是说我们要显示的富文本内容(图文)最终需要包装成 TextSpan或者WidgetSpan
+> 
+> 其中TextSpan 中有个text的可选属性用于接收字符串的文本, 有个 List 类型的可选属性 children 用来接收其它要显示的 InlineSpan Widget. 
+> 
+> 而在WidgetSpan中只有一个 Widget类型的child 属性用来接收其它要显示的 widget
+> ```
+
+
+
+## 3、按钮的使用
+
+
+
+Material widget库中提供了多种按钮Widget如: `FloatingActionButton`、`RaisedButton`、`FlatButton`、`OutlineButton`等
+
+```
+class ButtonDemoContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        FloatingActionButton(
+          child: Text('float action button title'),
+          onPressed: () {
+            print(' float action button 被点击了');
+          },
+        ),
+
+        RaisedButton(
+          child: Text('raise buttonn'),
+          onPressed: () {
+            print('raise button click');
+          },
+        ),
+        FlatButton(
+          child: Text('flat buttonn'),
+          onPressed: () {
+            print('flat button click');
+          },
+        ),
+        OutlineButton(
+          child: Text('OutlineButton buttonn'),
+          onPressed: () {
+            print('OutlineButton button click');
+          },
+        ),
+        // 自定义button
+        FlatButton(
+          color: Colors.orange,
+          highlightColor: Colors.red,
+          textColor: Colors.white,
+          shape:RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+              ),
+          child: Text('自定义 buttonn'),
+          onPressed: () {
+            print('自定义 button click2');
+          },
+        ),
+        FlatButton(
+          color: Colors.red,
+          disabledColor: Colors.grey,
+          highlightColor: Colors.blue,
+          // 设置圆角
+          shape:RoundedRectangleBorder(
+              borderRadius:BorderRadius.circular(10)
+          ) ,
+
+          child: Row(
+            // 控制主轴上占用的宽度
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('自定义button'),
+              SizedBox(width: 25,),
+              Icon(Icons.people)
+            ],
+          ),
+          // onPress 这个属性很重要, 直接控制了 button 的disable
+          onPressed: (){
+            print('自定义 图文 button 点击了');
+          },
+        ),
+        IconButton(
+          color: Colors.cyan,
+          icon: Icon(Icons.people),
+          onPressed: (){},
+        )
+      ],
+    );
+  }
+}
+```
+
+![](images/buttondemo1.png)  
+
+
+
+
+
+## 4、图片的使用
+
+图片可以让我们的应用更加丰富多彩，Flutter中使用Image组件
+
+Image组件有很多的构造函数，我们这里主要学习两个：
+
+- Image.assets：加载本地资源图片；
+- Image.network：加载网络中的图片；
+
+
+
+
+
+
+
+
+
+### 1、本地图片的使用
+
+在我们的flutter开发中, 使用本地图片主要有三个步骤:
+
+- 在flutter项目中创建一个文件, 用于存储图片
+
+- 在`pubspec.yaml` 文件中配置图片的信息
+
+  ![Snip20200817_1](images/Snip20200817_1.png) 
+
+
+```
+class ImageDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Image(
+    	// Image Widget有个续传属性 image 是一个ImageProvider, 加载本地图片时, 我们可以使用
+    	// AssetImage, 提供一个图片路劲即可
+      image: AssetImage('asset/images/card@1x.png'),
+    );
+  }
+}
+```
+
+> 一般我们使用本地图片, 为了简化代码 一般法会尽量使用  `Image.asset()` 代替
+
+```
+Image.asset('asset/images/card@1x.png');
+```
+
+### 2、网络图片的使用
+
+相对来讲，Flutter中加载网络图片会更加简单，直接传入URL并不需要什么配置，所以我们先来看一下Flutter中如何加载网络图片。
+
+我们先来看看Image有哪些属性可以设置：
+
+> const Image({
+>   ...
+>   this.width, *//图片的宽*
+>   this.height, *//图片高度*
+>   this.color, *//图片的混合色值*
+>   this.colorBlendMode, *//混合模式*
+>   this.fit,*//缩放模式*
+>   this.alignment = Alignment.center, *//对齐方式*
+>   this.repeat = ImageRepeat.noRepeat, *//重复方式*
+>   ...
+> })
+
+```
+class ImageDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Image(
+      image:NetworkImage(url)
+    );
+
+  }
+}
+```
+
+> 般我们使用网络图片, 为了简化代码 一般法会尽量使用  `Image.network()` 代替
+
+```
+Image.network(url);
+```
+
+
+
+
+
+### 3、图片常用的属性介绍
+
+- `width`、`height`：用于设置图片的宽、高. 
+
+  - 当不指定宽高时，图片会根据当前父容器的约束限制，尽可能的显示其原始大小
+  - 如果只设置`width`、`height`的其中一个，那么另一个属性(宽、高)默认会按比例缩放，但可以通过下面介绍的`fit`属性来指定适应规则。
+
+- `fit`：该属性用于在图片的显示空间和图片本身大小不同时指定图片的适应模式。具体取值如下:
+
+  ```
+  enum BoxFit {
+    fill,
+    contain,
+    cover,
+    fitWidth,
+    fitHeight,
+    none,
+    scaleDown,
+  }
+  ```
+
+- **示例代码如下:**
+
+  ```
+  
+  class ImageDemoContent extends StatelessWidget {
+    final String url =
+        'https://pics2.baidu.com/feed/fc1f4134970a304e410cd2820c348981c8175c9b.jpeg?token=f9c9fd8d67c2cf3c1c152eca34009a3c';
+  
+    @override
+    Widget build(BuildContext context) {
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                  color: Colors.cyan,
+                  child: Image(
+                    image: NetworkImage(url),
+                    width: 120,
+                  )),
+              Text('只设置宽,不设置fit属性')
+            ],
+          ),
+          
+          
+          SizedBox(height: 10,),
+          Row(
+            children: <Widget>[
+              Container(
+                  color: Colors.orange,
+                  child: Image(
+                    image: NetworkImage(url),
+                    width: 120,
+                    height: 120,
+                  )),
+              Text('同时设置宽高, 不设置fit属性')
+            ],
+          ),
+          
+          
+          SizedBox(height: 10,),
+          Row(
+            children: <Widget>[
+              Container(
+                  color: Colors.pink,
+                  child: Image(
+                    image: NetworkImage(url),
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.fill, //会拉伸填充满显示空间，图片本身长宽比会发生变化，图片会变形
+                  )),
+              Text('同时设置宽高, 和fit=fill')
+            ],
+          ),
+          
+          
+          SizedBox(height: 10,),
+          Row(
+            children: <Widget>[
+              Container(
+                  color: Colors.pink,
+                  child: Image(
+                    image: NetworkImage(url),
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover, //会按图片的长宽比放大后居中填满显示空间，图片不会变形，超出显示空间部分会被剪裁。
+                  )),
+              Text('同时设置宽高和 fit= cover')
+            ],
+          ),
+          
+          
+          SizedBox(height: 10,),
+          Row(
+            children: <Widget>[
+              Container(
+                  color: Colors.pink,
+                  child: Image(
+                    image: NetworkImage(url),
+                    width: 120,
+                    height: 120,
+                    // 这是图片的默认适应规则，图片会在保证图片本身长宽比不变的情况下缩放以适应当前显示空间，图片不会变形。
+                    fit: BoxFit.contain,
+                  )),
+              Text('同时设置宽高, 设置fit=contain')
+            ],
+          ),
+          
+          
+          SizedBox(height: 10,),
+          Row(
+            children: <Widget>[
+              Container(
+                  color: Colors.pink,
+                  child: Image(
+                    image: NetworkImage(url),
+                    width: 120,
+                    height: 120,
+                    // fitHeight 图片等比缩放, 高度拉伸到指定高度, 宽度超出会裁剪掉
+                    // fitWidth 图片等比缩放, 宽度拉伸到指定高度, 高度超出会裁剪掉
+                    // 可以把 cover 理解成为fitWidth 或者 fitHeight
+                    fit: BoxFit.fitHeight,
+                  )),
+              Text('同时设置宽高, 设置fit=fitHeight')
+            ],
+          ),
+        ],
+      );
+    }
+  }
+  
+  ```
+
+  ![](images/imagefit1.png)  
+
+
+
+### 4、圆角图片
+
+> 在Flutter中实现圆角效果也是使用一些Widget来实现的。
+
+
+
+#### 1、CircleAvatar 实现圆角
+
+CircleAvatar可以实现圆角头像，也可以添加一个子Widget：
+
+换句话说, CircleAvatar 就是一个实现圆角功能的Widget,  将要显示圆角的Widget使用CircleAvatar包裹配上参数即可
+
+```
+const CircleAvatar({
+  Key key,
+  this.child, *// 子Widget*
+  this.backgroundColor, *// 背景颜色*
+  this.backgroundImage, *// 背景图像*
+  this.foregroundColor, *// 前景颜色*
+  this.radius, *// 半径*
+  this.minRadius, *// 最小半径*
+  this.maxRadius, *// 最大半径*
+})
+```
+
+> 注意:
+>
+> 此处, backgroundImage 是一个ImageProvider类型的参数, 不能直接使用图片
+
+- 示例代码: 
+
+  ```
+  class CircleImageDemo1 extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return CircleAvatar(  
+        backgroundImage: NetworkImage(url),
+        radius: 100 / 2,
+        child: Text('我是 文字', style: TextStyle(fontSize: 20, color: Colors.green),),
+      );
+    }
+  }
+  ```
+
+  ![](images/circleiamge1.png) 
+
+
+
+#### 2、ClipOval 实现圆角
+
+```
+const ClipOval({
+    Key key, 
+    this.clipper, 
+    this.clipBehavior = Clip.antiAlias, 
+    Widget child
+})
+```
+
+通常我们使用ClipOval 来实现圆角头像,默认情况下 ClipOval 会根据子组件的宽高自动实现圆角, 如果子组件宽高相等就是一个圆, 否则就是一个椭圆
+
+ 示例代码如下:
+
+```
+class ClipOvalDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ClipOval(
+          child: Container(
+            color: Colors.green,
+            child: Image(
+              image: NetworkImage(url),
+              width: 100,
+              height: 200,
+            ),
+          )
+        ),
+        
+        SizedBox(height: 10,),
+        
+        ClipOval(
+          child: Container(
+            color: Colors.green,
+            child: Image(
+              image: NetworkImage(url),
+              width: 200,
+              height: 200,
+            ),
+          )
+        ),
+      ],
+    );
+  }
+
+
+}
+```
+
+![](images/clipovaldemo1.png) 
+
+
+
+#### 3、Container + BoxDecoration 实现圆角
+
+## 5、字体图标 icon
+
+
+
+## 6、表单Widget
+
+> 和用户交互的其中一种就是输入框，比如注册、登录、搜索，我们收集用户输入的内容将其提交到服务器。
+
+
+
+### 1、**TextField** 的简单介绍
+
+TextField用于接收用户的文本输入，它提供了非常多的属性，我们来看一下源码：
+
+但是我们没必要一个个去学习，很多时候用到某个功能时去查看是否包含某个属性即可
+
+```
+const TextField({
+  Key key,
+  this.controller,
+  this.focusNode,
+	//  用于设置输入框相关的样式, 如下:
+  //	icon：设置左边显示的图标
+  //  labelText：在输入框上面显示一个提示的文本
+  //  hintText：显示提示的占位文字
+  //  border：输入框的边框，默认底部有一个边框，可以通过InputBorder.none删除掉
+  //  filled：是否填充输入框，默认为false
+  //  fillColor：输入框填充的颜色
+  this.decoration = const InputDecoration(),
+  
+  TextInputType keyboardType,		// 键盘的类型(数字键盘, 文字键盘)
+  this.textInputAction,					// return 键显示的样式
+  this.textCapitalization = TextCapitalization.none,
+  this.style,										// 设置输入框文字样式
+  this.strutStyle,
+  this.textAlign = TextAlign.start,	// 文本对齐方式
+  this.textAlignVertical,
+  this.textDirection,
+  this.readOnly = false,
+  ToolbarOptions toolbarOptions,
+  this.showCursor,
+  this.autofocus = false,
+  this.obscureText = false,
+  this.autocorrect = true,
+  this.maxLines = 1,
+  this.minLines,
+  this.expands = false,
+  this.maxLength,
+  this.maxLengthEnforced = true,
+  this.onChanged,				// 监听输入框内容的改变，传入一个回调函数
+  this.onEditingComplete,
+  this.onSubmitted,			// 点击键盘中右下角的down时，会回调的一个函数
+  this.inputFormatters,
+  this.enabled,
+  this.cursorWidth = 2.0,
+  this.cursorRadius,
+  this.cursorColor,
+  this.keyboardAppearance,
+  this.scrollPadding = const EdgeInsets.all(20.0),
+  this.dragStartBehavior = DragStartBehavior.start,
+  this.enableInteractiveSelection = true,
+  this.onTap,
+  this.buildCounter,
+  this.scrollController,
+  this.scrollPhysics,
+})
+```
+
+
+
+​			
+
+### 2、TextField 的简单使用
+
+示例代码如下:
+
+```
+class TextFieldContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: TextField(
+        keyboardType:TextInputType.text,                  // 键盘的样式(数字键盘, 文字键盘...)
+        textInputAction: TextInputAction.join,            // return 键显示的样式
+        style: TextStyle(color:Colors.red, fontSize: 30), // 输入框的文字样式
+        decoration: InputDecoration (
+          icon: Icon(Icons.people),  // 输入框左边的按钮
+          hintText: '我是占位文字',   // 输入框的占位文字
+          hintStyle: TextStyle(color: Colors.green),
+          filled: true,         // 只有filled为true 时, 才能使用fillColor
+          fillColor: Color.fromARGB(50, 255, 0, 0) // 输入框填充色
+        ),
+        onChanged: (String value ){ // 当输入框的文字发生变化就会回调这个方法, 在这里监听输入框的变化
+          print('textfield change: $value');
+        },
+        onSubmitted: (String value){ // 当用户点击 done 按钮时回调这个方法
+          print('key board down: $value');
+        },
+      ),
+    );
+  }
+}
+```
+
+![](images/textfield1.png) 
+
+
+
+### 3、TextField 的controller
+
+我们可以给TextField添加一个控制器（Controller），可以使用它设置文本的初始值，也可以使用它来监听文本的改变；
+
+> 事实上，
+>
+> 如果我们没有为TextField提供一个Controller，那么会Flutter会默认创建一个TextEditingController的，这个结论可以通过阅读源码得到, 如下:
+>
+> ```
+> @override
+>   void initState() {
+>     super.initState();
+>     // ...其他代码
+>     if (widget.controller == null)
+>       _controller = TextEditingController();
+>   }
+> ```
+
+我们也可以自己来创建一个Controller控制一些内容：
+
+```
+class TextFieldContent2 extends StatefulWidget {
+  @override
+  _TextFieldContent2State createState() => _TextFieldContent2State();
+}
+
+class _TextFieldContent2State extends State<TextFieldContent2> {
+  // 因为我们要个TextField 设置controller, 且只设置一次, 所以我们在 initState 方法中设置最好
+  final textEditingCtr = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 1.通过controller 设置TextField的默认文字
+    textEditingCtr.text = "默认昵称";
+
+    // 2. 监听文本框
+    textEditingCtr.addListener(() {
+      print('text edit ctr listener: ${textEditingCtr.text}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: TextField(
+        controller: textEditingCtr, 
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.all(10), hintText: "请输入昵称"),
+      ),
+
+    );
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+## 7、Form表单
+
+
+
+### 1、Form的基本使用
+
+Form表单也是一个Widget，可以在里面放入我们的输入框。
+
+但是Form表单中输入框必须是FormField类型的
+
+- 我们查看刚刚学过的TextField是继承自StatefulWidget，并不是一个FormField类型；
+- 我们可以使用TextFormField，它的使用类似于TextField，并且是继承自FormField的；
+
+我们通过Form的包裹，来实现一个注册的页面：
+
+```
+
+class FormContent extends StatefulWidget {
+  @override
+  _FormContentState createState() => _FormContentState();
+}
+
+class _FormContentState extends State<FormContent> {
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+        color: Colors.lightGreen,
+
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.people, color: Colors.orange,),
+                hintText: '用户名',
+              ),
+            ),
+
+            SizedBox(height: 10,),
+            TextFormField(
+              obscureText: true,  // 是否显示密码
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock, color: Colors.orange,),
+                hintText: "密码",
+              ),
+            ),
+
+            SizedBox(height: 10,),
+            Container(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Colors.orange,
+                child: Text('点击 注册'),
+                onPressed: (){
+
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+```
+
+![](images/formdemo1.png)  
+
+
+
+
+
+### 2、保存和获取表单数据
+
+**有了表单后，我们需要在点击注册时，可以同时获取和保存表单中的数据，怎么可以做到呢？**
+
+1. 需要监听注册按钮的点击，在之前我们已经监听的onPressed传入的回调中来做即可。（当然，如果嵌套太多，我们待会儿可以将它抽取到一个单独的方法中）
+
+2. 监听到按钮点击时，同时获取`用户名`和`密码`的表单信息。
+
+   
+
+**如何同时获取`用户名`和`密码`的表单信息？** 
+
+如果我们调用`Form的State对象`的save方法，就会调用Form中放入的TextFormField的onSave回调
+
+```
+TextFormField(
+  obscureText: true,  // 是否显示密码
+  decoration: InputDecoration(
+    icon: Icon(Icons.lock, color: Colors.orange,),
+    hintText: "密码",
+  ),
+  onSaved: (value){
+    print('获取到用户密码: ${value}');
+  },
+)
+```
+
+但是，我们有没有办法可以在点击按钮时，拿到 `Form对象` 来调用它的save方法呢？
+
+> 知识点：
+>
+> 在Flutter如何可以获取一个通过一个引用获取一个StatefulWidget的State对象呢？
+
+```
+class FormContent extends StatefulWidget {
+  @override
+  _FormContentState createState() => _FormContentState();
+}
+
+class _FormContentState extends State<FormContent> {
+
+  // 注册一个formkey
+  final registFormKey = GlobalKey<FormState>();
+  String userName, password;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      // 通过formKey.currentState 可以获取到它的State对象
+      key: registFormKey,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+        color: Colors.lightGreen,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.people, color: Colors.orange,),
+                hintText: '用户名',
+              ),
+              onSaved: (value){
+                print('获取到用户名: ${value}');
+                this.userName = value;
+              },
+            ),
+
+            SizedBox(height: 10,),
+            TextFormField(
+              obscureText: true,  // 是否显示密码
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock, color: Colors.orange,),
+                hintText: "密码",
+              ),
+              onSaved: (value){
+                print('获取到用户密码: ${value}');
+                this.password = value;
+              },
+
+            ),
+
+            SizedBox(height: 10,),
+            Container(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Colors.orange,
+                child: Text('点击 注册'),
+                onPressed: (){
+
+                  this.registerForm();
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+
+    );
+  }
+
+  void registerForm(){
+    registFormKey.currentState.save();
+    print(registFormKey.currentState);
+    print('username: ${userName}, password: ${password}');
+  }
+
+}
+```
+
+
+
+### 3、验证填写的表单数据
+
+
+
+在表单中，我们可以添加`验证器`，如果不符合某些特定的规则，那么给用户一定的提示信息
+
+比如我们需要账号和密码有这样的规则：账号和密码都不能为空。
+
+按照如下步骤就可以完成整个验证过程：
+
+- 1、为TextFormField添加validator的回调函数；
+- 2、调用Form的State对象的validate方法，就会回调validator传入的函数；
+
+```
+class FormContent extends StatefulWidget {
+  @override
+  _FormContentState createState() => _FormContentState();
+}
+
+class _FormContentState extends State<FormContent> {
+
+  // 注册一个formkey
+  final registFormKey = GlobalKey<FormState>();
+  String userName, password;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      // 通过formKey.currentState 可以获取到它的State对象
+      key: registFormKey,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+        color: Colors.lightGreen,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.people, color: Colors.orange,),
+                hintText: '用户名',
+              ),
+              onSaved: (value){ // 当调用 form 的save 方法时, 会自动调用 TextFormField 的onSaved 方法, 获取内容
+                print('获取到用户名: ${value}');
+                this.userName = value;
+              },
+              // 我们通过给 TextFormField 添加 验证器来验证数据格式
+              validator: (value){
+                if(value.isEmpty){
+                  return "用户名不能为空";
+                }
+                return null;
+              },
+            ),
+
+            SizedBox(height: 10,),
+            TextFormField(
+              obscureText: true,  // 是否显示密码
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock, color: Colors.orange,),
+                hintText: "密码",
+              ),
+              onSaved: (value){
+                print('获取到用户密码: ${value}');
+                this.password = value;
+              },
+              // 我们通过给 TextFormField 添加 验证器来验证数据格式
+              validator: (value){
+                if(value.isEmpty){
+                  return "密码不能为空";
+                }
+                return null;
+              },
+
+            ),
+
+            SizedBox(height: 10,),
+            Container(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Colors.orange,
+                child: Text('点击 注册'),
+                onPressed: (){
+
+                  this.registerForm();
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+
+    );
+  }
+
+  void registerForm(){
+    // 获取form 中每个 TextFormField 的文字内容
+    registFormKey.currentState.save();
+    // 通过调用 validate 方法验证 TextFormField的数据
+    registFormKey.currentState.validate();
+
+    print(registFormKey.currentState);
+    print('username: ${userName}, password: ${password}');
+  }
+
+}
+```
+
+![](images/textformfieldvalidate1.png) 
+
+
+
+也可以为TextFormField添加一个属性：autovalidate
+
+- 不需要调用validate方法，会自动验证是否符合要求；
+
+```
+TextFormField(
+  obscureText: true,  // 是否显示密码
+  decoration: InputDecoration(
+    icon: Icon(Icons.lock, color: Colors.orange,),
+    hintText: "密码",
+  ),
+  onSaved: (value){
+    print('获取到用户密码: ${value}');
+    this.password = value;
+  },
+  // 通过自动验证数据格式, 不需要调用 form 的validate() 方法
+  autovalidate: true,
+  // 我们通过给 TextFormField 添加 验证器来验证数据格式
+  validator: (value){
+    if(value.isEmpty){
+      return "密码不能为空";
+    }
+    return null;
+  },
+
+)
+```
+
+
+
+# 十三、flutter 布局
+
+在我们前面有用到的 `Button` 、`Image` 、`TextField` 、`Text` 、`Icon`  这些我们在flutter中一般称为叶子组件. 
+
+
+
+为了实现界面内组件的各种排布方式，我们需要进行布局，和其他端不同的是，Flutter中因为万物皆Widget，所以布局也是使用Widget来完成的。
+
+Flutter中的布局组件非常多，有31个用于布局的组件，**Flutter布局组件**
+
+在学习的过程中，我们没必要一个个全部掌握，掌握最常用的，一些特殊的组件用到时去查文档即可；
+
+
+
+> Flutter将布局组件分成了 `单子布局组件`（Single-child layout widgets） 和 `多子布局组件`（Multi-child layout widgets）
+
+## 1、单子布局组件
+
+> 单子布局组件的含义是其只有一个子组件, 可以通过设置一些属性设置改子组件所在的位置信息.
+>
+> 比如: 常用的单子布局组件有:
+>
+> `Align` 、`Center` 、`Padding`、`Container`
+
+
+
+### 1、Align 布局组件
+
+> 看到`Align`这个词，我们就知道它有我们的对齐方式有关。
+>
+> 在其他端的开发中（iOS、Android、前端）Align通常只是一个属性而已，但是Flutter中Align也是一个组件。
+
+我们可以通过源码来看一下Align有哪些属性：
+
+```
+const Align({
+  Key key,
+  this.alignment: Alignment.center, // 对齐方式，默认居中对齐
+  this.widthFactor, // 宽度因子，不设置的情况，会尽可能大
+  this.heightFactor, // 高度因子，不设置的情况，会尽可能大
+  Widget child // 要布局的子Widget
+})
+```
+
+
+
+这里我们特别解释一下`widthFactor`和`heightFactor`作用：
+
+- 因为子组件在父组件中的对齐方式必须有一个前提，就是父组件得知道自己的范围（宽度和高度）；
+
+- 如果`widthFactor`和`heightFactor`不设置，那么默认Align会尽可能的大
+
+  换句话说, 如果没有设置 widthFactor 和 heightFactor 那么Align占据的大小同父组件的宽高一样
+
+  如果设置了WidthFactor 和 heightFactor 那么Align 的宽度和高度就是子组件的 对应倍数.
+
+  
+
+  ```
+  class SingleChildContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Align(
+        child: Icon(Icons.people, size: 40,),
+        alignment: Alignment.bottomRight,
+        widthFactor: 2,  // 宽度因子, Align的宽度为Icon的2倍
+        heightFactor: 2, // 高度因子, Align的高度为Icon的2倍
+      );
+    }
+  }
+  ```
+
+  ![Snip20200827_3](images/Snip20200827_3.png) 
+
+
+
+### 2、Center 布局组件
+
+Center组件我们在前面已经用过很多次了。
+
+事实上Center组件继承自Align，只是将alignment设置为Alignment.center。
+
+源码分析：
+
+```
+class Center extends Align {
+  const Center({
+    Key key,
+    double widthFactor,
+    double heightFactor,
+    Widget child
+  }) : super(key: key, widthFactor: widthFactor, heightFactor: heightFactor, child: child);
+}
+```
+
+示例:
+
+```
+class CenterContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Icon(Icons.people, size: 40,),
+      widthFactor: 2,
+      heightFactor: 2,
+    );
+  }
+}
+```
+
+![](images/centerdemo1.png) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 3、Padding 布局组件
+
+> Padding组件在其他端也是一个属性而已，但是在Flutter中是一个Widget，但是Flutter中没有Margin这样一个Widget，这是因为外边距也可以通过Padding来完成。
+>
+> Padding通常用于设置子Widget到父Widget的边距（你可以称之为是父组件的内边距或子Widget的外边距）。
+
+源码分析：
+
+```
+const Padding({
+  Key key,
+  @required this.padding, // EdgeInsetsGeometry类型（抽象类），使用EdgeInsets
+  Widget child,
+})
+```
+
+示例:
+
+```
+class PaddingContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          "莫听穿林打叶声，何妨吟啸且徐行。竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。",
+          style: TextStyle(
+              color: Colors.redAccent,
+              fontSize: 18
+          ),
+        )
+    );
+  }
+}
+```
+
+![](images/paddingdemo1.png) 
+
+
+
+## 2、Container 布局组件(重要!!! )
+
+> Container在开发中被使用的频率是非常高的，特别是我们经常会将其作为容器组件。
+
+下面我们来看一下Container有哪些属性：
+
+```
+Container({
+  this.alignment,
+  this.padding, //容器内补白，属于decoration的装饰范围
+  Color color, // 背景色
+  Decoration decoration, // 背景装饰
+  Decoration foregroundDecoration, //前景装饰
+  double width,//容器的宽度
+  double height, //容器的高度
+  BoxConstraints constraints, //容器大小的限制条件
+  this.margin,//容器外补白，不属于decoration的装饰范围
+  this.transform, //变换
+  this.child,
+})
+```
+
+
+
+- 在flutter的开发中, Container 是一个比较特殊的布局组件, 一个Container 容器布局组件具体显示占据多大的空间情况是比较多的, 后面我们会详细的讲解.
+
+- 在讲解Container 布局组件前我们需要先来了解一下在flutter中关于组件的布局流程:
+
+  
+
+### 1 、flutter布局流程及原理介绍
+
+- 大家知道, 我们在flutter开发中, 各种widget 最后都是形成一棵树结构, 最后渲染出来的是一棵RenderObjectTree.
+
+- Flutter 的布局流程其实是这样的, 首先父节点会告诉子节点自己的盒约束Constraits`(一般是BoxConstraints)`,  在BoxConstraits中主要有`minWidth`、`maxWidth`、`minHeight`、`maxHeight` 信息用于描述自己的宽高范围, 当子节点(Renderobject) 拿到父节点约束信息后就知道父节点的宽高范围了, 然后子节点就在父节点的宽高范围内对自己做一个布局调整(比如: 对自己的大小做一个调整, 自己的显示方式调整(比如ListView可以滚动) ). 调整完后父节点就知道子节点的尺寸了且子节点会再将自己的盒约束Constraints 传给自己的子节点, 一层层的布局.
+
+  > 比如说:  父节点是一个Row且盒约束的 maxWidth是 100, 但是 有3个子节点分别的宽度是`50`、`40`、`30`  , 显然 50+40+30 的宽度是超过了父节点的盒约束宽度的, 此时就会报 黄条的越界警告, 说布局错误. 其实父节点在布局子节点的时候会计算一下所有子节点的size 判断是否会越界, 发现越界了就会抛出越界的错误并绘制黄条的警告,如下图
+
+  ![column1](images/column1.png) 
+
+  换句话说, 在我们的flutter布局中, 子节点会根据父节点的盒约束BoxConstraits来调整自己的大小, 不同的子节点有各自调整大小的方式, 子节点调整完自己的大小后会将自己的尺寸再汇报给父节点.
+
+  也就是说, 父节点先将自己的盒约束Constraints传递给子节点, 子节点拿到父节点的盒约束Constraints后再根据父节点的盒约束Constraints调整自己的尺寸, 尺寸调整完成后再将自己的尺寸汇报给父节点, 父节点拿到子节点的尺寸后就知道具体的子节点如何排布, 布局了.
+
+  > 比如说, 父节点知道了子节点的尺寸后, 父节点结合 主轴的对齐方式MainAxisAlignment 以及侧轴的对齐方式CrossAxisAlignment 对子节点进行布局了, 等等...
+
+	
+
+	### 2、flutter 布局总结 
+
+- 父节点会将自己的盒约束传递给子节点, 告诉子节点自己的宽高范围.
+
+- 子节点拿到父节点的盒约束后, 就知道了父节点的宽高范围, 然后子节点就根据父节点的宽高范围调整自己的尺寸以及显示方式
+
+  >  比如:Column 和ListView 作为子节点时调整方式和显示就不一样.
+
+- 子节点根据父节点的盒约束调整完成尺寸和显示方式后, 父节点就知道了子节点的大小, 父节点再根据主轴和侧轴的对齐方式等等,来调整子节点的显示位置 position, 这样整个布局就完成了.
+
+- 当然, 如果子节点还有自己的子节点的话, 就这样一层层的调整, 最后就完成了所有的显示布局了.
+
+
+
+### 3、Container 中常见的几种布局介绍
+
+在我们的官方文档中, 对于Container 的描述, 有这么一句总结, 如下:
+
+> Summary:
+>
+> Container tries, in honor to alignment, to size itself to the child,  to honor the width、 height, and constraints, to expand to fit parent, to be as small as posible.
+>
+> 翻译: 容器Container尝试，为了对齐，根据子对象调整自身大小，遵循宽度、高度和约束，扩展以适合父对象，尽可能小。
+
+这句话怎么理解呢? 
+
+是这样, Container这个容器为了对齐Alignment , 它会根据子节点的尺寸, 或者设置的宽高, 或者设置的constraints来调整自己的大小, 又或者如果Contianer这个组件内没有设置子节点 或者 宽高 或则 constraints时container 就和父节点一样大.
+
+```
+import 'package:flutter/material.dart';
+main(List<String> args){
+  runApp(YRApp());
+}
+
+class YRApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: true,
+      home: HomePage()
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('我是标题'),
+      ) ,
+      body: ContainerContent(),
+    ) ;
+
+  }
+}
+
+```
+
+**示例如下:**
+
+- **表现1:**
+
+  根据子节点调整自己的大小, 子节点有多大自己就多大, 即Container包裹子节点.
+
+  > 即,默认情况下, Container 是包裹子节点的, 子节点多大,Container就占多大
+
+  ```
+  // Container占据的大小就是 子节点的大小
+  class ContainerContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Container(
+        color: Colors.green,
+        child: Text('我 是container 的文本'),
+      );
+    } 
+  }
+  ```
+
+  ![](images/container_1.png) 
+
+- **表现2:**
+
+   根据Container 中设置的width 和 height 来调整自己的大小, 
+
+  > 即,如果Container 中设置了 width 或 height 那么Container就按照具体的宽高显示
+
+  ```
+  // Container 占据的大小就是 width 和 height 描述的大小
+  class ContainerContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Container( // 按照宽200, 高100 显示
+        width: 200,
+        height: 100,
+        color: Colors.green,
+        child: Text('我 是container 的文本'),
+      );
+    } 
+  }
+  ```
+
+  ```
+  // Container 占据的高度是 height指定的, 宽度为子节点的宽度
+  class ContainerContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Container( // 按照高100, 宽度为子节点的宽 显示
+        height: 100,
+        color: Colors.green,
+        child: Text('我 是container 的文本'),
+      );
+    } 
+  }
+  ```
+
+  ```
+  // Container 占据的高度是子节点的高度, 宽度是指定的width
+  class ContainerContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Container( // 按照宽200, 高度为子节点的高 显示
+        width: 200,
+        color: Colors.green,
+        child: Text('我 是container 的文本'),
+      );
+    } 
+  }
+  ```
+
+  ![](images/container_21.png)  ![](images/container_23.png) ![](images/container_22.png)  
+
+- **表现3: ** 
+
+- 当Container中没有设置 width 和 height 且没有子节点时, Container 会扩展到和父节点一样大
+
+  > 即, 如果仅仅是一个Container, 则container 会和父节点一样大
+
+  ```
+  // Container中没有子节点, 也没有设置任何宽高信息, Contianer 占据的大小就是 父节点的大小
+  class ContainerContent extends StatelessWidget {
+  
+    @override
+    Widget build(BuildContext context) {
+      return Container( // 父节点有多大, container 就多大
+        color: Colors.green,
+      );
+    } 
+  } 
+  
+  // Container中没有子节点
+  // 只设置了高度信息,高度为 height所指定, 宽度就位父节点宽度
+  class ContainerContent extends StatelessWidget {		
+    @override
+    Widget build(BuildContext context) {
+        return Container( // 高度200, 宽和父节点一样高
+          height: 200,
+          color: Colors.green,
+        );
+      } 
+  }
+  
+  // Container中没有子节点
+  // 只设置了宽度信息,宽度为 width所指定, 高度就位父节点高度
+  class ContainerContent extends StatelessWidget {
+    @override Widget build(BuildContext context) {
+      return Container( // 高度200, 宽和父节点一样高
+        width: 200,
+        color: Colors.green,
+      );
+  	}
+  }
+  ```
+  
+   ![](images/container_31.png) ![](images/container_32.png) ![](images/container_33.png) 
+
+
+
+### 4、Container 布局总结
+
+上面我们对flutter的布局流程原理以及Container 布局的几种常见情况都做了一些简单的介绍和示例, 其实还有一些其它情况这里就不介绍了, 后面用到再说. 
+
+其实, 从前面几个Container 的布局情况我们可以发现一个特点, 就是 只要在Container内部能获取到 宽高相关的信息, 那么Container 在展示的时候就会按照已知的宽高信息来展示, 如果Container 没有获取到具体的宽高信息, 那么他就和父节点一样宽或这一样高
+
+
+
+> 其实, 
+>
+> - 当我们在给Container 这个Widget 指定 `child` 元素时, 或者 设置 `width 、height`  或者设置 `constraints` 时, 都算是给Container 提供宽高信息. 
+> - 只要Container 能拿到宽高信息, 它就会按照指定的宽高信息来展示, 否则就按照父元素的宽高来展示
+>
+> 这就是我在使用Container 是总结到的一些特点. 
+
+**其实, Container的布局还远不止我们上面介绍的几种情况, 它还有 padding 属性, margin属性, alignment属性, 这些都会影响整个Container 的显示的, 后续我们再细讲**
+
+
+
+### 5、Container 中的 padding、margin、 alignment属性
+
+
+
+在Container中, 除了我们前面提到的 `width` 、`height` 、`constraints`、`child` 属性外, 还有 `padding` 、`margin` 和 `alignment` 属性. 这些都会影响我们的container 的显示以及所占据的位置的. 
+
+
+
+### 6、Container 中BoxDecoration
+
+圆角、阴影
+
+Container 有一个非常重要的属性`decoration` , 它对应的是`Decoration` 类型, 不过他是抽象类我们不能直接用, 一般我们在开发中使用它的子类`BoxDecoration`
+
+- BoxDecoration 常见属性
+
+  ```
+  const BoxDecoration({
+      this.color, // 颜色，会和Container中的color属性冲突
+      this.image, // 背景图片
+      this.border, // 边框，对应类型是Border类型，里面每一个边框使用BorderSide
+      this.borderRadius, // 圆角效果
+      this.boxShadow, // 阴影效果
+      this.gradient, // 渐变效果
+      this.backgroundBlendMode, // 背景混合
+      this.shape = BoxShape.rectangle, // 形变
+    })
+  ```
+
+- 示例:
+
+  ```
+  class BoxDecotationContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Center(
+        child: Container(
+          width: 150,
+          height: 150,
+          child: Icon(
+            Icons.pets,
+            size: 50,
+          ),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Colors.amber,
+  //          border: Border( // 单独设置边框
+  //              top: BorderSide(  width: 2, style: BorderStyle.solid, color: Colors.red),
+  //              left: BorderSide(  width: 2, style: BorderStyle.solid, color: Colors.green),
+  //              bottom: BorderSide(  width: 2, style: BorderStyle.solid, color: Colors.blue),
+  //              right: BorderSide(  width: 2, style: BorderStyle.solid, color: Colors.cyan)
+  //          ),
+              border: Border.all(
+                  // 同时设置边框
+                  width: 3,
+                  color: Colors.redAccent,
+                  style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(
+                  20) ,// 注意: 如果要同时设置边框和圆角时, 边框只能使用Border.all的方式设置
+  //            shape: BoxShape.circle,  // shape 不能同时和borderRadius 同时用, 要冲突
+              boxShadow: <BoxShadow>[ // 可以同时设置多个阴影
+                BoxShadow(
+                  offset: Offset(15,15),  // 阴影的偏移量
+                  color: Colors.purple,
+                  blurRadius: 5           // 阴影的模糊度
+                ),
+                BoxShadow(
+                  offset: Offset(5,5),
+                  color: Colors.green,
+                  blurRadius: 3           // 阴影的模糊度
+                )
+  
+              ],
+            //渐变你色
+            gradient: LinearGradient(
+              colors: [
+                Colors.red, Colors.orange,Colors.blue, Colors.yellow
+              ]
+            )
+              ),
+  
+        ),
+      );
+    }
+  }
+  
+  ```
+
+  ![](images/containerboxdecoration1.png) 
+
+
+
+### 7、实现圆角图片
+
+前面我们提到可以通过 `Container+BoxDecoration`来实现圆角图像。
+
+示例代码:
+
+```
+class CircleContainerContent extends StatelessWidget {
+  String url =
+      "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=206669978,1648196901&fm=26&gp=0.jpg";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Center(
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+                color: Colors.yellow,
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                    image: NetworkImage(url), fit: BoxFit.cover)),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        Center(
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(url), fit: BoxFit.cover),
+                color: Colors.yellow,
+                shape: BoxShape.circle),
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+
+![](images/ContainerCircle.png) 
+
+
+
+## 3、多子布局
+
+> 在开发中，我们经常需要将多个Widget放在一起进行布局，比如水平方向、垂直方向排列，甚至有时候需要他们进行层叠，比如图片上面放一段文字等；
+>
+> 这个时候我们需要使用多子布局组件（Multi-child layout widgets）。
+>
+> 比较常用的多子布局组件是Row、Column、Stack，我们来学习一下他们的使用。
+
+
+
+### 1、Flex 组件
+
+事实上, 我们即将学习的`Row` 组件和 `Column` 组件都继承自`Flex` 组件
+
+- Flex 组件和 Row 、Column 组件的主要区别就是多了一个 direction属性
+- 当direction属性的值为 Axis.horizontal的时候, 则为 Row
+- 当direction属性的值为 Axis.vertical的时候, 则为column.
+
+在学习Row和Column之前, 我们先学习一下`主轴` 和`交叉轴(侧轴)` 的概念
+
+![](images/mainX.jpg) 
+
+因为Row是一行排布的, Column是一列排布的, 那么他们都存在两个方向, 并且两个Widget排列的方向应该是对立的. 
+
+不管是在`Row` 中, 还是在`Column` 中, 都存在主轴和交叉轴(侧轴) 的概念.
+
+在Flex 布局中我们需要知道Row 和 Column 常用的几个属性: 
+
+- `mainAxisAlignment` 主轴的排布方式
+- `mainAxisSize` 主轴的大小
+- `crossAxisAlignment` 侧轴的排布方式
+- `textDirection` 文字的方向
+- `verticalDirection` 主轴的方向
+- `textBaseline` 基线的对齐方式
+
+```
+// 文字的方向
+enum TextDirection {
+ 	rtl,
+	ltr,
+}
+
+// 主轴的排布方式
+enum MainAxisAlignment {
+  start,
+  end,
+  spaceBetween,
+  spaceAround,
+  spaceEvenly,
+}
+
+// 交叉轴排布方式
+enum CrossAxisAlignment {
+  start,
+  end,
+  center,
+  stretch,		// 每个子组件在交叉轴上 拉满父组件的 范围
+  baseline,
+}
+
+// 主轴的排布方向
+enum VerticalDirection {
+  up,
+	down,
+}
+
+// 基线对齐方式 (有文字时, 效果更明显)
+enum TextBaseline {
+  alphabetic,
+	ideographic,
+}
+
+// 组件在主轴上占用的空间的大小
+enum MainAxisSize {
+  min,	// 主轴方向上占用尽量小的空间(包裹子组件内容)
+  max,	// 主轴方向上占用尽量大的空间(一般是父组件有多大就占用多大)
+}
+```
+
+
+
+### 2、Row 组件
+
+> Row组件用于将所有的子Widget排成一行，实际上这种布局应该是借鉴于Web的Flex布局。
+>
+> 如果熟悉Flex布局，会发现非常简单。
+
+Row 组件的特点:
+
+- 水平方向尽可能占用比较大的空间
+- 垂直方向尽量占用小比较小的空间(包裹内容)
+
+```
+Row(
+  // Row默认情况下
+  // 在水平会尽量占用较大的空间
+  // 在垂直方向上会占用较小的空间(包裹子组件内容 )
+  // 但是最终, 在主轴上占用较多的还是占用较少的空间, 我们可以通过 mainAxisSize 来控制
+  children: <Widget>[
+    Text('Row 的文字内容', style: (TextStyle(backgroundColor: Colors.green)),)
+  ],
+);
+
+Row(
+  // 我们可以通过 mainAxisSize 来控制, 主轴上占用的空间大小
+  mainAxisSize: MainAxisSize.min,
+  children: <Widget>[
+    Text('Row 的文字内容', style: (TextStyle(backgroundColor: Colors.green)),)
+  ],
+);
+```
+![](images/row-max.png) ![](images/row-min.png) 
+
+
+
+### 3、Column
+
+
+
+### 4、可伸缩组件
+
+`Flexible ` 和 `Expanded` 伸缩, 变大和变小
+
+
+
+## 4、Stack 组件
+
+在开发中 , 我们多个组件很有肯能需要重叠显示, 比如: 在一张图片上显示一个文字或者一个按钮
+
+在Android 中可以使用 Frame来实现, 在web端可以使用绝对定位, 在flutter中我们需要使用层叠布局 Stack
+
+
+
+### 1、Stack 介绍
+
+```
+import 'package:flutter/material.dart';
+main(List<String> args){
+  runApp(YRApp());
+}
+
+
+class YRApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: true,
+      home: HomePage()
+    );
+  }
+}
+
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('我是标题'),
+      ) ,
+      body: StackContent(),
+    ) ;
+
+  }
+}
+
+class StackContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    /**
+     * 1. 在我们开发中, Stack 默认的大小是包裹内容的, 也就是说在Stack 中最大的child 有多大, Stack就占据多大
+     * 换句话说, 默认情况下Stack是包裹所有内容的
+     * 2. 在Stack中所有的 child 是按照 数组children 中书写的顺序层第的, 后面的child盖在前面的child上面, 在Stack
+     * 中是没有 网页中的Zindex 层叠顺序这一说法的, 如果要改变层叠顺序, 那么修改 数组children中的元素顺序即可
+     * 3. 在Stack 中, 虽然我们能让所有的子组件之间出现层叠(一层盖一层)的效果, 我们也能控制子组件的显示位置, 但是我们
+     * 只能通过alignment控制所有子组件的对齐方式, 不能单个的指定位置
+     *4. 在Stack 中也有一个 fit 属性, 默认你情况下是 loose按照子组件默认的大小排布, 也可以是 expand 表示和父组件一样大表示的是拉伸
+     * 如果Stack的fit 是StackFit.expand 的话, 所有的子元素都会被拉升到父组件的大小
+     */
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      fit: StackFit.expand,
+      children: <Widget>[
+
+        Container(
+          width: 180,
+          height: 100,
+          color: Colors.cyan,
+        ),
+        Image.asset("asset/images/card@1x.png", width: 200,),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+          Text('wo shi wen ben ', style: TextStyle(backgroundColor: Colors.red),)
+        ],)
+      ],
+    );
+  }
+}
+```
+
+- 在我们开发中, Stack 默认的大小是包裹内容的, 也就是说在Stack 中最大的child 有多大, Stack就占据多大,换句话说, 默认情况下Stack是包裹所有内容的
+- 在Stack中所有的 child 是按照 数组children 中书写的顺序层第的, 后面的child盖在前面的child上面, 在Stack中是没有 网页中的Zindex 层叠顺序这一说法的, 如果要改变层叠顺序, 那么修改 数组children中的元素顺序即可
+- 在Stack 中, 虽然我们能让所有的子组件之间出现层叠(一层盖一层)的效果, 我们也能控制子组件的显示位置, 但是我们只能通过alignment控制所有子组件的对齐方式, 不能单个的指定位置
+- 在Stack 中也有一个 fit 属性, 默认你情况下是 loose按照子组件默认的大小排布, 也可以是 expand 表示和父组件一样大表示的是拉伸,如果Stack的fit 是StackFit.expand 的话, 所有的子元素都会被拉升到父组件的大小
+
+```
+
+import 'package:flutter/material.dart';
+main(List<String> args){
+  runApp(YRApp());
+}
+
+
+class YRApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: true,
+      home: HomePage()
+    );
+  }
+}
+
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('我是标题'),
+      ) ,
+      body: StackContent(),
+    ) ;
+
+  }
+}
+
+class StackContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    /**
+     * 1. 在我们开发中, Stack 默认的大小是包裹内容的, 也就是说在Stack 中最大的child 有多大, Stack就占据多大
+     * 换句话说, 默认情况下Stack是包裹所有内容的
+     * 2. 在Stack中所有的 child 是按照 数组children 中书写的顺序层第的, 后面的child盖在前面的child上面, 在Stack
+     * 中是没有 网页中的Zindex 层叠顺序这一说法的, 如果要改变层叠顺序, 那么修改 数组children中的元素顺序即可
+     * 3. 在Stack 中, 虽然我们能让所有的子组件之间出现层叠(一层盖一层)的效果, 我们也能控制子组件的显示位置, 但是我们
+     * 只能通过alignment控制所有子组件的对齐方式, 不能单个的指定位置
+     *4. 在Stack 中也有一个 fit 属性, 默认你情况下是 loose按照子组件默认的大小排布, 也可以是 expand 表示和父组件一样大表示的是拉伸
+     * 如果Stack的fit 是StackFit.expand 的话, 所有的子元素都会被拉升到父组件的大小
+     */
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      fit: StackFit.expand,
+      children: <Widget>[
+
+        Container(
+          width: 180,
+          height: 100,
+          color: Colors.cyan,
+        ),
+        Image.asset("asset/images/card@1x.png", width: 200,),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+          Text('wo shi wen ben ', style: TextStyle(backgroundColor: Colors.red),)
+        ],)
+      ],
+    );
+  }
+}
+```
+
+
+
+#### 2、Stack 结合 Positon组件实现 层叠绝对定位
+
+```
+
+import 'package:flutter/material.dart';
+main(List<String> args){
+  runApp(YRApp());
+}
+
+
+class YRApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: true,
+      home: HomePage()
+    );
+  }
+}
+
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('我是标题'),
+      ) ,
+      body: StackContent(),
+    ) ;
+
+  }
+}
+
+class StackContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    /**
+     * 使用Stack 的正确姿势
+     * 1. 使用一个设置的 宽高的Container 包裹Stack
+     * 2. 设置Stack 的fit 属性为StackFit.expand 即将Stack 扩展为Container的大小
+     * 3. Stack的children 属性中的所有子组件 均 使用 Position 组件包裹
+     * 4. 在Position组件中 包裹上要显示的 具体组件即可, 比如: Text 或者 Image 等等
+     */
+    return Container(
+      width: double.infinity,
+      height: 200,
+      color: Colors.green,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Positioned(
+            left: 0,
+            top: 0,
+            child: Image.asset('asset/images/card@1x.png', width: 150,),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Text('我是 Stack 中的 position 中的text的文本',
+              style: TextStyle(backgroundColor: Colors.orange),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+```
+
+ 
+
+![](images/stackfit0.png)  
+
+
+
+## 5、滚动的Widget
+
+列表是移动端经常使用的一种视图展示方式, 在flutter中提供了 ListView 和 GridView
+
+
+
+### 1、ListView  组件
+
+> 移动端数据量比较大时，我们都是通过列表来进行展示的，比如商品数据、聊天列表、通信录、朋友圈等。
+>
+> 在Android中，我们可以使用ListView或RecyclerView来实现，在iOS中，我们可以通过UITableView来实现。
+>
+> 在Flutter中，我们也有对应的列表Widget，就是ListView。
+
+创建ListView 通常有4种方式:
+
+- 方式1: 默认构造方法:`ListView()` 
+
+- 方式2: `ListView.builder()`
+
+- 方式3: `ListView.separated()`
+
+- 方式4: `ListView.custom()` 
+
+#### 1、ListView 的基本使用
+
+```
+class ListViewContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+    	// List.generate 是一个数组构造函数, 可以构建一个指定数量的数组List
+      children: List.generate(50, (index){
+        return   Padding(
+          padding: EdgeInsets.all(10),		// 为了让文字显示的更好看, 使用了padding 包裹
+          child: Text('ListView 基本使用 $index'),
+        );
+      }),
+    );
+  }
+}
+```
+
+![](images/listviewdemo1.png) 
+
+
+
+#### 2、ListTile 的使用
+
+在开发中, 我们经常见到一种列表, 有图标、有标题、副标题, 尾部还有图标, 这种样式, 我们可以使用flutter为我们提供的 `ListTile`
+
+```
+class ListTileContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: List.generate(30, (index) {
+        return ListTile(
+        leading: Icon(Icons.people, size: 30,color: Colors.green,),
+        title: Text('通讯录: $index') ,
+        subtitle: Text('子标题'),
+        trailing: Icon(Icons.delete, size: 15, color: Colors.red,),
+        );
+      }),
+    );
+  }
+}
+```
+
+![](images/listviewdemo2.png) 
+
+
+
+#### 3、ListView 实现水平滚动
+
+我们在使用ListView时, 最多的应用场景是用来做垂直方向的列表, 但是我们也可以使用ListView 来实现水平的滚动
+
+```
+class ListViewHScrollContennt extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      // 设置滚动方向
+      scrollDirection: Axis.horizontal,
+      // 设置行高(列宽)
+      itemExtent: 200,
+      
+      children: List.generate(30, (index) {
+        return ListTile(
+          leading: Icon(
+            Icons.people,
+            size: 30,
+            color: Colors.green,
+          ),
+          title: Text('通讯录: $index'),
+          subtitle: Text('子标题'),
+          trailing: Icon(
+            Icons.delete,
+            size: 15,
+            color: Colors.red,
+          ),
+        );
+      }),
+    );
+  }
+}
+```
+
+
+
+#### 4、ListView.builder 的基本使用
+
+我们在使用ListView时, 如果要显示的数量很少就可以直接使用ListView的默认构造方法`ListView()` 来实现, 但是如果数据量大了的话就不能直接使用默认的构造方法, 因为ListView在使用默认构造方法时时全量加载所有的子Widget, 不论显示与否, 当数据量很大的时候这是有很大的性能开销的. 
+
+如果数据量大的话, 我们需要使用ListView另外的方法来实现, 一般我们使用 `ListView.builder()` , 在ListView.builder 中要求我们传递2个参数, 参数一是要显示的子组件的数量, 参数2是一个回调函数, 用来加载要显示的子组件.
+
+```
+class ListViewBuilderContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: 30,
+       
+      // itemBuilder 是一个item的一个构造器, 将要显示某一行时才会加载某一行, 降低性能消耗
+      itemBuilder:(BuildContext context, int index){
+        return ListTile(
+          leading: Icon(Icons.people, color: Colors.green,),
+          title: Text('wo shi biaoti $index'),
+          subtitle: Text('wo shi zi biaoti '),
+          trailing: Icon(Icons.delete, color: Colors.red,),
+        );
+      }
+
+    );
+  }
+}
+```
+
+![](images/listviewdemo3.png) 
+
+
+
+#### 5、ListView.separated 的简单使用
+
+`ListView.separated`可以生成列表项之间的分割器，它比`ListView.builder`多了一个`separatorBuilder`参数，该参数是一个分割器生成器。 你可以这样理解, 在ListView 中通过itemBuilder来构造一个个的要显示的item, 通过separatedBuilder 来构建一个个要显示的分割线
+
+```
+// 带分割线的 ListView
+class ListViewSeparatedContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+        itemCount: 50,
+        
+        // itemBuilder 是每一个item的构造函数, 用于显示每一行
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            leading: Icon(
+              Icons.people,
+              color: Colors.green,
+            ),
+            trailing: Icon(Icons.delete, color: Colors.red),
+            title: Text('我是 ListViewSepatated 的 title'),
+            subtitle: Text('我是 listViewSeparated 的 subtitle'),
+          );
+        },
+        
+        // separaterBuilder 是每一个分割线的构造函数, 用于显示分割线
+        separatorBuilder: (BuildContext context, int index) {
+          return Divider(  		// 我们可以使用 Divider 做分割线
+            height: 1,
+            thickness: 1,  		// 分割线的粗细
+            color:  index % 2 == 0 ?  Colors.orange : Colors.green,
+            indent: 30,     	// 前面缩进的距离
+            endIndent: 30,  	// 尾部缩进的距离
+          );
+        });
+  }
+}
+```
+
+![](images/listviewdemo4.png) 
+
+
+
+### 2、GridView
+
+在我们flutter开发中, 我们除了可以使用ListView来实现表格的效果, 我们也可以使用GridView来实现类似的效果
+
+GridView 主要有几个方法:
+
+- `GridView()` 默认构造方法
+- `GridView.count`
+- `GridView.extent`
+- `GridVeiw.builder` 
+
+
+
+#### 1、GridView 默认构造函数的使用
+
+一种使用GridView的方式就是使用构造函数来创建，和ListView对比有一个特殊的参数：`gridDelegate`
+
+`gridDelegate`用于控制交叉轴的item数量或者宽度，需要传入的类型是SliverGridDelegate，但是它是一个抽象类，所以我们需要传入它的子类：**SliverGridDelegateWithFixedCrossAxisCount** 或 **SliverGridDelegateWithMaxCrossAxisExtent**
+
+
+
+- 交叉轴上固定数量 的 item , 使用`SliverGridDelegateWithFixedCrossAxisCount` 
+
+  > SliverGridDelegateWithFixedCrossAxisCount({
+  >   @required double crossAxisCount, *// 交叉轴的item个数*
+  >   double mainAxisSpacing = 0.0, *// 主轴的间距*
+  >   double crossAxisSpacing = 0.0, *// 交叉轴的间距*
+  >   double childAspectRatio = 1.0, *// 子Widget的宽高比*
+  > })
+
+  ```
+  class GridViewContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return GridView(
+  
+        // 在gridView 中我们通过 gridDelegate 来控制交叉轴上子widget显示的数量
+        // 以及子widget之间的间距
+        gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // 交叉轴上item的数量
+            crossAxisSpacing: 10, // 交叉轴间距(列间距)
+            mainAxisSpacing: 20,  // 主轴间距(行间距)
+            childAspectRatio:1.5 // 子元素item的宽高比
+        ) ,
+  
+        children: List.generate(30, (index) {
+          return Container(
+            alignment: Alignment.center,
+            color: Color.fromARGB(255, Random().nextInt(255), Random().nextInt(255), Random().nextInt(255)),
+            child: Text('index: $index'),
+          );
+        }),
+      );
+    }
+  }
+  ```
+
+  ![](images/gridviewdemo1.png) 
+
+- 交叉轴上使用非固定个数 item, 使用`SliverGridDelegateWithMaxCrossAxisExtent` 
+
+  > SliverGridDelegateWithMaxCrossAxisExtent({
+  >   double maxCrossAxisExtent, *// 交叉轴的item宽度*
+  >   double mainAxisSpacing = 0.0, *// 主轴的间距*
+  >   double crossAxisSpacing = 0.0, *// 交叉轴的间距*
+  >   double childAspectRatio = 1.0, *// 子Widget的宽高比*
+  > })
+
+  ```
+  class GridViewContent2 extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return GridView(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200, // 交叉轴上最大的item宽度, 很多时候实际达不到这个宽度
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 30,
+            childAspectRatio: 3
+        ),
+        children: List.generate(30, (index) {
+          return Container(
+            alignment: Alignment.center,
+            color: Color.fromARGB(255, Random().nextInt(255),
+                Random().nextInt(255), Random().nextInt(255)),
+            child: Text('index: $index'),
+          );
+        }),
+      );
+    }
+  }
+  ```
+
+  ![](images/gridviewdemo2.png) 
+
+
+
+**前面两种方式也可以不设置delegate**
+
+可以分别使用：`GridView.count构造函数`和`GridView.extent`构造函数实现相同的效果，这里不再赘述。
+
+
+
+#### 2、GridView.build
+
+和ListView一样，使用默认构造函数会一次性创建所有的子Widget，会带来性能问题，所以我们可以使用`GridView.build`来交给GridView自己管理需要创建的子Widget。
+
+```
+class GridViewBuildContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+        gridDelegate:
+        SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 3,
+            mainAxisSpacing: 5
+        ),
+        itemBuilder: (BuildContext ctx, index) {
+          return Container(
+            alignment: Alignment.center,
+            color: Colors.orange,
+            child: ListTile(
+              leading: Icon(Icons.people),
+              title: Text(
+                  'index: $index'
+              ),
+            ),
+          );
+        }
+    );
+  }
+}
+```
+
+
+
+
+
+### 3、Slivers的基本使用
+
+因为我们需要把很多的Slivers 放在一个CustomScrollView中, 所以CustomScrollView有一个slivers属性,里面让我们放对应的一些sliver
+
+- `SliverList` 类似于我们之前使用过的ListView
+- `SliverFixedExtentList` 类似于SliverList, 只是可以设置滚动的高度
+- `SliverGrid` 类似于我们之前使用过的GridView
+- `SliverPadding` 设置Sliver的内边距, 因为可能要单独给sliver设置内边距
+- `SliverAppBar` 添加一个AppBar, 通常用来作为CustomScrollView和headerView
+- `SliverSafeArea` 设置内容显示在安全区域 ( 比如: 不让齐刘海挡住我们的内容)
+
+下面我们简单演示一下, Sliver + SliverPadding+SliverSafeArea 的组合
+
+`Scaffold` 类似于控制器
+
+`SafeArea` 安全区域
+
+`SliverSafeArea`  sliver的安全区域
+
+`SliverPadding` 给sliver的滑动内容增加内边距
+
+
+
+## 6、监听滚动
+
+
+
+
+
+
+
+# 十四、异步&网络请求
+
+
+
+## 1、Dart 是单线程的
+
+
+
+### 1、程序中的耗时操作
+
+- **开发中的耗时操作**:
+
+  网络请求、文件的读取都是属于耗时操作, 如果所有的耗时操作都放到主线程执行的话, 主线程是会被阻塞的, 带给用户的体验就是卡顿和没有反应, 这是不行的. 
+
+  
+
+- **如何处理耗时操作**:
+
+  针对如果处理耗时操作, 不同的语言有不同的处理方式.
+
+  - **方式一: ** 多线程
+
+    比如: java、C++、C语言、OC 等, 我们普遍的做法是开启一个新的线程(`thread`), 在新开启的线程中做耗时操作, 耗时操作完毕后再通过线程之间的通信, 将结果给到对应的线程(`一般是主线程`)继续处理.
+
+  - **方式二**:单线程 + 事件循环
+
+    比如: javaScript 和 Dart 都是采用单线程+事件循环来处理耗时操作. 那么单线程+事件循环是如何处理耗时操作的, 我们下面会讲解. 
+
+    
+
+### 2、Dart的异步操作 Future
+
+> 说明:
+>
+> 1. 因为Dart是单线程的, 因此在Dart开发中或者在flutter开发中不会存在像其他语言(比如: java/C++/C)中说的主线程与子线程的说法.即在Dart中只有主线程, 所有的方法都是在主线程中执行的
+> 2. 因为在Dart中只有主线程没有子线程的说法, 为了保证在Dart开发中程序不会因为耗时操作(比如: 文件的读取, 网络请求)而阻塞, 在Dart开发中引入了异步的概念. 换句话说在Dart开发中凡是涉及到耗时的操作我们都需要放到异步中来执行, 执行完后再通过回调返回结果.
+> 3. 为了更好的在Dart中使用异步, 引入了Future的概念. 所有的耗时操作都需要使用 Future来进行包装处理.
+
+**Dart 中Future 的使用步骤大致是这样的:** 
+
+- 使用`Future` 进行耗时操作封装(`future`成功的耗时封装, 异常的耗时封装)
+
+- 使用 `future.then()` 对耗时操作的结果进行处理
+
+- 使用`future.then().catchError()`  对耗时操作中产生的 异常或者错误结果进行处理
+
+- 使用`future.then().catchError().whenComplete()` 完成异步的收尾工作  **(推荐)**
+
+  或者 使用 `future.catchError().whenComplete()` 完成异步的收尾工作**(推荐)** 
+
+  或者使用`future.then().whenComplete()` 完成异步的收尾工作 **(不推荐, 有异常风险)**
+
+  也可以使用 `future.whenComplete() 完成异步的收尾工作  **(不推荐, 有异常风险)** 
+
+```
+// 异步操作的封装
+int i = 0;
+Future<String> getNetworkData3(){
+
+  return Future<String>((){
+    sleep(Duration(seconds: 5));
+    if(i < 2){
+      i ++;
+      //  reture 返回的结果需要通过 future.then 来获取
+      //  可以给future 使用泛型约束 return 返回的数据类型, 这样外面在.then 中可以直接使用对应的数据类型
+      return '异步操作 成功完成 $i';
+    }
+  // 当程序出错时, 需要通过 throw Exceptionn 的方式将 异常抛出, 外面需要使用 future.catchError 来接收
+  throw Exception('future 抛出异常');
+  });
+}
+```
+
+
+
+```
+// 异步操作的调用哪个
+FlatButton(
+  color: Colors.orange,
+  child: Text('future 最完整写法'),
+  onPressed: (){
+	  print('\n\n');
+    print('future 最完整写法 发出异步任务开始');
+    Future<String> future = getNetworkData3();
+    future.then((String rst){
+      print('成功结果: $rst');
+    }).catchError((error){
+      // future 抛出异常 来到这里
+      print('异常错误: $error');
+    }).whenComplete((){
+      // 不论前面的 future 是正常执行还是异常执行, 只要future 完成就会来到这里
+      print('future 最完整写法 future 结束了');
+    });
+    print('future 最完整写法 发出异步任务完成');
+  },
+ );
+```
+
+![](images/future1.png) 
+
 
 
 
