@@ -1,5 +1,3 @@
- n Flutter 学习
-
 # flutter 开发快捷键
 
 ## 1、android studio 
@@ -42,7 +40,7 @@
 
 - 抽取一段代码为一个方法, 快捷键 `command` + `option` + `m` 
 
-
+- 当有时我们在编写flutter代码的时候, 已经把Widget写出来的, 但是因为没有import报错, 但是我们这时却不知道怎么导入正确的文件, 这时快捷键 `option` + `enter` 就会有提示
 
 
 
@@ -5651,13 +5649,158 @@ Row(
 
 
 
-### 3、Column
+
+
+**Row 组件属性详细介绍** 
+
+```
+Row({
+  Key key,
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start, // 主轴对齐方式
+  MainAxisSize mainAxisSize = MainAxisSize.max, // 水平方向尽可能大
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center, // 交叉处对齐方式
+  TextDirection textDirection, // 水平方向子widget的布局顺序（默认为系统当前Locale环境的文本方向(如中文、英语都是从左往右，而阿拉伯语是从右往左））
+  VerticalDirection verticalDirection = VerticalDirection.down, // 表示Row纵轴（垂直）的对齐方向
+  TextBaseline textBaseline, // 如果上面是baseline对齐方式，那么选择什么模式（有两种可选）
+  List<Widget> children = const <Widget>[],
+})
+```
 
 
 
-### 4、可伸缩组件
+- **mainAxisSize：**
 
-`Flexible ` 和 `Expanded` 伸缩, 变大和变小
+  - 表示Row在主轴(水平)方向需要占用多大的空间
+  - 默认是`MainAxisSize.max`，表示尽可能多的占用水平方向的空间，此时无论子widgets实际占用多少水平空间，Row的宽度始终等于水平方向的最大宽度(一般就是父组件占据的宽度)
+  - 而`MainAxisSize.min`表示尽可能少的占用水平空间，宽度为所有子组件中最宽的一个宽度(即一般是包裹最宽的子组件宽度)
+
+- **mainAxisAlignment** 
+
+  表示子Widgets在Row所占用的水平空间内对齐方式
+
+  - 如果mainAxisSize值为`MainAxisSize.min`，则此属性无意义，因为子widgets的宽度等于Row的宽度
+  - 只有当mainAxisSize的值为`MainAxisSize.max`时，此属性才有意义
+  - `MainAxisAlignment.start`表示沿textDirection的初始方向对齐，
+  - 如textDirection取值为`TextDirection.ltr`时，则`MainAxisAlignment.start`表示左对齐，textDirection取值为`TextDirection.rtl`时表示从右对齐。
+  - 而`MainAxisAlignment.end`和`MainAxisAlignment.start`正好相反；
+  - `MainAxisAlignment.center`表示居中对齐。
+
+- **crossAxisAlignment**：
+  - 表示子Widgets在纵轴方向的对齐方式,Row的高度等于子Widgets中最高的子元素高度
+  - 它的取值和MainAxisAlignment一样(包含`start`、`end`、 `center`三个值)
+  - 不同的是crossAxisAlignment的参考系是verticalDirection，即verticalDirection值为`VerticalDirection.down`时`crossAxisAlignment.start`指顶部对齐，verticalDirection值为`VerticalDirection.up`时，`crossAxisAlignment.start`指底部对齐；而`crossAxisAlignment.end`和`crossAxisAlignment.start`正好相反；
+
+![](images/rowdemo2.png) 
+
+### 3、Expanded 可伸缩组件
+
+如果我们希望红色和黄色的Container Widget不要设置固定的宽度，而是占据剩余的部分，这个时候应该如何处理呢？
+
+这个时候我们可以使用 `Expanded` 来包裹 Container Widget
+
+```
+const Expanded({
+  Key key,
+  int flex = 1,
+  @required Widget child,
+})
+```
+
+> 说明:
+>
+> Expanded 这个Widget组件内主要有2个属性需要注意, 一个是flex属性, 这个属性是用来说明被包裹的子组件内暂用主轴上剩余空间的分数.
+>
+> Expanded 继承自Flexible, 我们一般使用Expanded
+
+
+
+```
+class RowContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Container(color: Colors.red, width: 60, height: 60),
+            Container(color: Colors.blue, width: 80, height: 80),
+            Container(color: Colors.green, width: 70, height: 70),
+            Container(color: Colors.orange, width: 100, height: 100),
+          ],
+        ),
+
+
+        SizedBox(height: 10,),
+        Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(color: Colors.red, width: 60, height: 60),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(color: Colors.blue, width: 80, height: 80),
+            ),
+            Container(color: Colors.green, width: 70, height: 70),
+            Container(color: Colors.orange, width: 100, height: 100),
+          ],
+        ),
+
+        SizedBox(height: 10,),
+        Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(color: Colors.red, width: 60, height: 60),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(color: Colors.blue, width: 80, height: 80),
+            ),
+            Container(color: Colors.green, width: 70, height: 70),
+            Container(color: Colors.orange, width: 100, height: 100),
+          ],
+        ),
+
+        SizedBox(height: 10,),
+        Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(color: Colors.red, width: 60, height: 60),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(color: Colors.blue, width: 80, height: 80),
+            ),
+            Container(color: Colors.green, width: 70, height: 70),
+            Container(color: Colors.orange, width: 100, height: 100),
+          ],
+        ),
+      ],
+    );
+  }
+}
+```
+
+![](images/expanded1.png) 
+
+
+
+### 4、Column 
+
+>  Column组件用于将所有的子Widget排成一列，学会了前面的Row后，Column只是和row的方向不同而已。
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5808,6 +5951,10 @@ class StackContent extends StatelessWidget {
   }
 }
 ```
+
+![](images/stack01.png) 
+
+
 
 
 
@@ -6241,7 +6388,7 @@ class GridViewBuildContent extends StatelessWidget {
 
 
 
-# 十四、异步&网络请求
+# 十四、异步&网络请求(重要!!!) 
 
 
 
@@ -6269,9 +6416,27 @@ class GridViewBuildContent extends StatelessWidget {
 
     比如: javaScript 和 Dart 都是采用单线程+事件循环来处理耗时操作. 那么单线程+事件循环是如何处理耗时操作的, 我们下面会讲解. 
 
-    
+- flutter 中处理耗时操作
 
-### 2、Dart的异步操作 Future
+  > 所谓的耗时操作不仅仅指的是网络请求, 这里的耗时操作囊括的范围很广
+  >
+  > 我们平时 通过执行的文件读取操作、发出的网络请求、或者是有一大段代码需要执行耗时很长、又或者我们在执行某个方法时中间有个时间延时,这些我们都称之为耗时操作.
+  >
+  > 简单的讲, 从代码开始执行到结束如果需要耗时, 我们都称为耗时操作
+
+  - 在以前, 比如在java或者C++ 语言中, 我们通常处理耗时操作的方法是, 将这段耗时的操作从当前线程扔到子线程中执行, 等执行完成后再将结果返回到当前线程(一般来说是结果返给主线程)
+
+  - 在Dart或者flutter开发中, 因为是单线程的, 没有主线程子线程的概念, 因此我们在dart或者flutter开发中是没有办法将耗时的操作从当前扔到子线程中执行的, 因为没有子线程的概念都是主线程.虽然在Dart和flutter开发中没有子线程的概念, 但是有个异步任务的概念, 即在Dart和flutter开发中不在讨论线程的问题,只会有同步任务和异步任务的概念了. 我们平时书写的代码默认情况下都是同步的顺序执行、挨个执行、从上到下执行的(即前一句代码执行完成了才会执行后一句)
+
+  - 通常我们在dart和flutter开发中, 为了保证我们在实行耗时操作时, 不会等耗时任务执行完毕后再执行后面的代码, 这样会卡主耗时操作的代码后面的代码需要一直等到前面的耗时操作执行完成了才有机会执行, 为了让耗时操作不卡主后面的代码, 我们就在异步中执行这个耗时操作, 执行完成后再将这个结果抛回来.
+
+  - 在Dart 和 flutter开发中, 我们只要将耗时操作包装到 **Future** 中, 系统自动的就会以异步的形式来执行我们的耗时操作, 我们外部只要持有这个 包装好的 `future` 对象, 系统异步执行完耗时操作后会再通过`future` 对象来告诉我们的.
+
+    > 简单的说, 在java、C++ 开发中我们会将耗时操作放到子线程中去执行, 在Dart或者flutter开发中我们将耗时操作包装成 `Future` 对象在异步中执行.
+
+  
+
+### 2、Future的简单操作 
 
 > 说明:
 >
@@ -6324,6 +6489,7 @@ FlatButton(
   onPressed: (){
 	  print('\n\n');
     print('future 最完整写法 发出异步任务开始');
+    
     Future<String> future = getNetworkData3();
     future.then((String rst){
       print('成功结果: $rst');
@@ -6334,12 +6500,2057 @@ FlatButton(
       // 不论前面的 future 是正常执行还是异常执行, 只要future 完成就会来到这里
       print('future 最完整写法 future 结束了');
     });
+    
     print('future 最完整写法 发出异步任务完成');
   },
  );
 ```
 
 ![](images/future1.png) 
+
+
+
+### 3、Future的链式调用
+
+> 其实在Dart 中future的使用, 是推荐使用链式调用结构的, 有些情况下如果不使用链式调用反而会出现异常
+>
+> 比如下面的案例:
+
+
+
+**在讲解Future的链式调用之前, 我们把Future 在使用过程中容易出的坑先将一下, 如下:** 
+
+```
+// 执行这个异步操作会抛出异常
+Future<String> getNetworkData4(){
+  return Future<String>((){
+    sleep(Duration(seconds: 5));
+    // return '异步操作 成功完成 $i';
+     throw Exception('future 抛出异常');
+  });
+}
+```
+
+- 这样书写代码(链式调用) 程序正常执行   推荐
+
+  ```
+  // 这样书写代码(链式调用) 程序正常执行   推荐
+  print('future 先异常在成功 发出异步任务开始');
+  
+  Future<String> future = getNetworkData4();
+  
+  future.then((String rst){
+  	print('成功结果: $rst');
+  }).catchError((error){
+  	print('异常错误: $error');
+  }).whenComplete((){
+  	print('future 先异常在成功 future 结束了');
+  });
+  
+  print('future 先异常在成功 发出异步任务完成');
+  ```
+
+- 这样书写(非链式调用), 程序无法正常执行, 会报错
+
+  ```
+  // 这样书写(非链式调用), 程序无法正常执行, 会报错
+  print('future 先异常在成功 发出异步任务开始');
+  
+  Future<String> future = getNetworkData4();
+  
+  future.then((String rst){
+  	print('成功结果: $rst');
+  });
+  
+  future.catchError((error){
+  	print('异常错误: $error');
+  });
+  
+  future.whenComplete((){
+  	print('future 先异常在成功 future 结束了');
+  });
+  
+  print('future 先异常在成功 发出异步任务完成');
+  ```
+
+
+
+**Future的链式调用的正确姿势, 如下: **
+
+```
+void getNetworkData() {
+  Future(() {
+    sleep(Duration(seconds: 3));
+    return '用户数据';
+  }).then((value) {
+    print('第一次请求获取到: ${value}');
+    sleep(Duration(seconds: 3));
+    throw Exception('获取用户头像出错');
+    return "用户头像";
+  }).then((value) {
+    print('第二请求获取到: ${value}');
+    sleep(Duration(seconds: 3));
+    return "用户昵称";
+  }).then((value) {
+    print('第三请求获取到: ${value}');
+  }).catchError((err) {
+    print('捕获到网络请求异常: ${err}');
+  }).whenComplete(() {
+    print('所有的网络请求结束');
+  });
+}
+```
+
+
+
+### 4、Future的其它API
+
+- **Future.value()** ApI 
+
+  > 比如, 有时我们在`Future` 中没有执行耗时操作, 那么我们就就可以使用`Future.value()` 这个Api替代
+
+  ```
+  // 原始写法
+  void getNetworkData2(){
+    Future((){
+      // 这里没有耗时操作
+      return 'future 直接返回数据';
+    }).then((value) {
+      print(value);
+    }).whenComplete((){
+      print('结束了');
+    });
+  }
+  
+  // 可以简化成这样能
+  void getNetworkData2(){
+    Future.value('future 直接返回数据').then((value){
+      print(value);
+    }).whenComplete((){
+      print('结束了');
+    });
+  }
+  ```
+
+- **Future.error()** API
+
+  示例如下:
+
+  ```
+  // 比如, 我们在封装Future时, 仅仅是想 抛出一个异常, 正常情况下我们是这样写的, 如下:
+  void getErrorData(){
+    Future((){
+      // 仅仅是想在 Future里面往外面抛出一个 异常
+      throw Exception('future 异常出错');
+    }).catchError((err){
+      print('捕获到异常: ${err}');
+    });
+  }
+  
+  
+  // 可以简化成这样
+  void getErrorData(){
+    Future.error('future 异常出错').catchError((err){
+      print('捕获到异常: ${err}');
+    });
+  }
+  ```
+
+- **Future.delay()**  Api
+
+  ```
+  // 延时方式1
+  void delayOpt(){
+    print('----->');
+    Future.delayed(Duration(seconds: 5)).then((value){
+      print('delay: ${value}');
+    });
+  }
+  
+  // 延时方式2:
+  void delayOpt(){
+    print('----->');
+    Future.delayed(Duration(seconds: 5),(){
+      return '延时操作执行完毕';
+    }).then((value){
+      print('delay: ${value}');
+    });
+  }
+  ```
+
+
+
+## 2、await & async 详解
+
+
+
+### 1、Future 的链式调用, 解决嵌套问题
+
+- Future 嵌套的现象
+
+  > 很多时候, 我们在开发中会出现这样的情况:
+  >
+  > 1. 先发送一个网络请求
+  > 2. 根据拿到的第一个网络的结果, 再执行第二个网络请求
+  > 3. 根据拿到的第二个网络请求, 再执行第三个网络请求
+  >
+  > ... ... 
+  >
+  > 这样的需求让我们的代码一层层的嵌套, 在执行的阅读时不方便, 如下代码
+
+  ```
+  // 耗时操作封装你
+  Future getNetWorkData(count){
+    return Future((){
+      sleep(Duration(seconds: 3));
+  //    if(count == 2){
+  //      throw Exception('出错了: ${count}');
+  //    }
+      return count + 1;
+    });
+  }
+  ```
+
+  ```
+  // 多个耗时操作嵌套使用, 原始写法
+  void test(){
+    int count = 1;
+  
+    print('发起第一次请求: ${count}');
+    getNetWorkData(count).then((count1){
+  
+  
+      print('\n收到第一次结果: ${count1}');
+      print('发起第二次请求: ${count1}');
+      tgetNetWorkData(count1).then((count2) {
+  
+  
+        print('\n收到第二次结果: ${count2}');
+        print('发起第三次请求: ${count2}');
+        getNetWorkData(count2).then((count3) {
+  
+          print('\n收到第三次结果: ${count3}');
+        }).catchError((err3){
+          print('捕获到异常: ${err3}');
+        });
+        
+  
+      }).catchError((err2){
+        print('捕获到异常: ${err2}');
+      });
+  
+  
+  
+    }).catchError((err1){
+      print('捕获到异常: ${err1}');
+    });
+  
+  }
+  
+  ```
+
+  
+
+- 为了解决上面一层层的异步嵌套, 我们使用 `Future` 的链式调用就可以了,
+
+  改造如下:
+
+  > 下面的示例代码就是我们说的, future链式调用解决future的嵌套问题
+
+  ```
+  void test2(){
+    int count = 1;
+  
+    print('发起第一次请求: ${count}');
+    getNetWorkData(count).then((count1) {
+    
+      print('\n收到第一次结果: ${count1}');
+      print('发起第二次请求: ${count1}');
+      // 这里相当于是将第二次的异步结果返回出去, 在外部的.then .catchError 中在去取
+      return getNetWorkData(count1);
+    })
+  
+    .then((count2) {
+    
+      print('\n收到第二次结果: ${count2}');
+      print('发起第三次请求: ${count2}');
+      return getNetWorkData(count2);
+    })
+    
+    .then((count3) {
+      print('\n收到第三次结果: ${count3}');
+    }).catchError((err){
+      print('捕获到异常: ${err}');
+    });
+  }
+  ```
+
+  ![](images/futurerst.png) 
+
+### 2、await & async 的简单使用
+
+虽然我们在前面通过future 的链式调用解决了嵌套的问题, 但是代码看起来还是比较多, 有没有方法能让我们的代码看起来更精简呢? 
+
+答案是有的
+
+在我的Dart开发中为我们提供了2个关键字**await**  和 **async** , 通过这两个关键字我们可以将原来书写的代码写的很精简, 具体使用如下:
+
+- 原来的耗时`(比如: 文件读取、网络请求)`操作, 封装如下:
+
+  ```
+  // 一个耗时的异步操作方法, 返回的是 Future
+  Future getNetWorkData(count){
+    return Future((){
+      sleep(Duration(seconds: 3));
+      if(count == 1){
+        throw Exception('出错了: ${count}');
+      }
+      return count + 1;
+    });
+  }
+  ```
+
+- 原来我们在没有借助`await` 和 `async` 关键字的时候, 我们是这样操作的
+
+  ```
+  // 比如: 我们要在 test 方法中使用 getNetWorkData 执行一个耗时操作, 我们是这样的,如下:
+  
+  void test{
+    int count = 1;
+    print('发起第一次请求: ${count}');
+  
+    getNetWorkData(count).then((count1) {  // 整个这坨代码不会卡主, 等有结果后会再回调回来
+      print('\n第一次结果: ${count1}');
+    });
+    print('第一次请求发起 结束');
+  }
+  ```
+
+  ![](images/futureraw1.png) 
+
+  > 从上面的代码可以看出, 虽然我们使用Future执行了一个耗时操作, 满足了我们的需求, 但是我们在拿到异步执行结果时要在future后面再使用 `future.then()... ...`  巴拉巴拉的一大长串, 如果我们的操作很复杂, 异步操作后又有异步操作的话, 就要使用 **Future 的链式调用** 代码还是很长, 不是很容易阅读. 
+
+- 在上面的 `test()` 方法中 直接调用耗时方法操作的, 我们可以借助 **async 和 await** 两个关键字来对代码进行改造, 改造后的的代码如下:
+
+  ```
+  void test() async{
+    int count = 1;
+    print('await 发起第一次请求: ${count}');
+    var rst = await getNetWorkData(count);  // 注意: 这句代码会卡主, 直接有结果为止
+    print('await 收到第一次结果: ${rst}');
+  }
+  ```
+
+  ![](images/awaitresult1.png) 
+
+  > 改造前后对比说明:
+  >
+  > 改造前: 
+  > 我们是在 Future 的后面使用`.then((value){})` 来获取异步完成的结果的
+  >
+  > 改造后:
+  >
+  > 1.  我们在方法名`test() ` 的后面添加了关键字 **async** , 说明了这是一个异步的方法
+  > 2. 我们使用了关键字**await** 来修饰了返回结果(即, 我们使用了await 关键字修饰Future 对象),  将返回的future对象直接转换成了 原来在 `.then((value){})` 返回的value, 即如果我们在**async 方法** 中使用关键字**await** 修饰 **future** 对象的话, 系统会将我们的异步方法转换成同步方法并把结果返回给我们用
+
+
+
+
+
+### 3、await & async 的总结
+
+1. 获取`future` 对象成功会调的结果有两种方式:
+   - 一种是通过 `future.then((value){})` 这种方式, 这种是异步的方式, 不会阻塞`future.then((value){})` 后面的其它带的执行
+   - 另一种是直接在`future` 对象前面使用 `await` 关键字修饰`future` 对象, 将原来的`future.then` 这种异步获取结果的方式,转换为同步阻塞式获取结果的方式.
+2. 使用 `await future` 这种方式获取结果的方式有以下的特点
+   - 在获取到`future` 执行结果之前, `await future` 是处于阻塞状态的, 后面的代码是一直处于等待状态的, 换句话说,只要`await future` 没有拿到执行结果, 后面的代码是没有机会执行的
+   - `await` 修饰的语句必须写在 `async` 方法内, 换句话说只有在`async` 方法内才能使用 `await` 
+3. 外面在调用 `async` 修饰的方法时, 与调用普通的方法是一样的
+
+> 其实, 使用 `async` 和 `await` 修饰的方法与未使用 `async` 和 `await` 修饰的方法的主要区别在于, `async ` 和 `await` 修饰的方法内部的future代码是顺序同步执行的, 只有前一句future代码执行完毕后才执行下一句代码, future代码的执行特点是顺序阻塞的, 而未使用`async` 和 `await` 修饰的future代码是非阻塞的, 这个阻塞特点一定要记住, 否则在开发中会发生意想不到的问题
+
+**注意:**
+
+1. 虽然, 通过关键字 `async` 和 `await` 可以将异步的`future` 代码简化为同步的代码, 让代码的可读性提高很多, 但是我们在程序中也是不能滥用的, 因为一旦将异步的`future` 代码转换为同步代码后, `await` 之后的代码是阻塞式的, 稍不注意就会造成卡死的现象, 这样不好.
+
+2. 其实, `async` 和 `await` 是有它的独特使用情景的, 一般来说我们使用 `async` 和 `await` 来解决多个连续依赖的异步操作, 比如我们有这么一个应用场景: 一般就使用 `async` + `await` 来解决.
+
+   > - 首先发起网络请求1.
+   > - 当我们收到网络请求1的结果后, 再根据请求1的结果执行网络请求2.
+   > - 当我们收到网络请求2的结果后, 再根据请求2的结果发起请求3.
+   > - ... ... 
+   > - 在最后 一个网络请求中拿到我们想要的结果, 做我们想要的事.
+
+   上面的这个业务情景是典型的**异步依赖异步,层层依赖, 层层相关**  , 这种场景我们就可以使用**future 的链式调用  或是  async + await** 的方案来解决.  虽然我们的最正确的方式(最原始的方式)是使用`future链式调用`, 但是如果链式调用的代码太长了和async+await相比代码也是要复杂的多的, 没有async+await的代码优雅. 这种情景下我们就推荐使用async+await 的方案.
+
+   
+
+### 4、await & async 的返回值 future
+
+**被async 关键字修饰的方法有以下几个特点**:
+
+- 被 **async关键字**  修饰的方法, 返回值是一个Future类型,示例如下:
+
+  ```
+  // async 方法定义
+  awaitAsync() async{
+    return 'abc';
+  }
+  ```
+
+  ```
+  // 外部调用 async 方法
+  void test(){
+    print('---func_Async 调用前->');
+    var rst = func_Async();
+    print('返回值: ${rst}');
+    rst.then((value){
+    print('func_Async 真实结果: ${value}');
+    });
+    print('---func_Async 调用完毕->');
+  }
+  ```
+
+  ![](images/func-asynnc2.png)   
+
+- 既然,  被 **async关键** 字修饰的方法的返回值是Future类型的, 那么我们在调用 async 方法时, async 中的代码是异步执行的, async 方法的执行不会阻塞其它方法
+
+  > 说明:
+  >
+  > 1. 虽然 async 方法的调用是异步的, 在调用async 方法时不会阻塞其它代码的正常运行, 但是需要说明的是, 如果在async 中使用了 await 将future 转换为了同步方法, 那么async 方法内的代码是同步顺序执行的, 是阻塞的.
+
+  ```
+  // 验证async 代码的执行是异步的, 非阻塞的
+  
+  Future getNetWorkData(count){
+    return Future((){
+      sleep(Duration(seconds: 3));
+      return count + 1;
+    });
+  }
+  
+  test_func_Async() async{
+    var rst1 = await getNetWorkData(11);
+    print('rst1: ${rst1}'); // 3秒后打印
+  
+    var rst2 = await getNetWorkData(rst1);
+    print('rst2: ${rst2}'); // 6秒后打印
+  
+    var rst3 = await getNetWorkData(rst2);
+    print('rst3: ${rst3}'); // 9秒后打印
+  
+    print('async 中的 await 执行完毕');
+    return rst3;
+  }
+  
+  
+  test(){
+    print('---test_func_Async 调用前->');
+    var rst = test_func_Async();
+    print('test_func_Async方法返回值: ${rst}');
+    rst.then((value){
+      print('test_func_Async方法返回值.then结果: ${value}');
+    });
+    print('---test_func_Async 调用完毕->');
+  }
+  ```
+
+  当我们调用 test() 方法后, 打印如下:
+
+  ![](images/asyncawaitrst.png) 
+
+
+
+### 5、async & await 异常处理
+
+1. 我们上面已经讲的很清楚了, 当我们使用 **async 关键字** 修饰方法后, 方法返回的是**future** 类型的结果, async 方法返回future类型结果的好处就是当我们外部在调用async 方法时, async 方法内部是异步执行的不会因为async 内部方法没有执行完毕而阻塞async方法外部其它代码的执行. 其实从async 名字也可以看出是异步的意思, 在Dart 和flutter开发中是要代码是异步执行的, 我们就应该想到这段代码被封装到future中了.
+
+2. 前面我们已经讲过了, 我们可以直接使用 **await关键字** 将 `future.then()` 这段异步代码转换为同步代码, 转换后的同步代码会一直卡主直到拿到`future.then()` 中的结果, 只有await等到了结果await 后的其它代码才有机会执行. 
+
+3. 我们知道, 当我们在执行一个方法, 而这个方法如果返回值是一个**Future** 类型的数据时, 一般我们有三种处理方式:
+
+   - **方式1**: 通过 `future.then((value){})` 中的`.then((value){})`拿到异步成功执行完毕的结果
+   - **方式2:** 通过`future.then((value){}).catchError((error){})` 中的`.catch((value){})` 拿到异步执行抛出的异常结果
+   - **方式3:** 通过`future.then((value){}).catch((error){}).whenComplete((){})` 中的`.whenComplete((){})` 方法拿到异步执行完毕的结果
+
+   但是, 我们在`async + await` 方法中只是通过 `await 修饰future` 拿到异步成功的回调结果, 并没有对future 异步执行中可能出现的异常以及异步的执行难完毕进行处理,那我我们使用 `async + await` 将原来的future 代码进行改造后, 我们应该如何来处理异常以及监听异步执行完毕呢? 
+
+   
+
+**是这样的, 我们前面已经讲过了, 使用`async` 修饰的方法返回的是`future` 类型的结果, 如果我们在调用async方法时, async 内部的代码如果抛出异常的话, 我们是可以直接通过 async 方法返回的future 对象来监听已经以及方法发的执行完毕的**
+
+
+
+监听async 方法内部异常的示例代码如下: 
+
+```
+// 耗时操作
+Future getNetWorkData(count){
+  return Future((){
+    sleep(Duration(seconds: 3));
+    if(count == 2){
+      throw Exception('出错了: ${count}');
+    }
+    return count + 1;
+  });
+}
+
+// async 内部连续调用耗时操作
+test_func_Async() async{
+  var rst1 = await getNetWorkData(1);
+  print('rst1: ${rst1}');
+
+  var rst2 = await getNetWorkData(rst1);
+  print('rst2: ${rst2}');
+
+  var rst3 = await getNetWorkData(rst2);
+  print('rst3: ${rst3}');
+
+  print('async 中的 await 执行完毕');
+  return rst3;
+}
+
+
+// test 方法内部调用 async 方法, async 方法通过 .then 拿成功结果, 通过 .catchError 捕获异常
+// 通过whenComplete 监听async 方法执行完毕
+test(){
+  print('---test_func_Async 调用前->');
+
+  var rst = test_func_Async();
+  print('test_func_Async方法返回值: ${rst}');
+  rst.then((value){
+    print('test_func_Async方法返回值.then结果: ${value}');
+  }).catchError((error){
+    print('test_func_Async方法捕获到异常: ${error}');
+  }).whenComplete((){
+    print('test_func_Async方法complete');
+  });
+
+  print('---test_func_Async 调用完毕->');
+}
+```
+
+打印截图如下:
+
+![](images/async_catcherror.png) 
+
+
+
+
+
+### 6、Future & async & await 大总结
+
+1. future 的链式调用, 解决了future多层嵌套的代码书写方式, 让代码逻辑层次更清晰了
+2. async + await 的方式, 将future 的异步链式书写格式转化成了, 同步的顺序执行格式, 让代码比future的链式调用更简洁
+3. 不论是通过 future的链式调用, 还是通过 async + await 的同步大改造, 最终我们的结果还是要通过**.then()  .catchError()   .whenComplete() ** 来获取.   
+
+
+
+## 3、Dart 的异步补充
+
+### 1、任务执行的顺序
+
+#### 1、认识微任务队列 (面试)
+
+
+
+### 2、多核CPU的利用
+
+#### 1、Isolate 的理解
+
+> 说明:
+>
+> 一般来说, 在前端不要处理复杂的数据, 复杂的数据一般交由服务端统一处理
+>
+> 其实让后端统一处理其实是有好处的, 最起码是在业务层上多了一层业务, 这样可以保证
+>
+> 复杂的数据处理多端的处理逻辑是一致的, 如果都交由前端来处理那么可能造成不同前端
+>
+> 有不同的处理逻辑, 数据结构乱七八糟, 这个其实也是我们在实际开发中后来总结发现的一个
+>
+> 项目开发不规范带来的问题. 
+
+
+
+
+
+
+
+#### 2、创建Isolate
+
+
+
+#### 3、Isolate 之间的通信
+
+
+
+
+
+
+
+
+
+
+
+# 十五、Flutter 网络请求
+
+>  项目中展示的大部分数据都是来自服务器，我们需要向服务器请求数据，并且对他们进行解析展示。向服务器发出请求就需要用到网络请求相关的知识。
+
+
+
+
+
+## 1、网络请求的方式
+
+> 在Flutter中常见的网络请求方式有三种：HttpClient、http库、dio库；
+
+
+
+
+
+### 1、httpClient
+
+HttpClient是dart自带的请求类，在io包中，实现了基本的网络请求相关的操作。
+
+
+
+**网络调用通常遵循如下步骤：** 
+
+1. 创建 client.
+2. 构造 Uri.
+3. 发起请求, 等待请求，同时您也可以配置请求headers、 body。
+4. 关闭请求, 等待响应.
+5. 解码响应的内容.
+
+- 示例代码:
+
+  
+
+
+
+
+
+### 2、http
+
+
+
+
+
+### 3、dio
+
+
+
+#### 1、dio 的大致介绍
+
+dio这个框架是中国人写的, 在github上可以找到, dio框架里面包含很多的内容,比如
+
+- Dio APIs
+- 请求配置
+- 响应数据
+- 拦截器
+- Cookie 管理
+- 使用application/x-www-form-urlencoded 编码
+- FormData
+- 转换器
+- HttpClientAdapter
+- 设置http代理
+- https证书校验
+- http2支持
+- 请求取消
+- 继承Dio class
+- Feature and bugs
+
+
+
+#### 2、android studio 项目导入 flutter第三方库
+
+##### 1、项目中第三方库简单使用--示例
+
+1. 在以前我们说过了, 只有用到第三库, 我们都来到**pub.dev** 这个网站搜索具体的第三方库即可
+
+   > 比如我们要在flutter项目中使用使用`dio` 这个第三方网络请求库, 我们就可以在`pub.dev` 这个网站上搜索`dio`, 然后选择`install` 标签可以查看到安装相关的各种提示说明:
+
+   ![](images/Snip20200831_2.png)   
+
+   在`pubspec.yaml` 文件中填写好需要导入的第三方框架信息`dio: ^3.0.10` 然后在android studio 的终端中执行命令 `flutter pub get` 即可将描述的第三方框架信息安装到项目中, 框架版本描述信息如下图:
+
+   ![](images/Snip20200831_3.png) 
+
+   
+
+   
+
+   ##### 2、项目中使用第三方库, 描述的细节
+
+   **pubspec.yalm 文件中的 `dependencies` 和 `dev_depandencies` 的区别**
+
+   
+
+   - `dev_dependencies` 是开发时依赖, 当我们在打包app时开发时依赖是不会打包的进去的.
+
+     >  也就是说, 我们在开发app的测试环境可能会用到对应描述的第三方依赖库, 在实际生产的时候是不会使用的. 
+
+   - `dependencies`  是生产依赖, 当我们打包app的时候是会将生产时依赖打包到app 中的. 
+
+   
+
+#### 3、dio 简单的使用 get/post请求
+
+一般我们都是在`httpbin.org` 这个经典的网站上测试我们的`get` `post` 等请求. 
+
+> 说明: 
+>
+> ```
+> 当我们在使用 https://httpbin.org 这个网站来进行http请求测试时, 我们传递什么参数response 就会返回
+> 什么样的数据, 如果没传会返回一个空对象
+> ```
+
+- dio 测试`get` 请求
+
+  ```
+  // 1. 使用dio 测试get请求
+  testDioGet() async{
+    final dio = Dio();
+    // 说明:
+    // 当我们通过 dio.get 发送get请求后, 默认情况下 dio.get 返回的是一个future对象
+    // 如果要的到具体的请求内容, 这就使用前面介绍的future的常用操作 .then .catchError .whennComplete即可
+    var rst = await dio.get('https://httpbin.org/get');
+    print('dio get success: ${rst}');
+  
+    // 说明:
+    // 如果async 里面没有返回值的会话, 默认情况下async方法也会返回一个 future 类型的对象
+    // 但是, 我们通过这个future对象的 .then() 方法获取到的value 为null
+  }
+  ```
+
+- dio 测试`post` 请求
+
+  ```
+  // 2. 使用dio 测试post请求
+  testDioPost() async{
+    final dio = Dio();
+    var rst = await dio.post('https://httpbin.org/post');
+    print('dio post success: ${rst}');
+  }
+  ```
+
+  
+
+#### 4、dio 第三方库的再次封装
+
+1. 在我们的实际开发中, 我们肯定不会仅仅是像上面简单的使用 dio 来发送网络请求, 我们肯定还会有其它的需求, 比如: 我们在实际的网络请求时可能有`请求的参数` 、`拦截器` 、`我们还会对dio做一层我们自己简单的封装不会直接在代码里面使用dio发送网络请求` 等等.
+2. 在我们开发的过程中, 其实只要用到了第三方的库, 建议大家都进行一层封装, 这样的话代码更解耦, 以后框架替换后, 只需要修改封装的文件即可, 而不用修改整个项目里的代码. 
+
+> 补充:
+>
+> - 一般来说在我们dart 或者 flutter开发中, 文件的命名有自己的规范, 比如: 如果我们项目中文件的名称如果是由多个单词组成了, 一般我们不会使用驼峰命名, 而是使用 _ 链接各个单词, 这是我们dart或者flutter开发中的一个小注意点
+>
+>   换句话说, 如果你在dart 或者flutter开发中使用驼峰命名的方式来给文件命名, 那么会显得不专业.
+>
+> - 在dart 或者 flutter开发中, 因为文件的命名不推荐使用驼峰命名的规则, 因此很多时候你会发现dart或者flutter中某个文件的名字和文件内定义的类名字不同, 一个采用的是_分隔, 一个采用的是驼峰命名`虽然文件命名使用的是 _  分隔, 但是我们的类名还是推荐使用驼峰命名的规则` 
+>
+> - 在dart 或者 flutter开发中没有像C语言一样有专门用来做常量定义的宏定义文件, 但是我们在dart 或者flutter开发中有很多的公共常量也是要抽取出来的, 不会直接定义在类文件中, 这样对于我们项目的维护来说是更方便的.  一般来说在dart 或者 flutter 开发中我们会创建一个 `.dart` 文件,在这个文件中专门来定义一个类并在类中定义很多的静态属性, 在外部直接通过类名来获取指定的常量值
+>
+>   > 虽然可以直接在一个`.dart` 文件中定义常量供外部配置使用, 但是我们一般不会这样做, 原因主要有2点. 一是在使用时公共常量的使用场景及范围不好界定, 需要有前缀标识. 二是如果外部有其它变量的名字冲突了的话容易产生混淆. 我们直接使用类的静态属性比如: `NetWorkConfig.baseUrl` 这样很见名知意, 描述很清晰
+
+
+
+**在对dio http网络请求第三方库进行二次封装时, 我们主要会做以下几件事:**
+
+1. 定义一个常量配置文件, 用于全局配置 http请求的通用你配置, 比如: `baseUrl` 、`超时时间` , 具体如下:
+
+   ```
+   // http_tool_config.dart 文件
+   
+   // 全局常量公共配置数据
+   class YRHttpToolConfig{
+     static const String baseUrl = "https://httpbin.org";
+     static const int timeOut = 5000;
+   }
+   ```
+
+2. 网络请求工具封装, 在封装是会提供默认的 http全局配置, 以及拦截器 
+
+   ```
+   import 'package:dio/dio.dart';  // 导入第三方 dio 框架
+   import 'http_tool_config.dart';  // 导入常量配置文件
+   
+   export 'http_tool_config.dart'; // 导出自定义的常量配置文件, 供外部用
+   
+   class YRHttpTool {
+   
+     // 1. 配置dio全局的 基本配置参数
+     static BaseOptions baseOptions = BaseOptions(
+       baseUrl: YRHttpToolConfig.baseUrl,
+       connectTimeout: YRHttpToolConfig.timeOut,
+   		// headers:  这里我们也可以根据实际情况配置一些 公共的headers
+     );
+   
+     // 2. 使用默认的 基础配置创建 dio 对象
+     static final dio = Dio(baseOptions);
+     
+     static Future<T> request<T>(String url,
+         {String method = 'get',
+           Map<String, dynamic> param,
+           Map<String, dynamic> headers, // http请求的header
+           Interceptor interceptor}) //  拦截器(可以对: 请求, 响应, 错误做自定义拦截
+     async {
+     
+       // 3. 创建个性化配置
+       final options = Options(method: method);
+   
+       {
+         // 添加全局的拦截器
+         // 创建一个默认的全局拦截器
+         // 在创建拦截器的时候会让你传入三个回调函数: 请求的回调函数onRequest, 响应的回调函数onResponse, 失败的回调函数onError
+         Interceptor defaultInterceptor = InterceptorsWrapper(
+             onRequest: (options) { // 1. 请求拦截, 
+               print('请求拦截');
+               return options;
+             },
+             onResponse: (response) { // 2. 响应拦截
+               print('响应拦截');
+               return response;
+             },
+             onError: (err) { // 3. 异常的拦截
+               print('异常拦截');
+               return err;
+             }
+         );
+   
+         List<Interceptor> interceptorList = [defaultInterceptor];
+   
+         // 请求单独的拦截器
+         if (interceptor != null) {
+           interceptorList.add(interceptor);
+         }
+         // 统一添加到拦截器中
+         dio.interceptors.addAll(interceptorList);
+       }
+   
+       // 4. 发起网络请求, 获取response
+       Response response = await dio.request(url, // url 就会和 baseUrl 合并
+                                             queryParameters: param,
+                                             options: options); // options 就会和 baseOptions 合并
+   
+       // 5. 取出response 中data
+       return response.data;
+     }
+   
+   }
+   ```
+
+   
+
+
+
+
+
+# 十六、app 基本框架搭建
+
+
+
+这一章节我们主要要达到三个目的:
+
+- 第一, 对前面以往知识点的回顾
+
+- 第二,对一些widget其它知识点进行补充
+
+- 第三,代码的结构如何进行组织
+
+
+
+**computed** 函数答疑:
+
+待续补充
+
+
+
+##  1、效果图如下:   
+
+![](images/materialapp.png) 
+
+
+
+## 2、工程项目目录的基本划分
+
+我们整个项目的问价大致划分为2大块:
+
+- 一块是资源文件, 主要存储的是我们的图片等
+- 第二块是我们编写的flutter代码
+
+具体如下图:
+
+![Snip20200901_4](images/Snip20200901_4.png) 
+
+> 说明:
+>
+> 我么flutter项目中直接把资源图片放到项目中后是不能直接在代码里面使用的
+>
+> 我们需要在`pubspec.yalm` 文件中配置资源图片的路径, 路径需要配置到目录一级, 如下:
+
+```
+ assets:
+    - asset/images/
+    - asset/images/home/
+    - asset/images/tabbar/
+```
+
+
+
+## 3、具体实现代码
+
+### main.dart 
+
+```
+import 'package:flutter/material.dart';
+import 'pages/main/main_page.dart';
+
+main(List<String> args){
+
+  runApp(MaterialApp(
+    theme: ThemeData(
+      primarySwatch: Colors.green,  // 主题色(navBar 和 item选中色)
+      splashColor: Colors.transparent,      // 飞溅色
+      highlightColor: Colors.transparent    // 去掉flutter默认选中的水波纹圆圈效果
+
+    ),
+    home: YRMainPage(),
+  ));
+}
+```
+
+
+
+### main模块
+
+#### main_page.dart文件
+
+```
+import 'package:flutter/material.dart';
+
+import 'bottom_nav_bar/bottom_nav_bar.dart';
+import '../group/group.dart';
+import '../home/home.dart';
+import '../mall/mall.dart';
+import '../subject/subject.dart';
+import '../profile/profile.dart';
+
+
+class YRMainPage extends StatefulWidget {
+  @override
+  _YRMainPageState createState() => _YRMainPageState();
+}
+
+class _YRMainPageState extends State<YRMainPage> {
+  int selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: IndexedStack(
+          index: selectedIndex,
+          children: <Widget>[
+            YRHomePage(),
+            YRSubjectPage(),
+            YRGroupPage(),
+            YRMallPage(),
+            YRProfilePage(),
+          ],
+        ),
+
+        bottomNavigationBar: YRBottomNavBar(
+          onTap: (index) {
+            print(' 用户点击了索引: ${index}');
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+          currentIndex: selectedIndex,
+        ));
+  }
+}
+```
+
+
+
+#### bottom_nav_bar 模块
+
+##### bottom_nav_bar_item.dart文件
+
+```
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+// 自定义一个类继承自  BottomNavigationBarItem 实现 tabbarItem
+class YRBottomNavBarItem extends BottomNavigationBarItem {
+
+  YRBottomNavBarItem(String title, String icon)
+      : super(
+          title: Text(title),
+          icon: Image.asset('asset/images/tabbar/${icon}.png', width: 30,),
+          activeIcon: Image.asset('asset/images/tabbar/${icon}_active.png', width: 30,),
+        );
+}
+```
+
+
+
+##### bottom_nav_bar.dart文件
+
+```
+import 'package:flutter/material.dart';
+import 'bottom_nav_bar_item.dart';
+
+class YRBottomNavBar extends StatelessWidget {
+  // 当点击item的时候就会调这个回调函数
+  final ValueChanged<int> onTap;
+  final int currentIndex;
+
+  YRBottomNavBar({@required this.onTap, @required this.currentIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: buildBottomNavBarItems(),
+      // 当item的数量超过3个时, 必须将BottomNavigationBar的type 设置为 fixed, 否则item 不显示标题
+      type: BottomNavigationBarType.fixed,
+      onTap: onTap,
+      currentIndex: currentIndex,
+// 也可以通过app 主题来控制
+//      selectedItemColor: Colors.red,        // 选中title颜色
+//      unselectedItemColor: Colors.green,    // 未 选中title颜色
+      selectedFontSize: 12,                 // 选中title 字体大小
+      unselectedFontSize: 12,               // 未 选中title 字体大小   flutter默认选中字体要大点
+    );
+  }
+
+  List<YRBottomNavBarItem> buildBottomNavBarItems() {
+    return [
+      YRBottomNavBarItem('首页', 'home'),
+      YRBottomNavBarItem('书影音', 'subject'),
+      YRBottomNavBarItem('小组', 'group'),
+      YRBottomNavBarItem('市集', 'mall'),
+      YRBottomNavBarItem('我的', 'profile'),
+    ];
+  }
+}
+```
+
+
+
+### home模块
+
+
+
+#### home.dart文件
+
+```
+import 'package:flutter/material.dart';
+import 'home_content.dart';
+
+class YRHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('首页标题'),
+      ),
+      body: YRHomeContent(),
+    );
+  }
+}
+```
+
+
+
+#### home_content.dart 文件
+
+```
+import 'package:flutter/material.dart';
+
+class YRHomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(0x10ffff00),
+      child: Center(child: Text('首页内容')),
+    );
+  }
+}
+```
+
+
+
+### group 模块
+
+
+
+#### group.dart 文件
+
+```
+import 'package:flutter/material.dart';
+import 'group_content.dart';
+class YRGroupPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('小组标题'),
+      ),
+      body: YRGroupContent(),
+    );
+  }
+}
+```
+
+
+
+#### group_content.dart 文件
+
+```
+import 'package:flutter/material.dart';
+
+class YRGroupContent extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text('小组内容')),
+    );
+  }
+}
+
+```
+
+
+
+### mall 模块
+
+#### mall.dart 文件
+
+```
+import 'package:flutter/material.dart';
+import 'mall_content.dart';
+
+class YRMallPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('市集 标题'),
+      ),
+      body:YRMallContent() ,
+
+    );
+  }
+}
+```
+
+
+
+#### mall_content.dart 文件
+
+```
+import 'package:flutter/material.dart';
+
+class YRMallContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text('市集 内容')),
+    );
+  }
+}
+
+```
+
+
+
+### profile 模块
+
+
+
+#### profile.dart 文件
+
+```
+
+import 'package:flutter/material.dart';
+import 'profile_content.dart';
+
+class YRProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('我的标题'),
+      ),
+      body: YRProfileContent(),
+    );
+  }
+}
+
+```
+
+
+
+#### profile_content.dart文件
+
+```
+import 'package:flutter/material.dart';
+
+class YRProfileContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text('我的 内容')),
+    );
+  }
+}
+
+```
+
+
+
+### subject 模块
+
+
+
+#### subject.dart 文件
+
+```
+import 'package:flutter/material.dart';
+import 'subject_content.dart';
+
+
+class YRSubjectPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('书影音标题'),
+      ),
+      body: YRSubjectConntent(),
+
+
+    );
+  }
+}
+```
+
+
+
+#### subject_content.dart 文件
+
+```
+import 'package:flutter/material.dart';
+
+class YRSubjectConntent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text('书影音 内容那个')),
+    );
+  }
+}
+```
+
+
+
+
+
+# 十七、豆瓣
+
+
+
+## 1、网络请求获取豆瓣数据
+
+数据转模型
+
+
+
+
+
+# 十九、flutter 的渲染流程
+
+## 1、Flutter 开发中的三棵树
+
+在我们整个flutter开发中必须要掌握三棵树, 否则的话是没有办法深入学习的.
+
+- Widget Tree
+- Element Tree
+- RenderObject Tree
+
+![](images/1599197391973.jpg) 
+
+
+
+### 1、什么是Widget
+
+官方对Widget的解释大概是这样的.
+
+- 首先,Flutter 中的Widget的灵感是来自React, 它的中心思想是构建你的UI使用Widget
+- widget 根据你提供的配置数据configuration和状态state来描述你的视图View应该长成什么样子
+- 当一个widget的状态State发生变化时, widget会重新build视图描述信息, 框架会和之前widget描述数据进行对比, 决定最小的开销代价, 从一个状态到另一个状态. 
+
+> 我自己的理解:
+>
+> widget是相当于是一个描述信息的配置文件, 这个描述文件在第一次被创建出来和状态改变时都会build
+
+
+
+### 2、什么是Element
+
+官方对Element的描述：
+
+- Element是一个Widget的实例，在树中详细的位置。
+- Widget描述和配置子树的样子，而Element实际去配置在Element树中特定的位置。
+
+> 一个widget 实例在被创建后有一个与之对应的Element对象也被创建了, widget 与 Element 是一一对应的
+
+
+
+### 3、什么是RenderObject
+
+官方对RenderObject的描述：
+
+- 渲染树上的一个对象
+- RenderObject层是渲染库的核心
+
+> 个人理解:
+>
+> RenderObject就是我们最终页面上所看到的UI
+
+
+
+## 2、组件Widget 和 渲染Widget 
+
+### 1、widget 分类
+
+在我们开发中一般习惯将Widget划分为两类: **组件Widget 和 渲染Widget** 
+
+- 组件widget是不会生成RenderObject的, 其功能特点仅仅是将其它的Widget组合在一起形成一个新的Widget, 达到某用UI组合展示的效果,常见的主要有: 
+
+  `Container` 、`Text` 、`StatelessWidget` 、`StatefulWidget` , 以及这些widget的子类
+
+- 渲染Widget是指会生成RenderObject的Widget, 一般主要有: `Padding、Row` 
+
+> 先下一个总结, 后面解释:
+>
+> 实现了 createRenderObject 方法的Widget 是渲染Widget, 其它的就是组件widget
+
+
+
+### 2、渲染Widget的继承链 
+
+- Padding继承链
+
+  `Padding` -->  `SingleChildRenderObjectWidget`  --> `RenderObjectWidget` --> `Widget` 
+
+- Row继承链
+
+  `Row`  --> `Flex` --> `MultiChildRenderObjectWidget` --> `RenderObjectWidget` - `Widget`
+  
+  > 渲染Widget继承链总结:
+  >
+  > 1. 从上面的渲染widget的继承链我们可以发现一个特点, 只要是一个渲染的widget, 不论是单子Widget(Padding是单子)还是多子Widfget(Row 是多子) , 最终都是继承自`RenderObjectWidget` 这个类的
+  > 2. RenderObjectWidget主要有2个子类`SingleChildRenderObjectWidget` 和 `MultiChildRenderObjectWidget` 
+  
+
+
+
+### 3、组件Widget 的继承链
+
+- Container继承链
+
+  `Container` --> `StatelessWidget` --> `Widget` 
+
+- Text的继承链
+
+  `Text` --> `StatelessWidget` --> `Widget` 
+
+- 自定义继承自StatefulWidget的Widget的继承链
+
+  `自定义Widget` --> `StatefulWidget` --> `Widget` 
+
+>  组件Widget继承链总结:
+>
+> 1. 从上面的组件Widget的继承链, 我们可以发现这样一个特点, 不论是系统提供的组件Widget还是我们自定义组件Widget, 都是直接继承自StatelessWidget 或者 StatefulWidget, 最终都是继承自Widget
+
+
+
+### 4、widget 继承链总结
+
+1. 从上面渲染Widget和组件Widget的继承链我们可以发现所有的子Widget 都是继承自Widget, 也就是说不论是渲染Widget还是组件Widget 都是Widget的子类, 
+2. 渲染widget和组件widget的相同点是这两类Widget都是继承自Widget的, 有一个共同的根.
+3. 渲染Widget和组件widget的不同点在于, 渲染widget 都是从 RenderObjectWidget子类派生出来的子类, 而组件widget是从StatelessWidget或者StatefulWidget 派生出来的子类
+4. 从Widget这个根开始, 派生出了三个类别的子Widget
+   - RenderObjectWidget 子类
+   - StatelessWidget 子类
+   - StatefulWidget 子类
+
+
+
+> 结合我们以前对flutter的学习知识和前面4点继承链的总结, 我们大致可以得出这样的结论:
+>
+> 1. flutter中所有的Widget 最终都是继承自Widget, 这也就验证了我们以前说过的话: **`在flutter中一切皆Widget`** 
+>
+> 2. 在flutter开发中的大致思路是这样的, 
+>
+>    2.1. 一类Widget用来负责最基础的渲染显示这类Widget就是继承自RenderObject的Widget的子Widget
+>
+>    2.2 一类Widget用来组装其它Widget用来达到某种组合展示的效果, 这类widget就是继承自StatelessWidget 的子Widget, 这类Widget一旦展示出来就不能在变化了
+>
+>    2.3 最后一类Widget就是用来组装其它Widget用来达到某种组合展示的效果并且有状态可以调整的Widget, 这类Widget就是继承自StatefulWidget的子Widget
+
+
+
+## 3、Widget创建RenderObject的本质流程
+
+下面我们义Padding这个Widget的实现流程来分析查看一个Widget创建RenderObject的本质
+
+- **RenderObjectWidget特点**  
+
+  我们在看源码时发现, RenderObjectWidget 除了继承自Widget类外, 它还有一个特点就是它有一个`RenderObject createRenderObject(BuildContext context);` 方法. 这也是RenderObjectWidget 具备渲染功能的原因.
+
+- **createRenderObject** 的实现分析
+
+  1. 当我们在分析源码时发现, RenderObjectWidget 类的 `createRenderObject()` 方法是抽象方法, 说明`createRenderObject()` 方法是留给子类实现的. 
+
+  2. 那么这个`createRenderObject` 方法到底是在哪里实现的呢? 
+
+  3. 根据我们的分析, 我们发现 `RenderObjectWidget` 这个类主要有2个子类: 
+
+     `SingleChildRenderObjectWidget` 和 `MultiChildRenderObjectWidget` 
+
+     但是通过源码查看这两个子类都也没有实现 `createRenderObject()` 方法 
+
+  4. 经过查看发现`Padding` 和 `Flex` 中实现了`createRenderObject()`方法.
+
+- `Pading` 中的createRenderObject 方法的实现流程
+
+  经过我们对源码的查看, 我们发现在`Padding` 内部实现了`createRenderObject()` 方法, 在这个方法内部返回了一个`RenderPadding` 对象, 而`RenderPadding` 继承自 `RenderShiftedBox` 继承自`RenderBox` 继承自`RenderObject`
+
+  
+
+**总结:** 
+
+**1.经过上面的源码分析, 我们就知道了Widget是如何创建RenderObject的了. 其本质上就是在Widget中实现createRenderObject() 方法, 在这个方中创建了renderObject**  ,至于在哪里调用的`createRenderObject()` 方法的, 这个我们后面再说
+
+**2.上面我们分析的是 渲染Widget, 得到的widget创建 renderObject 的本质, 但是如果我们那 组件Widget(比如: Contianer) 来分析, 我是是找不到 createRenderObject方法的实现的, 也就是组件Widget(比如: Container) 是不能直接创建 renderObject对象的. ** 
+
+
+
+## 4、Widget 与 Element 的关系
+
+
+
+### 1、渲染Widget 与 Element 的关系 分析
+
+我们还是先以`Padding` 这个渲染widget来分析下Element的创建本质.
+
+- Padding的继承链:
+
+  `Padding` --> `SingleChildRenderObjectWidget` --> `RenderObjectWidget` --> `Widget` 
+
+  当我们从子Widget Padding 一直往父Widget查看源码时, 我们发现 Padding 内是没有与Element 相关的方法的, 但是我们在父类SingleChildRenderObjectWidget 中发现了一个`createElement()`方法,如下:
+
+  ```
+  @override
+  SingleChildRenderObjectElement createElement() => SingleChildRenderObjectElement(this);
+  ```
+
+  我们再继续往父类查看源码, 我们发现在父类RenderObjectWidget中有个抽象的`createElement()` 方法, 如下:
+
+  ```
+  @override
+  RenderObjectElement createElement();
+  ```
+
+  我们再继续往父类看, 发现父类Widget中有个抽象的`createElement();` 方法
+
+  ```
+  @protected
+  Element createElement();
+  ```
+
+  最后我发现, 最早定义`createElement()` 方法的父类就是`Widget` 类 
+
+
+
+### 2、组件Widget 与Element 的关系 分析
+
+这里我们先以`Container` 组件Widget为例来分析下他与Element的关系
+- Container的继承链:
+
+  `Conntainer` --> `StatelessWidget` --> `Widget` 
+
+  我们查源码发现在Container类中是没有实现createElement() 方法的, 我们再看下他的父类
+
+  我们发现在父类StatelessWidget 中实现了createElement() 方法, 如下:
+
+  ```
+  @override
+  StatelessElement createElement() => StatelessElement(this);
+  ```
+
+- 再看下父类Widget中, 发现了抽象方法 createElement(), 如下:
+
+  ```
+  @protected
+  Element createElement();
+  ```
+
+
+
+下面我们再来看下StatefulWidget这个组件Widget与Element的关系,
+
+- StatefulWidget的继承链
+
+  `StatefulWidget` --> `Widget` 
+
+  查看源码我们发现在StatefulWidget 类中实现了createElement方法, 如下:
+
+  ```
+  @override
+  StatefulElement createElement() => StatefulElement(this);
+  ```
+
+  再看下父类Widget中, 发现了抽象方法 createElement(), 如下:
+
+  ```
+  @protected
+  Element createElement();
+  ```
+
+  
+
+
+### 3、Widget 与Element的关系结论
+
+根据我们前面阅读 渲染Widget 与 非渲染Widget 源码, 我们得出这样的结论:
+
+- 不论是 渲染Widget 还是 非渲染Widget, 只要是Widget最后都会创建一个Element 对象与之对应, 因为Widget中有个抽象方法, 在dart 中的抽象方法子类必须实现
+- 不同的Widget对象最后创建出来与之对应的Element对象可能是不同的, 比如:
+  - Padding 的Element对象与父类相同, 对应的是 SingleChildRenderObjectElement
+  - Column 与 Row 中对应的应该是 MultiChildRenderObjectElemen
+  - Container的Element对象与父类相同, 对应的是StalelessElemennt
+  - StatefulWidget 对应的是StatefulElement
+
+> 结论
+>
+> 只要是Widget 最后就会生成一个Element, Widget 与 Element 是一一对应的关系
+
+
+
+## 5 、Widget 中 Element 的实现及继承链
+
+- 渲染Widget对应的 Element 继承链关系
+
+  ```
+  abstract class RenderObjectElement extends Element 
+  class MultiChildRenderObjectElement extends RenderObjectElement
+  class SingleChildRenderObjectElement extends RenderObjectElement 
+  ```
+
+  
+
+- 组件Widget对应的Element 继承链关系
+
+  ```
+  abstract class ComponentElement extends Element
+  class StatelessElement extends ComponentElement
+  class StatefulElement extends ComponentElement 
+  ```
+
+  - StatelessElement 的具体实现, 如下: 
+
+    ```
+    abstract class StatelessWidget extends Widget {
+      @override
+      StatelessElement createElement() => StatelessElement(this);
+    }
+    
+    class StatelessElement extends ComponentElement {
+      StatelessElement(StatelessWidget widget) : super(widget);
+    }
+    ```
+  
+  - StatefulElement 的具体实现, 如下: 
+  
+    ```
+    abstract class StatefulWidget extends Widget {
+      @override
+      StatefulElement createElement() => StatefulElement(this);
+    }
+    
+    class StatefulElement extends ComponentElement { 
+    	// 在statefulWidget 中有个_state属性
+      StatefulElement(StatefulWidget widget) : _state = widget.createState(),  super(widget){
+        
+      _state._element = this; 
+      _state._widget = widget; 
+    }
+    ```
+  
+    > 从上面StatelessWidget 和 StatefulWidget 的实现我们可以发现,  还是有差异的
+  
+  
+
+
+
+
+
+## 5、mout() 方法流程分析
+
+### 1、ComponentElement中的mount()分析
+
+>  说明: 
+>
+> 这节mount()方法原理分析我们是基于ComponentElement分析的
+>
+> 当然, 如果你这节能搞懂, 其它的Element的与mount() 之间的关系也就差不多了, 大同小异
+
+
+
+前面我们已经总结过了, 每个Widget都会创建一个与之对应的Element 对象. 
+
+我们阅读源码发现, 当Widget创建完对应的Element对象后, 会调用**mount** 方法(系统自己调用). 
+
+在Element 中对这个mount方法做了解释如下:
+
+```
+ /// Add this element to the tree in the given slot of the given parent.
+ ///
+ /// The framework calls this function when a newly created element is added to
+ /// the tree for the first time. Use this method to initialize state that
+ /// depends on having a parent. State that is independent of the parent can
+ /// more easily be initialized in the constructor.
+ ///
+ /// This method transitions the element from the "initial" lifecycle state to
+ /// the "active" lifecycle state.
+```
+
+- 当我们在阅读源码的时候, 我们发现在Element里面有个mount方法, 在执行mount方法的时候里面主要做了以下几件事情: 
+
+  - 首先mount()方法内部会调用 _firstBuild()方法
+  - 在_firstBuild() 方法内部会再调用performRebuild() 方法
+  - 在performRebuild() 方法内部会调用 build() 方法
+  - 在build() 方法内会调用 widget.build() 方法, 而这个widget就是在创建Element时传递进来的Widget
+
+  > 换句话说:
+  >
+  > - 当我们在创建Widget时, 每一个Widget在创建时内部都会自定调用 createElement(this)方法创建一个与之对应的Element对象, 这个被创建出来的Element对象内部会持有这个Widget对象.
+  > - 当Widget对应的Element对象创建后, 系统会自动调动Element内部的mount() 方法, 而在这个mount()方法内部会做一系列的断言判断, 最后会再调用Widget.build() 方法, 将对应的Widget build 出来
+  > - 这个就是Widget 与 Element 与mount() 与 build() 方法之间的一个关系流程.
+
+  
+
+  > 补充: Widget 在执行createElement() 方式时会传入一个Widget
+
+
+
+**总结:**
+
+我们以前一直在强调所有的Widget, 不论是StatelessWidget 还是StatefulWidget, 在创建出来后会调用自己的build() , 原来我们不理解为什么Widget在创建出来后调用自己的build方法, 现在我们就理解了.  是因为Widget在被创建出来后会创建一个与之对应的Element对象, Element对象被创建后会反过来持有这个Widget, 并调用这个Widget内的build方法. 
+
+
+
+### 2、各种Element中mount方法分析
+
+- ComponentElement 中的 mount()方法
+
+  ```
+  // ComponentElement 类中的 mount() 方法的最主要的作用有2个
+  // 1个是将自己挂载到Element树上
+  // 2个是build 出其他的widget
+  abstract class ComponentElement extends Element {
+  
+    @override
+    void mount(Element parent, dynamic newSlot) {
+    	// 将自己挂载到Element树上
+      super.mount(parent, newSlot); 
+      // build 出其他的Widget
+      _firstBuild(); 
+    }
+  }
+  ```
+
+- Element 中的 mount()方法
+
+  ```
+  // Element类中的 mount()的最主要作用是将自己挂载到Element 树上
+  abstract class Element extends DiagnosticableTree implements BuildContext {
+  	
+  	@mustCallSuper
+    void mount(Element parent, dynamic newSlot) {
+      
+      _parent = parent;		// 父Element
+      _slot = newSlot;		// 插槽
+      _depth = _parent != null ? _parent.depth + 1 : 1;	// 深度
+      _active = true;
+      if (parent != null) // Only assign ownership if the parent is non-null
+        _owner = parent.owner;
+      final Key key = widget.key;
+      if (key is GlobalKey) {
+        key._register(this);
+      }
+      _updateInheritance();
+    }
+  }
+  ```
+
+  
+
+- SingleChildRenderObjectElement 中的mount()方法
+
+  ```
+  class SingleChildRenderObjectElement extends RenderObjectElement {
+    
+    @override
+      void mount(Element parent, dynamic newSlot) {
+        super.mount(parent, newSlot);
+        _child = updateChild(_child, widget.child, null);
+      }
+  }
+  ```
+
+- RenderObjectElement 中的mount()方法
+
+  ```
+  // RenderObjectElement 类中的 mount() 主要作用是
+  // 1. 将自己挂载到Element树上
+  // 2. 创建 RenderObject
+  // 3. 将创建出来的 RenderObject 挂载到RenderObject树上
+  // 其实. RenderObjectElement中的mount() 方法的一个最主要的功能是 创建出 renderObject 
+  abstract class RenderObjectElement extends Element {
+  
+  @override
+    void mount(Element parent, dynamic newSlot) {
+      super.mount(parent, newSlot); // 主要是调用Element中的mount 方法将自己挂载到Element树上
+      
+      // 主要作用树创建 renderObject, 并将RenderObject挂载到renderObject的树上
+      _renderObject = widget.createRenderObject(this);
+      
+      attachRenderObject(newSlot);
+      _dirty = false;
+    }
+  
+  }
+  
+  
+  // 从RenderObjectElement类中的 mount() 方法中, 我们可以发现 mount() 方法中创建出来的 renderObject 对象是直接赋值给了 RenderObjectElement 中的 _renderObject 属性了
+  // 结合前面我们讲过的 createElemennt() 方法, 我们可以知道, 在RenderObjectElement 中有两个属性
+  // _widget 和 _renderObject, 
+  
+  也就是说我们可以总结一下:
+  RenderObjectElement 有承上启下的的供能, 因为 RenderObjectElement中 有一个_widget 用来呈上连接Widget, 有一个_renderObjecgt 用来启下连接 renderObject 
+  ```
+
+- Element 中的 mount()方法
+
+  ```
+  // Element 中的 mount() 的最主要的作用就是把自己挂在到Element 树中
+  abstract class Element extends DiagnosticableTree implements BuildContext {
+  	
+  	@mustCallSuper
+    void mount(Element parent, dynamic newSlot) {
+      _parent = parent;		// 父类
+      _slot = newSlot;		// 插槽
+      _depth = _parent != null ? _parent.depth + 1 : 1;	// 深度
+      _active = true;
+      if (parent != null) // Only assign ownership if the parent is non-null
+        _owner = parent.owner;
+      final Key key = widget.key;
+      if (key is GlobalKey) {
+        key._register(this);
+      }
+      _updateInheritance();
+    }
+  }
+  ```
+
+- StatefulWidget 对应的 ComponentElement 中的mount() 方法
+
+我们查看源码时发现, StatefulWidget 在创建后会调用createElement() 方法, 而StatefulWidget 中的createElement() 方法内直接返回的是一个StatefulElement 对象, 在StatefulElement对象创建的时候做了一件比较奇怪的事情, 
+
+```
+StatefulElement(StatefulWidget widget)
+      : _state = widget.createState(),	// 这句代码很熟悉啊, 创建state, 调用StatefulWidget中的createState
+        super(widget) {
+        
+    _state._element = this;			// state 中持有Element
+    _state._widget = widget;		// state 中持有 widget
+}
+```
+
+从上面的代码我们可以发现:
+
+1. 在StatefulElement 中持有了 StatefulWidget  中创建的State
+2. StatefulElement 中的State 又持有了Widget, 这也是为什么我们以前在State 中可以直接使用 this.widget 的原因
+
+
+
+# 二十、Widget中的key
+
+
+
+## 1、Key 的简单介绍
+
+ 在我们创建Widget的时候，总是会看到一个key的参数，它又是做什么的呢？我们查看源码会发现这个 key 是在Widget类中定义的, 也就是说每个Widget都可以设置一个可以, 具体定义如下:
+
+```
+abstract class Key {
+  /// Construct a [ValueKey<String>] with the given [String].
+  ///
+  /// This is the simplest way to create keys.
+  const factory Key(String value) = ValueKey<String>;
+
+  /// Default constructor, used by subclasses.
+  ///
+  /// Useful so that subclasses can call us, because the [new Key] factory
+  /// constructor shadows the implicit constructor.
+  @protected
+  const Key.empty();
+}
+```
+
+Key本身是一个抽象，不过它也有一个工厂构造器，创建出来一个ValueKey
+
+key直接子类主要有：LocalKey和GlobalKey
+
+- LocalKey，它应用于具有相同父Element的Widget进行比较，也是diff算法的核心所在；
+- GlobalKey，通常我们会使用GlobalKey某个Widget对应的Widget或State或Element
+
+> 我们也可以通过快捷键 `option` + `command` + `b` 查看具体的实现的key
+
+
+
+前面我们已经介绍过了
+
+## 2、LocalKey
+
+LocalKey 有三个子类:
+
+- ValueKey:
+
+  ValueKey是当我们以特定的值作为key时使用, 比如: 一个String, 数字等
+
+- Objectkey:
+
+  如果有2个学生, 他们的名字一样, 使用name作为他们的key就不合适了, 我们可以创建一个学生对象用这个对象作为key
+
+- UniqueKey:
+
+  如果我们要确保key的唯一性, 可以使用UniqueKey, 比如: 我们通常使用随机数来保证每次key的不同, 但是有时随机数也可能是一样的不安全, 这时我们就可以使用 UniqueKey 不用我们再费心了. 
+
+
+
+## 3、GlobalKey
+
+GlobalKey可以帮助我们访问某个Widget的信息，包括Widget或State或Element等对象
+
+> 换句话说,
+>
+> 我们在开发flutter的过程中, 有时想在一个widget中去拿另外一个Widget, 使用普通的方法是很难办到的, 这时我们就可以使用GlobalKey了. 
+
+代码如下: 我们在常见Widget时, 给Widget绑定一个key, 后面我们就可以通过这个 GlobalKey 获取到对应的widget 等等 了
+
+```
+class HomePage extends StatelessWidget {
+  // 定义一个 GlobalKey
+  final GlobalKey<_HomeContentState> homeKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('测试 global key'),
+      ),
+      body: HomeContent(key: homeKey,),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.pets),
+        onPressed: (){
+
+          // 我们定义了 GlobalKey 后可以通过这个 key 获取到以下
+          print('1context: ${homeKey.currentContext}');
+          print('2state: ${homeKey.currentState}');
+          print('3widget: ${homeKey.currentState.widget}');
+          homeKey.currentState.test();
+          print('5widget name: ${homeKey.currentState.widget.name}');
+          print('6state value: ${homeKey.currentState.value}');
+          
+
+        },
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatefulWidget {
+  final name = 'home content name';
+  
+  HomeContent({Key key}):super(key: key);
+  @override
+  _HomeContentState createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  final value = 'home content state value';
+
+  test(){
+    print('home content state test');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 十八、状态管理
+
+
+
+## 1、Flutter 中状态State的介绍
+
+
+
+### 1、认识状态管理
+
+> 说明:
+
+- 状态管理是声明式编程非常重要的一个概念.
+
+  我们在前面介绍过flutter是声明式编程范式.
+
+下面我们就来介绍一下声明式编程中一个重要的**状态管理**
+
+
+
+很多从命令式编程框架`(Android 或者 iOS 原生开发)` 转成声明式编程`(Flutter、Vue、React等)` 刚开始并不适应, 因为需要一个新的角度来考虑App 的开发模式.
+
+Flutter作为一个现代的框架, 是**声明式编程**
+
+![](images/state1.jpg) 
+
+在编写一个应用的过程中, 我们有大量的`State` 需要进行管理, 而正是对这些`State` 的改变, 来更新界面的刷新. 
+
+![](images/state2.jpg) 
+
+
+
+### 2、不同状态管理分类
+
+- **短时状态** `Ephemeral state`
+
+  - 这种状态只需要使用`StatefulWidget` 对应的 `State` 类自己管理即可, Widget 树中的其它部分并不需要访问这个状态.
+
+    > 其实, 在前面的开发中, 我们就一直在强调我们flutter中的Widget主要有两种, 一种是`StatelessWidget` 另一种是`StatefulWidget` , 在那个时候就在介绍状态了.只是没有详细讲什么是状态, 状态拿来做什么, flutter中为什么要有状态,以及Widget为什么要分为`StatelessWidget 和 StatefulWidget`,
+    >
+    > 换句话说, StatefulWidget中的state就是一种状态的管理方式,短时状态
+
+- **应用状态**  `App State` 
+
+  - 前面我们提到的 **短时状态** `Ephemeral State` 指的是`StatefulWidget` 中的State, 这种状态State, 主要的应用场景是记录组件内部自己的状态.
+
+    > 比如: 一个按钮是选中的还是未选中的, StatefulWidget内部自己维护就好, 外部不需要关心
+
+  - 在整个项目的开发中我们会用到很多的`StatefulWidget`, 每个`StatefulWidget` 中都维护着自己的状态, 通常外部是不需要关心的. 但是在有些应用场景下各个不同的组件之间的状态`State`其实是密切关联的, 不可能各管各的.
+
+    > 比如: 用户的个性化选项状态直接决定了其它页面(组件) 的显示样式, 用户的登录状态直接影响了其它页面的展示, 消息未读数的等等
+
+    如果这些相互关联的状态在`Widget` 之间传来、传去, 那么是无穷无尽的, 并且代码的耦合度是非常的高, 牵一发而动全身, 这对程序员来说是灾难性的, 整个项目的交期和质量将是没有保证.
+
+    在这时候, 我们要介绍的**全局状态管理** 就出场了,我们可以对多个组件之间共同的状态进行统一的管理和应用那个. 这种复杂的多组件之间相互依赖的状态我们一般称为**应用状态 App State**, 这种状态不能只在单个StatefulWidget中进行管理了. 
+
+     
+
+### 3、如何选择不同的管理方式
+
+在前面我们介绍flutter开发中的状态有2种: `短时状态` 和 `应用状态` , 但是在实际的开发中我们并没有明确的规则去判断划分, 那些状态应当划分为短时状态, 那些状态需要被划分为应用状态.
+
+因为随着我们开发的进行, 项目的维护, 短时状态可能升级为应用状态, 应用状态的数据也可能演化为短时状态的数据.
+
+针对,状态的管理方式的问题, Redux 的作者 `Dan Abramov` 是这样回答的
+
+> The rule of thumb is: Do whatever is less awkward
+>
+> 原则就是, 选择尽可能减少麻烦的方式
+
+
+
+
+
+## 2、共享状态管理
+
+
+
+### 1、InheritedWidget
+
+flutter 中的 `InheritedWidget`  和 React中的`context` 功能是类似的.可以实现跨组件数据的传递.定义一个共享数据的`InheritedWidget` , 需要继承自 `InheritedWidget`
+
+> inherited 是继承的意思
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
