@@ -1,5 +1,3 @@
-# flutter 开发快捷键
-
 ## 1、android studio 
 
 - hot reload 功能, 快捷键  `command + \`
@@ -42,6 +40,10 @@
 
 - 当有时我们在编写flutter代码的时候, 已经把Widget写出来的, 但是因为没有import报错, 但是我们这时却不知道怎么导入正确的文件, 这时快捷键 `option` + `enter` 就会有提示
 
+- android studio 快速生成`getter` 、`setter` 、`toString` 、`构造方法` , 以及`==` 运算符重载方法等的快捷键: `command` + `n` 
+
+  注意: 要先选中类再使用快捷键
+
 
 
 ## flutter 帮助网站
@@ -53,8 +55,18 @@
 - 中文网站
 
   flutter.cn
+  
+- flutter 中文网站
 
+  flutterchina.club
 
+- 查询flutter文档的网站
+
+  https://api.flutter.dev 进入到网站后直接输入 类名搜索即可
+
+- 查看第三方库安装方式
+
+  https://pub.dev 然后搜索 第三方库名, 再选择 install
 
 ## 2、设置修改 android studio 快捷键
 
@@ -2071,7 +2083,7 @@ class Student{
 
 
 
-# 六、枚举、泛型
+# 六、枚举、泛型、扩展
 
 
 
@@ -2207,6 +2219,20 @@ main(List<String> args){
 	print(l2.x.runtimeType); // String 
 }
 ```
+
+
+
+## 3、extension 扩展
+
+做过iOS开的的都知道, 我们可以为某个为通过扩展的形式添加方法,
+
+其实在Dart中现在也是可以的. 
+
+
+
+
+
+
 
 
 
@@ -4057,6 +4083,8 @@ class TextContent extends StatelessWidget {
 
 
 
+### 1、按钮的简单使用呢
+
 Material widget库中提供了多种按钮Widget如: `FloatingActionButton`、`RaisedButton`、`FlatButton`、`OutlineButton`等
 
 ```
@@ -4138,6 +4166,110 @@ class ButtonDemoContent extends StatelessWidget {
 ```
 
 ![](images/buttondemo1.png)  
+
+
+
+### 2、小button 的使用
+
+我们在flutter开发中,默认情况下Button的大小是由内容决定的, 但是默认情况下即便button的内容很少, button 也是有一个默认的宽度和高度的, 这就导致了一个问题, 当我们想设置一个很小的button 时很困难.
+
+当我们在查看源码时发现, 在button 的build 方法中使用了 `ButtonThemeData` , 在ButtonThemeData 中有设置默认的宽和高
+
+- RaiseButton 的build 方法定义如下: 
+
+  ```
+  @override
+    Widget build(BuildContext context) {
+      final ThemeData theme = Theme.of(context);
+      // 就是这个ButtonnThemeData 中有设置button 默认的宽高
+      final ButtonThemeData buttonTheme = ButtonTheme.of(context);
+      return RawMaterialButton(
+        onPressed: onPressed,
+        onLongPress: onLongPress,
+        onHighlightChanged: onHighlightChanged,
+        clipBehavior: clipBehavior,
+        fillColor: buttonTheme.getFillColor(this),
+        textStyle: theme.textTheme.button.copyWith(color: buttonTheme.getTextColor(this)),
+        focusColor: buttonTheme.getFocusColor(this),
+        hoverColor: buttonTheme.getHoverColor(this),
+        highlightColor: buttonTheme.getHighlightColor(this),
+        splashColor: buttonTheme.getSplashColor(this),
+        elevation: buttonTheme.getElevation(this),
+        focusElevation: buttonTheme.getFocusElevation(this),
+        hoverElevation: buttonTheme.getHoverElevation(this),
+        highlightElevation: buttonTheme.getHighlightElevation(this),
+        disabledElevation: buttonTheme.getDisabledElevation(this),
+        padding: buttonTheme.getPadding(this),
+        visualDensity: visualDensity ?? theme.visualDensity,
+        constraints: buttonTheme.getConstraints(this),
+        shape: buttonTheme.getShape(this),
+        focusNode: focusNode,
+        autofocus: autofocus,
+        animationDuration: buttonTheme.getAnimationDuration(this),
+        materialTapTargetSize: buttonTheme.getMaterialTapTargetSize(this),
+        child: child,
+      );
+    }
+  ```
+
+- ButtonThemeData 的构造方法如下:
+
+  ```
+  const ButtonThemeData({
+      this.textTheme = ButtonTextTheme.normal,
+      
+      // 在设立设置的button 的默认宽高
+      this.minWidth = 88.0,
+      this.height = 36.0,
+      EdgeInsetsGeometry padding,
+      ShapeBorder shape,
+      this.layoutBehavior = ButtonBarLayoutBehavior.padded,
+      this.alignedDropdown = false,
+      Color buttonColor,
+      Color disabledColor,
+      Color focusColor,
+      Color hoverColor,
+      Color highlightColor,
+      Color splashColor,
+      this.colorScheme,
+      MaterialTapTargetSize materialTapTargetSize,
+    }) : assert(textTheme != null),
+         assert(minWidth != null && minWidth >= 0.0),
+         assert(height != null && height >= 0.0),
+         assert(alignedDropdown != null),
+         assert(layoutBehavior != null),
+         _buttonColor = buttonColor,
+         _disabledColor = disabledColor,
+         _focusColor = focusColor,
+         _hoverColor = hoverColor,
+         _highlightColor = highlightColor,
+         _splashColor = splashColor,
+         _padding = padding,
+         _shape = shape,
+         _materialTapTargetSize = materialTapTargetSize;
+  ```
+
+如果我们要想设置 小button只需在项目中修改默认的 ButtonThemeData 即可
+
+- 设置小button代码如下:
+
+  ```
+  main(List<String> args) {
+    runApp(MaterialApp(
+        title: '安卓最近使用app title', // 这个属性只在android 上有效, 在iOS 上无效
+        theme: ThemeData(
+            // 2. 设置 默认的button 大小
+            buttonTheme: ButtonThemeData(
+              minWidth: 10,
+              height: 10,
+              buttonColor: Colors.orange // 设置默认button背景色
+            )
+        ),
+        home: MyApp()));
+  }
+  ```
+
+  
 
 
 
@@ -7777,13 +7909,19 @@ class YRSubjectConntent extends StatelessWidget {
 
 在我们整个flutter开发中必须要掌握三棵树, 否则的话是没有办法深入学习的.
 
-- Widget Tree
-- Element Tree
-- RenderObject Tree
+- Widget Tree, 是用来描述widget 与Widget之间的一个关系的
+- Element Tree, Element是用来描述Element 之间的树状关系的
+- RenderObject Tree, renderObject 是用来描述renderObject 之间的树状关系的
+
+> 是这样的, 我们以前学过数据结构都是知道的, 在一个树结构中, 我们通过自己在整棵树中的位置就可以向上查到父节点获取父节点的相关信息, 也可以往下查有那些子节点, 并获取子节点的信息, 这是我们树的一个特点
 
 ![](images/1599197391973.jpg) 
 
-
+> 这里, 我们可以顺便提一下:
+>
+> - 一个widget 节点会有一个与之对应的Element节点
+> - 一个Element节点可能没有与之对应的RenderObject节点与之对应
+> - Element 是一个承上启下的树, 上联系 widget tree , 下联系 renderObject tree, 它相当于是中间的纽带
 
 ### 1、什么是Widget
 
@@ -7806,244 +7944,493 @@ class YRSubjectConntent extends StatelessWidget {
 - Element是一个Widget的实例，在树中详细的位置。
 - Widget描述和配置子树的样子，而Element实际去配置在Element树中特定的位置。
 
-> 一个widget 实例在被创建后有一个与之对应的Element对象也被创建了, widget 与 Element 是一一对应的
+> 一个widget 实例在被创建后有一个与之对应的Element对象也被创建了, widget 与 Element 是一一对应
 
 
 
-### 3、什么是RenderObject
-
-官方对RenderObject的描述：
-
-- 渲染树上的一个对象
-- RenderObject层是渲染库的核心
-
-> 个人理解:
->
-> RenderObject就是我们最终页面上所看到的UI
+## 2、Widget 的继承链
 
 
 
-## 2、组件Widget 和 渲染Widget 
+### 1、渲染Widget 继承链
 
-### 1、widget 分类
+- Padding 继承链
 
-在我们开发中一般习惯将Widget划分为两类: **组件Widget 和 渲染Widget** 
-
-- 组件widget是不会生成RenderObject的, 其功能特点仅仅是将其它的Widget组合在一起形成一个新的Widget, 达到某用UI组合展示的效果,常见的主要有: 
-
-  `Container` 、`Text` 、`StatelessWidget` 、`StatefulWidget` , 以及这些widget的子类
-
-- 渲染Widget是指会生成RenderObject的Widget, 一般主要有: `Padding、Row` 
-
-> 先下一个总结, 后面解释:
->
-> 实现了 createRenderObject 方法的Widget 是渲染Widget, 其它的就是组件widget
-
-
-
-### 2、渲染Widget的继承链 
-
-- Padding继承链
-
-  `Padding` -->  `SingleChildRenderObjectWidget`  --> `RenderObjectWidget` --> `Widget` 
-
-- Row继承链
-
-  `Row`  --> `Flex` --> `MultiChildRenderObjectWidget` --> `RenderObjectWidget` - `Widget`
+  ```
+  class Padding extends SingleChildRenderObjectWidget 
+  abstract class SingleChildRenderObjectWidget extends RenderObjectWidget 
   
-  > 渲染Widget继承链总结:
+  abstract class RenderObjectWidget extends Widget 
+  ```
+
+- Row 继承链
+
+  ```
+  class Row extends Flex 
+  class Flex extends MultiChildRenderObjectWidget
+  abstract class MultiChildRenderObjectWidget extends RenderObjectWidget
+  
+  abstract class RenderObjectWidget extends Widget
+  ```
+
+
+
+### 2、组件Widget 继承链
+
+- Container 继承链
+
+  ```
+  class Container extends StatelessWidget 
+  
+  abstract class StatelessWidget extends Widget
+  ```
+
+- Text 继承链
+
+  ```
+  class Text extends StatelessWidget 
+  
+  abstract class StatelessWidget extends Widget
+  ```
+
+- StatefulWidget 继承链
+
+  ```
+  abstract class StatefulWidget extends Widget 
+  ```
+
+
+
+### 3、Widget 继承链的特点
+
+Widget 根类定义的部分代码
+
+```
+abstract class Widget extends DiagnosticableTree 
+	@protected
+  Element createElement();
+}
+```
+
+1. 不论是 `渲染widget` 还是 `组件widget` 都是继承自Widget
+
+2. 所有的widget 都有一个createElement(); 方法
+
+3. 所有的渲染widget都继承自RenderObjectWidget.
+
+   > 结论:
+   >
+   >  继承自 RenderObjectWidget 的widget 是渲染widget
+
+4. 所有的组件widget 都继承自 StatelessWidget 或者 StatefulWidget
+
+   > 结论:
+   >
+   > 继承自 StatelessWidget 或者 StatefulWidget 的widget 都是 组件widget 
+
+
+
+## 3、渲染widget createElement 的流程
+
+
+
+### 1、渲染Widget ,Padding的CreateElement流程
+
+- Padding 类的定义
+
+  ```
+  // Padding 类的定义如下: 
+  class Padding extends SingleChildRenderObjectWidget {
+  
+  	@override
+    RenderPadding createRenderObject(BuildContext context) {
+      return RenderPadding(
+        padding: padding,
+        textDirection: Directionality.of(context),
+      );
+    }
+  }
+  ```
+
+  > 我们发现Padding中没有实现 Element 中定义的 createElement() 抽象方法, 说明在Padding的父类中可定实现了, 我们看下它的父类, 如下: 
+
+  
+
+- SingleChildRenderObjectWidget 类定义如下:
+
+  ```
+  abstract class SingleChildRenderObjectWidget extends RenderObjectWidget {
+     
+    @override
+    SingleChildRenderObjectElement createElement() => SingleChildRenderObjectElement(this);
+  }
+  ```
+
+  > 我们发现 SingleChildRenderObjectWidget 实现了Element父类定义的抽象方法 createElement() , 直接返回的是一个SingleChildRenderObjectElement对象, 我们来看下SingleChildRenderObjectElement的具体实现, 如下: 
+
+- SingleChildRenderObjectElement 的主要实现代码如下:
+
+  ```
+  class SingleChildRenderObjectElement extends RenderObjectElement {
+    
+    SingleChildRenderObjectElement(SingleChildRenderObjectWidget widget) : super(widget);
+  
+    @override
+    void mount(Element parent, dynamic newSlot) {
+      super.mount(parent, newSlot);
+      _child = updateChild(_child, widget.child, null);
+    }
+  }
+  ```
+
+  > 通过查看源码, 我们发现没有什么重要的代码, 比较有特点的就是构造方法和mount() 方法, 我们再继续看父类
+
+- RenderObjectElement 主要实现如下: 
+
+  ```
+  abstract class RenderObjectElement extends Element {
+    // 构造方法
+    RenderObjectElement(RenderObjectWidget widget) : super(widget);
+    
+    
+    @override
+    void mount(Element parent, dynamic newSlot) {
+      super.mount(parent, newSlot);
+      
+      _renderObject = widget.createRenderObject(this);
+      attachRenderObject(newSlot);
+      _dirty = false;
+    }
+  }
+  ```
+
+  我们接着再往父类看
+
+- Element 的实现如下:
+
+  ```
+  abstract class Element extends DiagnosticableTree implements BuildContext {
+  
+    Element(Widget widget)  : assert(widget != null),  _widget = widget;
+  
+    Element _parent;
+    
+    dynamic get slot => _slot;
+    dynamic _slot;
+    
+    @override
+    Widget get widget => _widget;
+    Widget _widget;
+    
+   
+  	// 其实Element 中的mount方法发的主要作用就是将Element挂载到Element 树上
+    @mustCallSuper
+    void mount(Element parent, dynamic newSlot) {
+     
+      _parent = parent;		// 父Element
+      _slot = newSlot;		// 插槽
+      _depth = _parent != null ? _parent.depth + 1 : 1;
+      _active = true;
+      if (parent != null) // Only assign ownership if the parent is non-null
+        _owner = parent.owner;
+      final Key key = widget.key;
+      if (key is GlobalKey) {
+        key._register(this);
+      }
+      _updateInheritance();
+    }
+    
+  }
+  ```
+
+**总结:**
+
+对源码的分析我们发现, 整个 渲染Widget 的实例化过程是这样的
+
+1. 每个Widget在实例过程中都会调用一个 叫createElement的方法, 创建一个Element对象.
+2. widget在执行createElement时会将Widget自己传入Element的构造方法, 这样Element对象 被创建后就持有了Widget
+3. Element对象创建后会执行Element里的一个叫做mount的方法, 渲染Widget对应你的Element在执行mount() 方法时会做 2件事, 一件事就是将Element 挂载到Element Tree 上, 另外一件事就是创建一个RenderObject对象
+
+### 2、渲染widget, Row的createElement流程
+
+- Row类的定义如下:
+
+  ```
+  class Row extends Flex {
+   //  Row() 的构造方法 
+  }
+  ```
+
+- Flex 类的定义
+
+  ```
+  class Flex extends MultiChildRenderObjectWidget {
+  
+  	// 实现了 createRenderObject()
+  	@override
+    RenderFlex createRenderObject(BuildContext context) {
+      return RenderFlex(
+        direction: direction,
+        mainAxisAlignment: mainAxisAlignment,
+        mainAxisSize: mainAxisSize,
+        crossAxisAlignment: crossAxisAlignment,
+        textDirection: getEffectiveTextDirection(context),
+        verticalDirection: verticalDirection,
+        textBaseline: textBaseline,
+      );
+    }
+  }
+  ```
+
+- MultiChildRenderObjectWidget
+
+  ```
+  abstract class MultiChildRenderObjectWidget extends RenderObjectWidget {
+  
+  	@override
+    MultiChildRenderObjectElement createElement() => MultiChildRenderObjectElement(this);
+  }
+  ```
+
+-  MultiChildRenderObjectElement
+
+  ```
+   class MultiChildRenderObjectElement extends RenderObjectElement {
+   
+     @override
+      void mount(Element parent, dynamic newSlot) {
+        super.mount(parent, newSlot);
+        
+        _children = List<Element>(widget.children.length);
+        Element previousChild;
+        for (int i = 0; i < _children.length; i += 1) {
+          final Element newChild = inflateWidget(widget.children[i], IndexedSlot<Element>(i, previousChild));
+          _children[i] = newChild;
+          previousChild = newChild;
+        }
+      }
+   }
+  ```
+
+- RenderObjectElement
+
+  ```
+  abstract class RenderObjectElement extends Element {
+    // 构造方法
+    RenderObjectElement(RenderObjectWidget widget) : super(widget);
+    
+    
+    @override
+    void mount(Element parent, dynamic newSlot) {
+      super.mount(parent, newSlot);
+      
+      _renderObject = widget.createRenderObject(this);
+      attachRenderObject(newSlot);
+      _dirty = false;
+    }
+  }
+  ```
+
+- Element
+
+  ```
+  abstract class Element extends DiagnosticableTree implements BuildContext {
+  
+    Element(Widget widget)  : assert(widget != null),  _widget = widget;
+  
+    Element _parent;
+    
+    dynamic get slot => _slot;
+    dynamic _slot;
+    
+    @override
+    Widget get widget => _widget;
+    Widget _widget;
+    
+   
+  	// 其实Element 中的mount方法发的主要作用就是将Element挂载到Element 树上
+    @mustCallSuper
+    void mount(Element parent, dynamic newSlot) {
+     
+      _parent = parent;		// 父Element
+      _slot = newSlot;		// 插槽
+      _depth = _parent != null ? _parent.depth + 1 : 1;
+      _active = true;
+      if (parent != null) // Only assign ownership if the parent is non-null
+        _owner = parent.owner;
+      final Key key = widget.key;
+      if (key is GlobalKey) {
+        key._register(this);
+      }
+      _updateInheritance();
+    }
+    
+  }
+  ```
+
+  
+
+## 4、组键Widget createElement的流程
+
+### 1、组键widget,Container 的createElement 流程
+
+- Container 类的定义
+
+  ```
+  class Container extends StatelessWidget {
+    // 没有定义与Element相关方法
+  }
+  ```
+
+- StatelessWidget 类的定义
+
+  ```
+  abstract class StatelessWidget extends Widget {
+    @override
+    StatelessElement createElement() => StatelessElement(this);
+  }
+  ```
+
+- StatelessElement 类的定义
+
+  ```
+  class StatelessElement extends ComponentElement {
+    StatelessElement(StatelessWidget widget) : super(widget);
+    
+    @override
+    StatelessWidget get widget => super.widget as StatelessWidget;
+    
+    @override
+    Widget build() => widget.build(this); 
+    // 这里的build() 相当于是调用子类的build方法, 参数就是 StatelessElement
+  }
+  ```
+
+- ComponentElement 类的定义
+
+  ```
+  abstract class ComponentElement extends Element {
+   ComponentElement(Widget widget) : super(widget);
+  
+    Element _child;
+  
+    @override
+    void mount(Element parent, dynamic newSlot) {
+    	super.mount(parent, newSlot);
+       
+      _firstBuild(); 
+      // 这个方法太重要了, 这个方法最终会执行 widget.build()
+      // 这步是 widget 中最关键的方法之一
+    }
+  }
+  ```
+
+- Element 类的定义
+
+  ```
+  abstract class Element extends DiagnosticableTree implements BuildContext {
+  	
+  	@mustCallSuper
+    void mount(Element parent, dynamic newSlot) {
+      _parent = parent;
+      _slot = newSlot;
+      _depth = _parent != null ? _parent.depth + 1 : 1;
+      _active = true;
+      if (parent != null) // Only assign ownership if the parent is non-null
+        _owner = parent.owner;
+      final Key key = widget.key;
+      if (key is GlobalKey) {
+        key._register(this);
+      }
+      _updateInheritance();
+    }
+    
+  }
+  ```
+
+  >  当我们在阅读源码的时候, 我们发现在Element里面有个mount方法, 在执行mount方法的时候里面主要做了以下几件事情: 
+
+  - 首先mount()方法内部会调用 _firstBuild()方法
+  - 在_firstBuild() 方法内部会再调用performRebuild() 方法
+  - 在performRebuild() 方法内部会调用 build() 方法
+  - 在build() 方法内会调用 widget.build() 方法, 而这个widget就是在创建Element时传递进来的Widget
+
+### 2、组件Widget, StatefulWidget的createElement流程
+
+- StatefulWidget 类定义
+
+  ```
+  abstract class StatefulWidget extends Widget {
+  
+  	 StatefulElement createElement() => StatefulElement(this);
+  	 
+  	 // 抽象方法, 子类必须实现
+  	 @protected
+    	State createState();
+  }
+  ```
+
+- StatefulElement 类定义
+
+  ```
+  class StatefulElement extends ComponentElement {
+  
+    // 这个方法也是相当的重要
+    // 这里Element 就持有了 State
+   	StatefulElement(StatefulWidget widget)   : _state = widget.createState(), super(widget{
+   		// 这里 state 就持有了 widget
+      _state._widget = widget;
+   }
+  	
+  	// 这里就是执行了 state 中的 build 方法了
+  	Widget build() => _state.build(this);  // 这个方法很重要
+  }
+  ```
+
+- ComponentElement 类定义
+
+  ```
+  abstract class ComponentElement extends Element {
+  	void mount(Element parent, dynamic newSlot) {
+      super.mount(parent, newSlot);
+      
+      _firstBuild();
+    }
+  }
+  
+  ```
+
+- Element 类的定义
+
+  ```
+  abstract class Element extends DiagnosticableTree implements BuildContext {
+  	
+  	@mustCallSuper
+    void mount(Element parent, dynamic newSlot) {
+      _parent = parent;
+      _slot = newSlot;
+      _depth = _parent != null ? _parent.depth + 1 : 1;
+      _active = true;
+      if (parent != null) // Only assign ownership if the parent is non-null
+        _owner = parent.owner;
+      final Key key = widget.key;
+      if (key is GlobalKey) {
+        key._register(this);
+      }
+      _updateInheritance();
+    }
+    
+  }
+  ```
+
+  > 当我们在阅读源码的时候, 我们发现在Element里面有个mount方法, 在执行mount方法的时候里面主要做了以下几件事情: 
   >
-  > 1. 从上面的渲染widget的继承链我们可以发现一个特点, 只要是一个渲染的widget, 不论是单子Widget(Padding是单子)还是多子Widfget(Row 是多子) , 最终都是继承自`RenderObjectWidget` 这个类的
-  > 2. RenderObjectWidget主要有2个子类`SingleChildRenderObjectWidget` 和 `MultiChildRenderObjectWidget` 
-  
-
-
-
-### 3、组件Widget 的继承链
-
-- Container继承链
-
-  `Container` --> `StatelessWidget` --> `Widget` 
-
-- Text的继承链
-
-  `Text` --> `StatelessWidget` --> `Widget` 
-
-- 自定义继承自StatefulWidget的Widget的继承链
-
-  `自定义Widget` --> `StatefulWidget` --> `Widget` 
-
->  组件Widget继承链总结:
->
-> 1. 从上面的组件Widget的继承链, 我们可以发现这样一个特点, 不论是系统提供的组件Widget还是我们自定义组件Widget, 都是直接继承自StatelessWidget 或者 StatefulWidget, 最终都是继承自Widget
-
-
-
-### 4、widget 继承链总结
-
-1. 从上面渲染Widget和组件Widget的继承链我们可以发现所有的子Widget 都是继承自Widget, 也就是说不论是渲染Widget还是组件Widget 都是Widget的子类, 
-2. 渲染widget和组件widget的相同点是这两类Widget都是继承自Widget的, 有一个共同的根.
-3. 渲染Widget和组件widget的不同点在于, 渲染widget 都是从 RenderObjectWidget子类派生出来的子类, 而组件widget是从StatelessWidget或者StatefulWidget 派生出来的子类
-4. 从Widget这个根开始, 派生出了三个类别的子Widget
-   - RenderObjectWidget 子类
-   - StatelessWidget 子类
-   - StatefulWidget 子类
-
-
-
-> 结合我们以前对flutter的学习知识和前面4点继承链的总结, 我们大致可以得出这样的结论:
->
-> 1. flutter中所有的Widget 最终都是继承自Widget, 这也就验证了我们以前说过的话: **`在flutter中一切皆Widget`** 
->
-> 2. 在flutter开发中的大致思路是这样的, 
->
->    2.1. 一类Widget用来负责最基础的渲染显示这类Widget就是继承自RenderObject的Widget的子Widget
->
->    2.2 一类Widget用来组装其它Widget用来达到某种组合展示的效果, 这类widget就是继承自StatelessWidget 的子Widget, 这类Widget一旦展示出来就不能在变化了
->
->    2.3 最后一类Widget就是用来组装其它Widget用来达到某种组合展示的效果并且有状态可以调整的Widget, 这类Widget就是继承自StatefulWidget的子Widget
-
-
-
-## 3、Widget创建RenderObject的本质流程
-
-下面我们义Padding这个Widget的实现流程来分析查看一个Widget创建RenderObject的本质
-
-- **RenderObjectWidget特点**  
-
-  我们在看源码时发现, RenderObjectWidget 除了继承自Widget类外, 它还有一个特点就是它有一个`RenderObject createRenderObject(BuildContext context);` 方法. 这也是RenderObjectWidget 具备渲染功能的原因.
-
-- **createRenderObject** 的实现分析
-
-  1. 当我们在分析源码时发现, RenderObjectWidget 类的 `createRenderObject()` 方法是抽象方法, 说明`createRenderObject()` 方法是留给子类实现的. 
-
-  2. 那么这个`createRenderObject` 方法到底是在哪里实现的呢? 
-
-  3. 根据我们的分析, 我们发现 `RenderObjectWidget` 这个类主要有2个子类: 
-
-     `SingleChildRenderObjectWidget` 和 `MultiChildRenderObjectWidget` 
-
-     但是通过源码查看这两个子类都也没有实现 `createRenderObject()` 方法 
-
-  4. 经过查看发现`Padding` 和 `Flex` 中实现了`createRenderObject()`方法.
-
-- `Pading` 中的createRenderObject 方法的实现流程
-
-  经过我们对源码的查看, 我们发现在`Padding` 内部实现了`createRenderObject()` 方法, 在这个方法内部返回了一个`RenderPadding` 对象, 而`RenderPadding` 继承自 `RenderShiftedBox` 继承自`RenderBox` 继承自`RenderObject`
-
-  
-
-**总结:** 
-
-**1.经过上面的源码分析, 我们就知道了Widget是如何创建RenderObject的了. 其本质上就是在Widget中实现createRenderObject() 方法, 在这个方中创建了renderObject**  ,至于在哪里调用的`createRenderObject()` 方法的, 这个我们后面再说
-
-**2.上面我们分析的是 渲染Widget, 得到的widget创建 renderObject 的本质, 但是如果我们那 组件Widget(比如: Contianer) 来分析, 我是是找不到 createRenderObject方法的实现的, 也就是组件Widget(比如: Container) 是不能直接创建 renderObject对象的. ** 
-
-
-
-## 4、Widget 与 Element 的关系
-
-
-
-### 1、渲染Widget 与 Element 的关系 分析
-
-我们还是先以`Padding` 这个渲染widget来分析下Element的创建本质.
-
-- Padding的继承链:
-
-  `Padding` --> `SingleChildRenderObjectWidget` --> `RenderObjectWidget` --> `Widget` 
-
-  当我们从子Widget Padding 一直往父Widget查看源码时, 我们发现 Padding 内是没有与Element 相关的方法的, 但是我们在父类SingleChildRenderObjectWidget 中发现了一个`createElement()`方法,如下:
-
-  ```
-  @override
-  SingleChildRenderObjectElement createElement() => SingleChildRenderObjectElement(this);
-  ```
-
-  我们再继续往父类查看源码, 我们发现在父类RenderObjectWidget中有个抽象的`createElement()` 方法, 如下:
-
-  ```
-  @override
-  RenderObjectElement createElement();
-  ```
-
-  我们再继续往父类看, 发现父类Widget中有个抽象的`createElement();` 方法
-
-  ```
-  @protected
-  Element createElement();
-  ```
-
-  最后我发现, 最早定义`createElement()` 方法的父类就是`Widget` 类 
-
-
-
-### 2、组件Widget 与Element 的关系 分析
-
-这里我们先以`Container` 组件Widget为例来分析下他与Element的关系
-- Container的继承链:
-
-  `Conntainer` --> `StatelessWidget` --> `Widget` 
-
-  我们查源码发现在Container类中是没有实现createElement() 方法的, 我们再看下他的父类
-
-  我们发现在父类StatelessWidget 中实现了createElement() 方法, 如下:
-
-  ```
-  @override
-  StatelessElement createElement() => StatelessElement(this);
-  ```
-
-- 再看下父类Widget中, 发现了抽象方法 createElement(), 如下:
-
-  ```
-  @protected
-  Element createElement();
-  ```
-
-
-
-下面我们再来看下StatefulWidget这个组件Widget与Element的关系,
-
-- StatefulWidget的继承链
-
-  `StatefulWidget` --> `Widget` 
-
-  查看源码我们发现在StatefulWidget 类中实现了createElement方法, 如下:
-
-  ```
-  @override
-  StatefulElement createElement() => StatefulElement(this);
-  ```
-
-  再看下父类Widget中, 发现了抽象方法 createElement(), 如下:
-
-  ```
-  @protected
-  Element createElement();
-  ```
-
-  
-
-
-### 3、Widget 与Element的关系结论
-
-根据我们前面阅读 渲染Widget 与 非渲染Widget 源码, 我们得出这样的结论:
-
-- 不论是 渲染Widget 还是 非渲染Widget, 只要是Widget最后都会创建一个Element 对象与之对应, 因为Widget中有个抽象方法, 在dart 中的抽象方法子类必须实现
-- 不同的Widget对象最后创建出来与之对应的Element对象可能是不同的, 比如:
-  - Padding 的Element对象与父类相同, 对应的是 SingleChildRenderObjectElement
-  - Column 与 Row 中对应的应该是 MultiChildRenderObjectElemen
-  - Container的Element对象与父类相同, 对应的是StalelessElemennt
-  - StatefulWidget 对应的是StatefulElement
-
-> 结论
->
-> 只要是Widget 最后就会生成一个Element, Widget 与 Element 是一一对应的关系
-
-
-
-## 5 、Widget 中 Element 的实现及继承链
+  > - 首先mount()方法内部会调用 _firstBuild()方法
+  > - 在_firstBuild() 方法内部会再调用performRebuild() 方法
+  > - 在performRebuild() 方法内部会调用 build() 方法
+  > - 在build() 方法内会调用 _state.build() 方法, 而这个widget就是在创建Element时传递进来的Widget
+
+## 5、Element 的继承链 
 
 - 渲染Widget对应的 Element 继承链关系
 
@@ -8101,193 +8488,6 @@ class YRSubjectConntent extends StatelessWidget {
 
 
 
-## 5、mout() 方法流程分析
-
-### 1、ComponentElement中的mount()分析
-
->  说明: 
->
-> 这节mount()方法原理分析我们是基于ComponentElement分析的
->
-> 当然, 如果你这节能搞懂, 其它的Element的与mount() 之间的关系也就差不多了, 大同小异
-
-
-
-前面我们已经总结过了, 每个Widget都会创建一个与之对应的Element 对象. 
-
-我们阅读源码发现, 当Widget创建完对应的Element对象后, 会调用**mount** 方法(系统自己调用). 
-
-在Element 中对这个mount方法做了解释如下:
-
-```
- /// Add this element to the tree in the given slot of the given parent.
- ///
- /// The framework calls this function when a newly created element is added to
- /// the tree for the first time. Use this method to initialize state that
- /// depends on having a parent. State that is independent of the parent can
- /// more easily be initialized in the constructor.
- ///
- /// This method transitions the element from the "initial" lifecycle state to
- /// the "active" lifecycle state.
-```
-
-- 当我们在阅读源码的时候, 我们发现在Element里面有个mount方法, 在执行mount方法的时候里面主要做了以下几件事情: 
-
-  - 首先mount()方法内部会调用 _firstBuild()方法
-  - 在_firstBuild() 方法内部会再调用performRebuild() 方法
-  - 在performRebuild() 方法内部会调用 build() 方法
-  - 在build() 方法内会调用 widget.build() 方法, 而这个widget就是在创建Element时传递进来的Widget
-
-  > 换句话说:
-  >
-  > - 当我们在创建Widget时, 每一个Widget在创建时内部都会自定调用 createElement(this)方法创建一个与之对应的Element对象, 这个被创建出来的Element对象内部会持有这个Widget对象.
-  > - 当Widget对应的Element对象创建后, 系统会自动调动Element内部的mount() 方法, 而在这个mount()方法内部会做一系列的断言判断, 最后会再调用Widget.build() 方法, 将对应的Widget build 出来
-  > - 这个就是Widget 与 Element 与mount() 与 build() 方法之间的一个关系流程.
-
-  
-
-  > 补充: Widget 在执行createElement() 方式时会传入一个Widget
-
-
-
-**总结:**
-
-我们以前一直在强调所有的Widget, 不论是StatelessWidget 还是StatefulWidget, 在创建出来后会调用自己的build() , 原来我们不理解为什么Widget在创建出来后调用自己的build方法, 现在我们就理解了.  是因为Widget在被创建出来后会创建一个与之对应的Element对象, Element对象被创建后会反过来持有这个Widget, 并调用这个Widget内的build方法. 
-
-
-
-### 2、各种Element中mount方法分析
-
-- ComponentElement 中的 mount()方法
-
-  ```
-  // ComponentElement 类中的 mount() 方法的最主要的作用有2个
-  // 1个是将自己挂载到Element树上
-  // 2个是build 出其他的widget
-  abstract class ComponentElement extends Element {
-  
-    @override
-    void mount(Element parent, dynamic newSlot) {
-    	// 将自己挂载到Element树上
-      super.mount(parent, newSlot); 
-      // build 出其他的Widget
-      _firstBuild(); 
-    }
-  }
-  ```
-
-- Element 中的 mount()方法
-
-  ```
-  // Element类中的 mount()的最主要作用是将自己挂载到Element 树上
-  abstract class Element extends DiagnosticableTree implements BuildContext {
-  	
-  	@mustCallSuper
-    void mount(Element parent, dynamic newSlot) {
-      
-      _parent = parent;		// 父Element
-      _slot = newSlot;		// 插槽
-      _depth = _parent != null ? _parent.depth + 1 : 1;	// 深度
-      _active = true;
-      if (parent != null) // Only assign ownership if the parent is non-null
-        _owner = parent.owner;
-      final Key key = widget.key;
-      if (key is GlobalKey) {
-        key._register(this);
-      }
-      _updateInheritance();
-    }
-  }
-  ```
-
-  
-
-- SingleChildRenderObjectElement 中的mount()方法
-
-  ```
-  class SingleChildRenderObjectElement extends RenderObjectElement {
-    
-    @override
-      void mount(Element parent, dynamic newSlot) {
-        super.mount(parent, newSlot);
-        _child = updateChild(_child, widget.child, null);
-      }
-  }
-  ```
-
-- RenderObjectElement 中的mount()方法
-
-  ```
-  // RenderObjectElement 类中的 mount() 主要作用是
-  // 1. 将自己挂载到Element树上
-  // 2. 创建 RenderObject
-  // 3. 将创建出来的 RenderObject 挂载到RenderObject树上
-  // 其实. RenderObjectElement中的mount() 方法的一个最主要的功能是 创建出 renderObject 
-  abstract class RenderObjectElement extends Element {
-  
-  @override
-    void mount(Element parent, dynamic newSlot) {
-      super.mount(parent, newSlot); // 主要是调用Element中的mount 方法将自己挂载到Element树上
-      
-      // 主要作用树创建 renderObject, 并将RenderObject挂载到renderObject的树上
-      _renderObject = widget.createRenderObject(this);
-      
-      attachRenderObject(newSlot);
-      _dirty = false;
-    }
-  
-  }
-  
-  
-  // 从RenderObjectElement类中的 mount() 方法中, 我们可以发现 mount() 方法中创建出来的 renderObject 对象是直接赋值给了 RenderObjectElement 中的 _renderObject 属性了
-  // 结合前面我们讲过的 createElemennt() 方法, 我们可以知道, 在RenderObjectElement 中有两个属性
-  // _widget 和 _renderObject, 
-  
-  也就是说我们可以总结一下:
-  RenderObjectElement 有承上启下的的供能, 因为 RenderObjectElement中 有一个_widget 用来呈上连接Widget, 有一个_renderObjecgt 用来启下连接 renderObject 
-  ```
-
-- Element 中的 mount()方法
-
-  ```
-  // Element 中的 mount() 的最主要的作用就是把自己挂在到Element 树中
-  abstract class Element extends DiagnosticableTree implements BuildContext {
-  	
-  	@mustCallSuper
-    void mount(Element parent, dynamic newSlot) {
-      _parent = parent;		// 父类
-      _slot = newSlot;		// 插槽
-      _depth = _parent != null ? _parent.depth + 1 : 1;	// 深度
-      _active = true;
-      if (parent != null) // Only assign ownership if the parent is non-null
-        _owner = parent.owner;
-      final Key key = widget.key;
-      if (key is GlobalKey) {
-        key._register(this);
-      }
-      _updateInheritance();
-    }
-  }
-  ```
-
-- StatefulWidget 对应的 ComponentElement 中的mount() 方法
-
-我们查看源码时发现, StatefulWidget 在创建后会调用createElement() 方法, 而StatefulWidget 中的createElement() 方法内直接返回的是一个StatefulElement 对象, 在StatefulElement对象创建的时候做了一件比较奇怪的事情, 
-
-```
-StatefulElement(StatefulWidget widget)
-      : _state = widget.createState(),	// 这句代码很熟悉啊, 创建state, 调用StatefulWidget中的createState
-        super(widget) {
-        
-    _state._element = this;			// state 中持有Element
-    _state._widget = widget;		// state 中持有 widget
-}
-```
-
-从上面的代码我们可以发现:
-
-1. 在StatefulElement 中持有了 StatefulWidget  中创建的State
-2. StatefulElement 中的State 又持有了Widget, 这也是为什么我们以前在State 中可以直接使用 this.widget 的原因
 
 
 
@@ -8427,7 +8627,7 @@ class _HomeContentState extends State<HomeContent> {
 
 
 
-# 十八、状态管理
+# 二一、状态管理
 
 
 
@@ -8503,16 +8703,295 @@ Flutter作为一个现代的框架, 是**声明式编程**
 
 ## 2、共享状态管理
 
+flutter中常用的数据共享方式:
+
+`StatefulWidget中的短时状态数据共享`、 `自定义继承自InheritedWidget下所有子节点数据共享` `provider Consumer数据共享` 
 
 
-### 1、InheritedWidget
 
-flutter 中的 `InheritedWidget`  和 React中的`context` 功能是类似的.可以实现跨组件数据的传递.定义一个共享数据的`InheritedWidget` , 需要继承自 `InheritedWidget`
+### 1、InheritedWidget 共享数据
+
+
+
+#### 1、InheritedWidget 数据共享原理
+
+在讲InheritedWidget 共享数据前我们先来介绍一些内容:
+
+首先让我们再来回顾一下, flutter 中的三棵树: `widget tree` 、`Element tree` 、`RenderObject tree` , 示意图如下: 
+
+![](images/1599197391973.jpg)
+
+- 我们知道 tree 是用来描述节点之间数据结构关系的,  当我们拿到一个节点后我们就可以向上获取到它的祖先节点, 向下获取到它的子节点. 
+
+- 在flutter开发中我们知道每一个Widget 都有一个与之对应的Element对象, Element 中有个`_widget`属性, 这样我们通过Element 就可以拿到对应的Widget
+
+- 如果Widget是渲染Widget类型的(即如果widget是继承自RenderObjectWidget 的话) 在Element( 此时的Element都是RenderObjectElement的子类) 会有一个`_renderObject`  属性, 用来持有需要渲染的renderObject对象
+
+- 如果Widget是组件Widget, 且widget是继承自StatefulWidget的话, 在Element(此时的Element是StatefulElement的子类)中还会有一个`_state` 属性, 用来持有当前的state对象.
+
+  > 再补充说一下:
+  >
+  > 不论是StatefulWidget 还是 StatelessWidget 中的build(BuildContext ctx) 方法, 其实这个 BuildContext 就是我们ElementTree 中的 Element节点
+  >
+  > 换句话说, 我们平时在实现build 方法时, build 方法内的 buildContext就是当前widget在Element tree 中对应的Element 节点, 这个知识点非常重要, 特别是在后面的数据共享中会用到
+
+
+
+flutter 中的 `InheritedWidget`  和 React中的`context` 功能是类似的.可以实现跨组件数据的传递, InheritedWidget 的数据共享原理就是将多个子节点需要共享的数据放在(存储在)共有的祖先节点, 这样各个子节点都可以通过build方法中的 BuildContext 方法找到存储数据的父节点, 最后实现数据的共享, 
+
+.定义一个共享数据的`InheritedWidget` , 需要继承自 `InheritedWidget`
 
 > inherited 是继承的意思
 
 
 
+![](images/Snip20200905_11.png) 
+
+
+
+
+
+#### 2、InheritedWidget 数据共享示例
+
+使用InheritedWidget共享数据, 必须继承自InheritedWidget
+
+- 共享数据, 继承自`InheritedWidget` 
+
+  ```
+  class HYCounterWidget extends InheritedWidget {
+    // 1.共享的数据
+    final int counter;
+  
+    // 2.定义构造方法
+    HYCounterWidget({this.counter, Widget child}): super(child: child);
+  
+    // 3.获取组件最近的当前InheritedWidget
+    static HYCounterWidget of(BuildContext context) {
+      // 沿着Element树, 去找到最近的HYCounterElement, 从Element中取出Widget对象
+      return context.dependOnInheritedWidgetOfExactType();
+    }
+  
+    // 4.绝对要不要回调State中的didChangeDependencies
+    // 如果返回true: 执行依赖当期的InheritedWidget的State中的didChangeDependencies
+    @override
+    bool updateShouldNotify(HYCounterWidget oldWidget) {
+      return oldWidget.counter != counter;
+    }
+  }
+  ```
+
+  > InheriedWidget 的继承链
+  >
+  > ```
+  > class HYCounterWidget extends InheritedWidget 
+  > abstract class InheritedWidget extends ProxyWidget 
+  > abstract class ProxyWidget extends Widget
+  > ```
+  >
+  > 1. 从InheritedWidget的继承链, 我们可以发现InheritedWidget 其实也是继承自Widget, 这样我们可以推断出它和其他的Widget的使用方式是一样的
+  > 2. 因为InheritedWidget也是widget, 所有它有个特点就是所有的成员属性都必须是 **final** 修饰的.
+  >
+  > 我们最开始在使用InheritedWidget来实现多个widget之间的数据共享时, 其实也是有点疑问的, InheritedWidget内的成员属性是 **final** 修饰的, 因为final是常量不能拿改变, 如何做到数据变化后再共享呢? 似乎有点矛盾, 但是的实际的开发中我们发现一点也不矛盾, 因为InheritedWidget 是作为Widget tree 中的一个节点, 我们知道Widget tree 有个最大的特点是极其不稳定, 一旦Widget tree 中某个节点的状态State 发生变化, 从这个变化的节点开始所有的子节点都会重新build.虽然InheritedWidget中的成员属性是final的, 只要我们在构建新的InheritedWidget时保证新创建出来的InheritedWidget的成员变量是新的值, 它下面说有的子节点就又能共享数据了
+
+- 共享数据的使用
+
+  ```
+  class HYHomePage extends StatefulWidget {
+    @override
+    _HYHomePageState createState() => _HYHomePageState();
+  }
+  
+  class _HYHomePageState extends State<HYHomePage> {
+    int _counter = 100;
+  
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("InheritedWidget"),
+        ),
+  
+        body: HYCounterWidget(
+          counter: _counter,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                HYShowData01(),
+                HYShowData02()
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _counter++;
+            });
+          },
+        ),
+      );
+    }
+  }
+  
+  
+  class HYShowData01 extends StatefulWidget {
+    @override
+    _HYShowData01State createState() => _HYShowData01State();
+  }
+  
+  class _HYShowData01State extends State<HYShowData01> {
+  
+  	// 这个方法很重要
+  	// 当继承自InheritedWidget的子类中的 updateShouldNotify 返回true 时, 会调用这个方法
+  	// 我们可以在这个方法中做点其它的事情, 比如网络请求等
+    @override
+    void didChangeDependencies() {
+      super.didChangeDependencies();
+      print("执行了_HYShowData01State中的didChangeDependencies");
+    }
+  
+    @override
+    Widget build(BuildContext context) {
+      int counter = HYCounterWidget.of(context).counter;
+  
+      return Card(
+        color: Colors.red,
+        child: Text("当前计数: $counter", style: TextStyle(fontSize: 30),),
+      );
+    }
+  }
+  
+  class HYShowData02 extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      int counter = HYCounterWidget.of(context).counter;
+  
+      return Container(
+        color: Colors.blue,
+        child: Text("当前计数: $counter", style: TextStyle(fontSize: 30),),
+      );
+    }
+  }
+  ```
+
+  ![](images/inheritedwidget.png)  
+
+  
+
+#### 3、InheritedWidget的使用步骤
+
+其实, 使用InheritedWidget来实现多节点之间数据共享和简单, 其使用步骤如下:
+
+1. 自定义继承自InheritedWidget 的数据共享widget
+2. 定义好共享的成员属性
+3. 定义好构造函数
+4. 实现通过 BuildContext(其实就是Element) 来获取共享数据的Widget的方法
+5. 实现updateShouldNotify 方法
+6. 在widget tree 中创建 自定义继承自InheritedWidget的 widget, 并设置child 属性
+7. 在需要共享数据的地方, 通过BuildContext 获取到自定义继承自InheritedWidget的子类, 拿到共享数据, 灌到需使用数据的widget中即可. 
+
+
+
+
+
+
+
+## 3、Provider 实现数据共享
+
+### 1、provide 简介
+
+Provider 是目前官方推荐的全局状态管理工具, 由社区工作者`Remi Rousselet 和 Flutter Team` 共同编写. 
+
+在项目中使用 Provider 之前, 我们需要先引入它的依赖,  目前我们以`4.0.4` 版本来说明:
+
+```
+Dependencies:
+	provider: ^4.0.4   // ^表示的是依赖版本兼容 >= 4.0.4 的版本
+```
+
+其实, 最开是官方推荐使用的是 `provide` , 后来就没有推荐了. 他们的用法是非常的相似的.
+
+其实, `Providr` 和 react 中的redux很像, 和 vue 中的vues 很像, 这个很重要, 在我们项目开发中来说是必须要掌握的. 
+
+
+
+Provider数据共享是在InheriedWidget 上进行改造的, 主要有三种方式:
+
+- 使用 Provider.of(ctx) 获取数据
+- 使用Consumer 共享数据
+- 使用selector 共享数据
+
+
+
+### 2、Provider.of(context) 共享数据
+
+
+
+### 3、Consumer 共享数据
+
+
+
+### 4、Selector 共享数据
+
+
+
+```
+class HYMealContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final category = ModalRoute.of(context).settings.arguments as HYCategoryModel;
+    return Selector<HYMealViewModel, List<HYMealModel>>(
+    	/// 此处 selector方法的作用就是将 HYMealViewModel 类型的数据 转换拿为 List<HYMealModel>类型的数据
+      selector: (ctx, mealVM) {
+        return mealVM.meals.where((meal) {
+          return meal.categories.contains(category.id);
+        }).toList();
+      },
+      /// shouldRebuild 的功能就是用来控制是否可以调用下面的builder方法
+      /// 此处prev 和 next 是 List<HYMealModel> 类型
+      shouldRebuild: (prev, next) => !ListEquality().equals(prev, next),
+      builder: (ctx, meals, child) {
+        return ListView.builder(
+          itemCount: meals.length,
+          itemBuilder: (ctx, index) {
+            return HYMealItem(meals[index]);
+          },
+        );
+      },
+    );
+  }
+}
+```
+
+Consumer 使用共享数据是有弊端的, 数据会频繁刷新
+
+```
+class HYMealContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final category = ModalRoute.of(context).settings.arguments as HYCategoryModel;
+    return Consumer<HYMealViewModel>(
+      builder: (ctx, mealVM, child) {
+        final meals = mealVM.meals.where((meal) => meal.categories.contains(category.id)).toList();
+        return ListView.builder(
+          itemCount: meals.length,
+          itemBuilder: (ctx, index) {
+            return ListTile(title: Text(meals[index].title),);
+          }
+        );
+      }
+    );
+  }
+}
+```
+
+
+
+
+
+### 5、Provider.of  Consumer Selector 之间共享数据的优缺点
 
 
 
@@ -8524,6 +9003,2074 @@ flutter 中的 `InheritedWidget`  和 React中的`context` 功能是类似的.�
 
 
 
+## 4、Provider 依赖provider (ChangeNotifierProxyProvider)
+
+是这样的, 我们有时有这样的需求:
+
+- 整个项目都会共用一个数据A, 我们使用providerA 来管理共享即可
+
+- 但是, 项目的其它地方有会共用数据B, 我们使用providerB来管理数据共享,
+
+  但是有的地方是会使用数据B中的一部分数据, 但是帅选部分B数据的条件是通过
+
+  providerA中的数据来管理的.
+
+- 这样就相当于是ProviderB在提供数据时, 是依赖providerA中数据的状态的, 我们前面是没有这种provider 依赖provider的情景, 用原来的方式不满足需求
+
+现在为了解决这种ProviderB 依赖 providerA中的数据条件来共享数据, 我们就要用到**ChangeNotifierProxyProvider** 
+
+示例代码如下: 
+
+- 我的菜, 我的收藏 基类
+
+  ```
+  import 'package:favorcate/core/model/meal_model.dart';
+  import 'package:flutter/material.dart';
+  
+  import 'filter_view_model.dart';
+  
+  class BaseMealViewModel extends ChangeNotifier {
+    List<HYMealModel> _meals = [];
+  
+    HYFilterViewModel _filterVM;
+  
+  	/// 更新依赖过滤条件
+    void updateFilters(HYFilterViewModel filterVM) {
+      _filterVM = filterVM;
+    }
+  
+    List<HYMealModel> get meals {
+      return _meals.where((meal) {
+        if (_filterVM.isGlutenFree && !meal.isGlutenFree) return false;
+        if (_filterVM.isLactoseFree && !meal.isLactoseFree) return false;
+        if (_filterVM.isVegetarian && !meal.isVegetarian) return false;
+        if (_filterVM.isVegan && !meal.isVegan) return false;
+        return true;
+      }).toList();
+    }
+  
+    List<HYMealModel> get originMeals {
+      return _meals;
+    }
+  
+    set meals(List<HYMealModel> value) {
+      _meals = value;
+      notifyListeners();
+    }
+  }
+  ```
+
+- 我的菜
+
+  ```
+  import 'package:favorcate/core/services/meal_request.dart';
+  import 'package:favorcate/core/viewmodel/base_view_model.dart';
+  
+  class HYMealViewModel extends BaseMealViewModel {
+    HYMealViewModel() {
+      HYMealRequest.getMealData().then((res) {
+        meals = res;
+      });
+    }
+  }
+  ```
+
+- 我的收藏
+
+  ```
+  import 'package:favorcate/core/model/meal_model.dart';
+  import 'package:favorcate/core/viewmodel/base_view_model.dart';
+  import 'package:flutter/material.dart';
+  
+  import 'filter_view_model.dart';
+  
+  class HYFavorViewModel extends BaseMealViewModel {
+    void addMeal(HYMealModel meal) {
+      originMeals.add(meal);
+      notifyListeners();
+    }
+  
+    void removeMeal(HYMealModel meal) {
+      originMeals.remove(meal);
+      notifyListeners();
+    }
+  
+    void handleMeal(HYMealModel meal) {
+      if (isFavor(meal)) {
+        removeMeal(meal);
+      } else {
+        addMeal(meal);
+      }
+    }
+  
+    bool isFavor(HYMealModel meal) {
+      return originMeals.contains(meal);
+    }
+  }
+  ```
+
+- 过滤条件
+
+  ```
+  import 'package:flutter/material.dart';
+  
+  class HYFilterViewModel extends ChangeNotifier {
+    // 无谷蛋白
+    bool _isGlutenFree = false;
+    // 有无乳糖
+    bool _isLactoseFree = false;
+    // 素食主义
+    bool _isVegetarian = false;
+    // 严格素食主义
+    bool _isVegan = false;
+  
+    bool get isGlutenFree => _isGlutenFree;
+  
+    set isGlutenFree(bool value) {
+      _isGlutenFree = value;
+      notifyListeners();
+    }
+  
+    bool get isVegan => _isVegan;
+  
+    set isVegan(bool value) {
+      _isVegan = value;
+      notifyListeners();
+    }
+  
+    bool get isVegetarian => _isVegetarian;
+  
+    set isVegetarian(bool value) {
+      _isVegetarian = value;
+      notifyListeners();
+    }
+  
+    bool get isLactoseFree => _isLactoseFree;
+  
+    set isLactoseFree(bool value) {
+      _isLactoseFree = value;
+      notifyListeners();
+    }
+  }
+  ```
+
+- 外部使用1
+
+  ```
+  void main() {
+    // Provider -> ViewModel/Provider/Consumer(Selector)
+    runApp(
+      MultiProvider(
+        providers: [
+        	/// 共享数据1
+          ChangeNotifierProvider(create: (ctx) => HYFilterViewModel()),
+          
+          /// 共享数据2
+          ChangeNotifierProxyProvider<HYFilterViewModel, HYMealViewModel>(
+            create: (ctx) => HYMealViewModel(),
+            /// 此处, 相当于给 mealVM 提供一个过滤条件  filterVM
+            update: (ctx, filterVM, mealVM) {
+              mealVM.updateFilters(filterVM);
+              return mealVM;
+            },
+          ),
+          
+          /// 共享数据3
+          ChangeNotifierProxyProvider<HYFilterViewModel, HYFavorViewModel>(
+            create: (ctx) => HYFavorViewModel(),
+            /// ctx 是BuildContext上下文
+            /// filterVM 是HYFilterViewModel类型的依赖数据
+            /// favorVM 是HYFavorViewModel类型的数据, 是提供给外部共享的数据,但是favorVM共享给外部的数据需要filterVM提供数据进行过滤
+            update: (ctx, filterVM, favorVM) {
+              favorVM.updateFilters(filterVM);
+              return favorVM;
+            },
+          ),
+        ],
+        child: MyApp(),
+      )
+    );
+  }
+  ```
+
+  > 共享数据1 因为不依赖其他的共享数据, 直接使用`ChangeNotifierProvider` 方式共享
+  >
+  > 共享数据2, 因为要依赖共享数据1, 因此共享数据2需要使用`ChangeNotifierProxyProvider` 的方式提供
+  >
+  > update 的主要作用是提供更新的数据依赖条件
+  >
+  > 共享数据3, 因为依赖共享数据1, 因此也要使用`ChangeNotifierProxyProvider` 的方式来提供共享数据
+
+
+
+
+
+
+# 二二、flutter 事件监听
+
+## 1、事件监听介绍
+
+> 在大前端开发中, 必然存在各种各样的用户交互的情况, 比如: 手指点击、手指滑动、双击、长按等
+
+在flutter中, 手势有2个不同的层次:
+
+- 第一层: 原始指针事件(Pointer Event),
+
+  描述了屏幕上由触摸板、鼠标、指示笔等触发的指针的位置和移动
+
+- 第二层: 手势识别(Gesture  Detector),
+
+  这个是在原始事件上的一种封装,比如:
+
+  - 我们要监听用户长按, 如果要自己封装原始事件我们需要监听从用户从按下到抬起的时间来判断是否是一次长按事件.
+  - 比如: 我们需要监听用户的双击事件, 我们需要自己封装监听用户两次按下抬起时间的间隔
+
+  > 幸运的是, 各个平台几乎都对他们进行了封装, 而flutter中的手势识别就是对原始指针事件的封装, 包括: 点击、双击、长按、拖动等
+
+
+
+## 2、指针事件
+
+Pointer 代表的是人机交互的原始数据, 一共有4种指针事件:
+
+- `PointerDownEvent` 指针在特定位置与屏幕接触
+- `PointerMoveEvent` 指针从屏幕的一个位置移动到另外一个位置
+- `PointerUpEvent` 指针与屏幕停止接触
+- `PointerCancelEvent` 指针因为一些特殊情况被取消
+
+Pointer的原理是什么? 
+
+- 在指针落下时, 框架做了一个`hit test` 的操作, 确定与屏幕接触的位置上有那些Widget以及分发给最内部的组件去响应
+- 事件会沿着最内的组件向组件树的根冒泡分发
+- 并且不存在用于取消或者停止指针事件进一步分发的机制
+
+> 注意: 
+>
+> 在Flutter中是不能阻止事件冒泡的, 这也是官方说的
+
+
+
+flutter中原始事件使用**Listener** 监听 ,示例代码如下:
+
+```
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      
+      /// 在flutter中要 监听手势, 就使用Listener 将对应的widget 包装起来即可
+      child: Listener(
+        child: Container(
+          alignment: Alignment.center,
+          color: Colors.yellow,
+          width: 150,
+          height: 150,
+          child: Text('事件监听'),
+        ),
+        onPointerDown: (PointerDownEvent event) {
+          print('onPointerDown');
+          
+          /// 监听指针在屏幕中的位置
+          print('pointer 在屏幕中的位置: ${event.position}');
+          /// 监听指针在当前widget中的位置
+          print('pointer 在点击的widget中的位置: ${event.localPosition}');
+        },
+        onPointerMove: (PointerMoveEvent event) {
+          print('onPointerMove');
+        },
+        onPointerUp: (PointerUpEvent event) {
+          print('onPointerUp');
+        },
+        onPointerCancel: (PointerCancelEvent event) {
+          print('onPointerCancel');
+        },
+      ),
+    );
+  }
+}
+```
+
+![](images/listener.png) 
+
+
+
+
+
+## 3、手势识别 Gesture
+
+Gesture 是对一系列的Pointer 的封装, 官方建议开发中尽量使用Gesture, 而不使用Pointer
+
+
+
+### 1、Gesture 分类
+
+**点击的Gesture** 
+
+- `onTapDown`: 用户发生手指按下的操作
+- `onTapUp`: 用户发生手指抬起的操作
+- `onTap`: 用户点击事件完成
+- `onTapCancle` : 事件按下过程中被取消
+
+**双击的Gesture** 
+
+- `onDoubleTap`: 快速点击了两次
+
+**长按Gesture**
+
+- `onLongPress:` 在屏幕上保持了一段时间
+
+**横向拖拽Gesture**
+
+- `onHorizontalDragStart`: 指针和屏幕产生接触并可能开始横向移动 
+- `onHorizontalDragUpdate`: 指针和屏幕产生接触, 在横向上发生移动并保持移动
+- `onHorizontalDragEnd`: 指针和屏幕产生接触结束
+
+**纵向拖拽** 
+
+- `onVerticalDragStart`:  指针和屏幕产生接触并可能开始纵向移动
+- `onVerticalDragUpdate`: 指针和屏幕产生接触, 在纵向上发生移动并保持移动
+- `onVerticalDragEnd`: 指针和屏幕产生移动结束
+
+**移动**
+
+- `onPanStart` : 指针和屏幕产生接触并可能开始横向或者纵向移动.
+
+  > 如果设置了`onHorizontalDragStart` 或者`onVerticalDragStart` 该回调方法会引发崩溃
+
+- `onPanUpdate`: 指针和屏幕产生接触, 在横向或者纵向上发生了移动并保持.
+
+  > 如果设置了`onHorizontalDragUpdate` 或者`onVerticalDragUpdate` 该回调方法会引发崩溃
+
+- `onPanEnd` : 指针先前和屏幕产生了接触, 并且以特定速度移动, 此后不再在屏幕上发生移动. 
+
+  > 如果设置了`onHorizontalDragEnd` 或者`onVerticalDragEnd` 该回调方法会引发崩溃
+
+
+
+
+
+从Widget的层面来监听手势, 我们需要使用: **GestureDetector** 
+
+> 当然, 我们也可以使用RaiseButton 、FlatButton、InkWell 等来监听手势
+>
+> globalPosition用于获取相对于屏幕的位置信息
+>
+> localPosition 用于获取相对于当前Widget的位置信息
+
+
+
+### 2、点击手势监听
+
+- 示例代码
+
+  在flutter中监听点击手势很简单, 只需要在Widget中包装一层个GestureDetector Widget实现各种(onTap...)点击方法
+
+  ```
+  class GestureDetectorContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+  
+      return Center(
+        child: GestureDetector(
+  
+          /// 监听手指按下
+          onTapDown:(TapDownDetails details){
+            print('onTapDown');
+            print('onTapDown 当前屏幕中的位置 : ${details.globalPosition}');
+            print('onTapDown 当前widget中的位置 : ${details.localPosition}');
+          } ,
+          onTapUp: (TapUpDetails details){
+            print('onTapUp');
+          },
+          /// 手势 onTapDown 和 onTapUp 后正常情况会调用 onTap, 否则触发
+          onTap: (){
+            print('onTap手势点击结束');
+          },
+          /// 监听手指点击取消, 来电 或 手机移动 或取消 点击操作
+          onTapCancel: (){
+            /// 发现一个比较 奇怪的现象, 当我们在执行onTap 事件监听时, 用户拖拽的话会调用 onTapCancle 事件回调方法
+            print('手势点击取消');
+          },
+          
+          /// 手势双击点击
+          onDoubleTap: (){
+            print(' double tap');
+          },
+  
+          /// 长按手势
+          onLongPress: (){
+            print('onLongPress');
+          },
+          
+          child: Container(
+            width: 150,
+            height: 150,
+            color: Colors.green,
+          ),
+        ),
+      );
+    }
+  }
+  ```
+
+  > 需要说明的是 flutter中的点击手势有很多种, 且他们之间是有冲突的, 用的时候要注意
+  >
+  > 一般我们是这样使用的:
+  >
+  > onTapDown + onTapUp + onTap + onTapCancle  是一个连续的动作, 这几个手势可以组合使用呢
+  >
+  > onDoubleTap 手势单独一组
+  >
+  > onLongPress 单独一组
+  >
+  > 这三组手势一般不混凝和使用
+
+
+
+
+
+### 3、点击手势高级
+
+
+
+#### 1、在一个Container 中显示另一个Conntainer
+
+我们想要在一个Container中显示另外一个Container, 其实并不简单, 如下图效果
+
+![](images/containerInContainer.png) 
+
+
+
+首先我们先显示外面的 红色Container, 代码如下, 效果如下: 
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.pink,
+      ),
+    );
+  }
+}
+```
+
+![](images/redcontainer.png) 
+
+让后我们再在这个红色的200 * 200 的Container中添加一个 100*100 的container, 代码如下, 你会发现有问题, 结果不是你预期的, 示例代码和效果如下:
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.pink,
+        child: Container(
+          width: 100,
+          height: 100,
+          color: Colors.green
+        ),
+      ),
+    );
+  }
+}
+```
+
+![](images/redgreencontainer.png) 
+
+
+
+当我们直接在一个container中直接包裹另外一个container时, 我们发现container里面的container没有按照我们预期的效果显示, 一脸懵逼~~~ , 我们要怎么处理呢?
+
+先说我们要在一个Container中直接包裹另外一个Container的解决方案有很多
+
+- 方案1, 在外层Container与内层Container 之间插入一个 `Row` 或者 `Column` 即可
+- 方案2, 设置外层Container的`alignment` 属性
+- 方案3, 在外层Container 与内层Container 之间插入一个Align Widget
+
+
+
+
+
+**方案1代码:**
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.pink,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(width: 100, height: 100, color: Colors.green),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+**方案2代码**
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.pink,
+        alignment: Alignment.center,
+        child: Container(width: 100, height: 100, color: Colors.green),
+      ),
+    );
+  }
+}
+```
+
+**方案3代码**
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 200,
+        height: 200,
+        color: Colors.pink, 
+        child: Align(
+          alignment: Alignment.center,
+          child: Container(width: 100, height: 100, color: Colors.green),
+        ),
+      ),
+    );
+  }
+}
+
+```
+
+方案1 2 3 都能实现下面的效果
+
+![](images/containerInContainer.png) 
+
+
+
+>  其实, 经过查看Container的源码, 我们发现 方案2和方案3其实原理是一样的, 因为Container的原来是这样处理的, 当我们给Container 这个组件设置了`alignment` 属性后, Container组件会在自己内部插入一个对应的`Alignment`组件, 并把赋值给Container的child 属性, 赋值给`Alignment组件的child` , 所以说方案2和方案3是一个道理
+
+```
+@override
+  Widget build(BuildContext context) {
+    Widget current = child;
+
+    if (child == null && (constraints == null || !constraints.isTight)) {
+      current = LimitedBox(
+        maxWidth: 0.0,
+        maxHeight: 0.0,
+        child: ConstrainedBox(constraints: const BoxConstraints.expand()),
+      );
+    }
+
+		/// 这里, 如果设置了lignment 会创建一个 Align 对象, 将container的child装进去
+    if (alignment != null)
+      current = Align(alignment: alignment, child: current);
+
+    final EdgeInsetsGeometry effectivePadding = _paddingIncludingDecoration;
+    
+    /// 这里如果设置了padding , 会创建一个Padding 将Container的child 装进去
+    if (effectivePadding != null)
+      current = Padding(padding: effectivePadding, child: current);
+
+		/// 这里会创建一个ColorBox 包裹子组件
+    if (color != null)
+      current = ColoredBox(color: color, child: current);
+
+		/// 这里会创建一个DecoratedBox 包裹子组件
+    if (decoration != null)
+      current = DecoratedBox(decoration: decoration, child: current);
+
+    if (foregroundDecoration != null) {
+      current = DecoratedBox(
+        decoration: foregroundDecoration,
+        position: DecorationPosition.foreground,
+        child: current,
+      );
+    }
+
+    if (constraints != null)
+      current = ConstrainedBox(constraints: constraints, child: current);
+
+    if (margin != null)
+      current = Padding(padding: margin, child: current);
+
+    if (transform != null)
+      current = Transform(transform: transform, child: current);
+
+    if (clipBehavior != Clip.none) {
+      current = ClipPath(
+        clipper: _DecorationClipper(
+          textDirection: Directionality.of(context),
+          decoration: decoration
+        ),
+        clipBehavior: clipBehavior,
+        child: current,
+      );
+    }
+
+    return current;
+  }
+```
+
+
+
+#### 2、flutter 中的事件冒泡问题
+
+默认情况下, flutter中的事件会沿着 树结构层层的从子节点冒泡到父节点, 且暂时没有好的办法解决, 如: 下面的代码是有冒泡的问题的
+
+> 我们原来是想用下面的代码实现这样的功能:
+>
+> - 点击红色范围, 红色的响应, 绿色的不响应
+> - 点击绿色的范围, 绿色响应, 红色不响应
+>
+> 但实际测试发现点击绿色范围内时 偶尔 红色范围也会接收到点击事件, 也就是说没有阻止到绿色方位的事件冒泡
+>
+> *经过测试, onTapDown 事件很容易出现冒泡的问题, onTap 要好点, 但是也不要这样做*
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+
+      /// 监听 红色范围的点击 (这种方式 偶尔会接收到绿色的冒泡事件, 出现意外)
+      child: GestureDetector(
+        onTapDown:(details){
+          print('outer container tap');
+        },
+        child: Container(
+          width: 200,
+          height: 200,
+          color: Colors.pink,
+          alignment: Alignment.center,
+
+          /// 监听 绿色范围的点击
+          child: GestureDetector(
+          	// 网上有人说在GestureDetector 中使用behavior: HitTestBehavior.opaque 阻止冒泡, 其实不行的
+          	behavior: HitTestBehavior.opaque ,
+            onTapDown:(details){
+              print('inner container tap');
+            } ,
+              child: Container(width: 100, height: 100, color: Colors.green)
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+![](images/gesturemaopao.png) 
+
+
+
+> 针对上面这种嵌套关系造成了冒泡无法解决的问题, 其实没有太好的解决方法
+>
+> 在Stack Overflow 上有人给出了解决flutter冒泡的方法:
+>
+> 1. 要解决这种冒泡, 首先不要让 组件之间有这种嵌套关系
+
+
+
+#### 3、使用Stack解决冒泡问题
+
+使用Stack 解决flutter中的冒泡问题
+
+```
+class StackContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      /// 外面使用一个Stack, 在Stack 内部再放上多个平行的子控件, 这样平行的子控件之间就不会有冒泡的问题了
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          
+          GestureDetector(
+            onTapDown: (details){
+              print('outer click');
+            },
+            child: Container(
+              width: 200,
+              height: 200,
+              color: Colors.pink,
+            ),
+          ),
+
+          GestureDetector(
+            onTapDown: (details){
+              print('inner click');
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              color: Colors.green,
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+```
+
+
+
+#### 4、在Stack 中使用IgnorePointer忽略事件点击
+
+如下图, 有时我们可能会有这样的一个需求: 
+
+- 情景1: 
+
+  点击绿色范围时, 只有绿色的能响应, 点击红色的部分只能红色的响应, 这时我们就可使用Stack内部的组件是平行的关系, 绿色的组件的事件不会冒泡到红色的组件内, 达到一个阻止冒泡的需求, 这样没有问题
+
+- 情景2: 
+
+  在情景1的功能特点不变的情况下, 增加一种选择, 当满足某种条件时我们想要达到点击绿色的范围时绿色不触发手势事件(相当于此时绿色范围是事件透明的) 仍然让红色的组件响应, 但是现在问题复杂了,
+
+  因为我们现在的布局是这样的, 最外层是一个Stack, 在Stack内放置的是红色的组件和绿色的组件, 红色的组件和绿色的组件因为都是放在Stack中的他们之间是平行的关系, 不存在嵌套关系, 所以按照默认的冒泡事件流程此时点击在绿色的范围内时事件是被绿色组件拦截了红色是不会响应任何事件的, 但是现在我们想要的是点绿色绿色不响应红色响应
+
+  针对这种特殊的需求, 其实flutter中为我们提供了一个**IgnorePointer** 组件, 我们只需要给想要忽略事件处理的组件包装上 **IgnorePointer** 那么, 被**IgnorePointer** 包裹的范围就会想空气一样不会拦截任何事件, 
+
+​	![](images/containerInContainer.png) 
+
+代码如下:
+
+```
+class StackContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      /// 外面使用一个Stack, 在Stack 内部再放上多个平行的子控件, 这样平行的子控件之间就不会有冒泡的问题了
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+
+          GestureDetector(
+            onTapDown: (details){
+              print('outer click');
+            },
+            child: Container(
+              width: 200,
+              height: 200,
+              color: Colors.pink,
+            ),
+          ),
+
+          /// 使用 IgnorePointer 忽略内部的事件指针, 不处理任何事件
+          IgnorePointer(
+            child: GestureDetector(
+              child: Container(
+                width: 100,
+                height: 100,
+                color: Colors.green,
+                alignment: Alignment.center,
+
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+```
+
+
+
+#### 5、使用Stack 拦截事件, 禁止某一区域点击
+
+在默认的情况下flutter中的事件是会从子组件冒泡到父组件的, 也就是说默认情况下用户点击了子Widget 父Widget也会接收到点击事件的, 比如下面的代码, 用户点击绿色. 红色也会接收到点击事件, 但是我们只想用户点击红色绿色不让点, 这时我们要怎么做呢? 
+
+![](images/containerInContainer.png) 
+
+```
+class ContainerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+
+      /// 监听 红色范围的点击 (这种方式 偶尔会接收到绿色的冒泡事件, 出现意外)
+      child: GestureDetector(
+        onTapDown:(details){
+          print('outer container tap');
+        },
+        child: Container(
+          width: 200,
+          height: 200,
+          color: Colors.pink,
+          alignment: Alignment.center,
+
+          /// 监听 绿色范围的点击
+          child: Container(width: 100, height: 100, color: Colors.green),
+        ),
+      ),
+    );
+  }
+}
+```
+
+我们执行用户点击红色区域, 绿色不让点, 这时我们怎么做呢? 
+
+答案是使用Stack, 将红色和绿色都放在Stack 中进行管理, 这样红色和绿色之间内有嵌套关系, 是平级的事件不会出现冒泡, 问题就解决了, 示例代码如下: 
+
+```
+class StackContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      /// 外面使用一个Stack, 在Stack 内部再放上多个平行的子控件, 这样平行的子控件之间就不会有冒泡的问题了
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+
+          GestureDetector(
+            onTapDown: (details){
+              print('outer click');
+            },
+            child: Container(
+              width: 200,
+              height: 200,
+              color: Colors.pink,
+            ),
+          ),
+
+           /// Stack 中的组件之间可以拦截事件
+          Container(
+            width: 100,
+            height: 100,
+            color: Colors.green,
+            alignment: Alignment.center,
+
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+```
+
+
+
+## 4、跨组件事件监听(EventBus事件总线)
+
+在flutter开发中, 有时我们想要在多个不相干的(没有嵌套层级关系)widget中监听同事件的变化, 这个就类似于iOS 中的通知
+
+在flutter开发中我们使用 **EventBus** 这个第三方模块来实现类似iOS中的通知, 但是在flutter中我们对这种操作叫做事件总线.
+
+
+
+**EventBus** 使用步骤
+
+在网站`https://pub.dev` 中搜索**EventBus** 查看flutter中安装和使用EventBus 的使用方法和步骤, 下面直接说怎么做:
+
+
+
+- 在flutter项目的pubspec.yaml文件中填下下面的模块依赖信息
+
+  ```
+  dependencies:
+    event_bus: ^1.1.1
+  ```
+
+- 执行命令`pub get` 安装依赖模块
+
+- 在项目中导入依赖模块
+
+  ```
+  import 'package:event_bus/event_bus.dart';
+  ```
+
+- 在项目中使用EventBus 完成事件的发送 和 事件的监听
+
+  ```
+  // 1. 创建一个全局的EventBus 对象, 用来管理事件的发送和监听
+  final EventBus eventBus =  EventBus();
+  
+  /// 3. 定义EventBus 事件类型
+  /// EventBus事件总线 是通过泛型类来监听 事件的
+  class UserLoginInfoEvent{
+    String nickName;
+    int age;
+  
+    UserLoginInfoEvent(this.nickName, this.age);
+  }
+  
+   /// 4.发出 UserLoginInfoEvent 类型的事件
+   eventBus.fire(UserLoginInfoEvent('zhangsan', 18));
+   
+   /// 5. 通过EventBus 注册监听  UserLoginInfoEvent 类型的事件
+    eventBus.on<UserLoginInfoEvent>().listen((event) {
+      print('监听到事件, runtime type: ${event.runtimeType}');
+    });
+  ```
+
+示例代码:
+
+```
+import 'package:flutter/material.dart';
+
+/// 1. 导入EventBus 第三方依赖
+import 'package:event_bus/event_bus.dart';
+
+/// 2. 创建EventBus 事件总线对象, 后面就可以拿到事件总线对象 发送事件 & 监听事件
+final EventBus eventBus =  EventBus();
+
+/// 3. 定义EventBus 事件类型
+/// EventBus事件总线 是通过泛型类来监听 事件的
+class UserLoginInfoEvent{
+  String nickName;
+  int age;
+
+  UserLoginInfoEvent(this.nickName, this.age);
+}
+
+
+main(List<String> args){
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Home(),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('event bus test'),
+      ),
+      body: HomeContent(),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        RaisedButton(
+          child: Text('点击 发出事件event', style: TextStyle(fontSize: 30),),
+          onPressed: (){
+
+            /// 4. 使用事件总线对象EventBus 发出事件
+            if(eventBus.streamController.isClosed == true){
+              print('事件主线 event bus 已经被关闭');
+              return;
+            }
+
+            /// 发出 UserLoginInfoEvent 类型的事件
+            eventBus.fire(UserLoginInfoEvent('zhangsan', 18));
+            /// 发出 String 类型的事件
+            eventBus.fire('字符串事件');
+          },
+        ),
+        SizedBox(height: 30,),
+        TestEventBus(),
+        SizedBox(height: 30,),
+        RaisedButton(
+          child: Text('点击 销毁事件总线', style: TextStyle(fontSize: 30),),
+          onPressed: (){
+            eventBus.destroy();
+          },
+        ),
+
+
+      ],
+    );
+  }
+}
+
+
+class TestEventBus extends StatefulWidget {
+  @override
+  _TestEventBusState createState() => _TestEventBusState();
+}
+
+class _TestEventBusState extends State<TestEventBus> {
+
+  UserLoginInfoEvent info;
+
+  @override
+  void initState() {
+    super.initState();
+    /// 在initState 方法中注册监听 对应类型的事件
+    listenUserInfoEvent();
+    listenAllEvent();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(getUserInfo(), style: TextStyle(fontSize: 20),);
+  }
+
+  /// 监听用户 信息 事件
+  void listenUserInfoEvent(){
+    /// 5. 通过EventBus 注册监听  UserLoginInfoEvent 类型的事件
+    eventBus.on<UserLoginInfoEvent>().listen((event) {
+      print('监听到事件, runtime type: ${event.runtimeType}');
+      setState(() {
+        info = event;
+      });
+    });
+  }
+
+  /// 监听事件总线上所有的事件
+  void listenAllEvent(){
+    /// 6. 监听事件总线上所有的事件
+    eventBus.on().listen((event) {
+      print('监听所有事件:  ${event.runtimeType}');
+    });
+  }
+
+  String getUserInfo(){
+    if(info == null){
+      return '当前用户信息, nickname:无名氏, age: 0';
+    }
+    return '当前用户信息, nickname:${info.nickName}, age: ${info.age}';
+  }
+}
+import 'package:flutter/material.dart';
+
+/// 1. 导入EventBus 第三方依赖
+import 'package:event_bus/event_bus.dart';
+
+/// 2. 创建EventBus 事件总线对象, 后面就可以拿到事件总线对象 发送事件 & 监听事件
+final EventBus eventBus =  EventBus();
+
+/// 3. 定义EventBus 事件类型
+/// EventBus事件总线 是通过泛型类来监听 事件的
+class UserLoginInfoEvent{
+  String nickName;
+  int age;
+
+  UserLoginInfoEvent(this.nickName, this.age);
+}
+
+
+main(List<String> args){
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Home(),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('event bus test'),
+      ),
+      body: HomeContent(),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        RaisedButton(
+          child: Text('点击 发出事件event', style: TextStyle(fontSize: 30),),
+          onPressed: (){
+
+            /// 4. 使用事件总线对象EventBus 发出事件
+            if(eventBus.streamController.isClosed == true){
+              print('事件主线 event bus 已经被关闭');
+              return;
+            }
+
+            /// 发出 UserLoginInfoEvent 类型的事件
+            eventBus.fire(UserLoginInfoEvent('zhangsan', 18));
+            /// 发出 String 类型的事件
+            eventBus.fire('字符串事件');
+          },
+        ),
+        SizedBox(height: 30,),
+        TestEventBus(),
+        SizedBox(height: 30,),
+        RaisedButton(
+          child: Text('点击 销毁事件总线', style: TextStyle(fontSize: 30),),
+          onPressed: (){
+            eventBus.destroy();
+          },
+        ),
+
+
+      ],
+    );
+  }
+}
+
+
+class TestEventBus extends StatefulWidget {
+  @override
+  _TestEventBusState createState() => _TestEventBusState();
+}
+
+class _TestEventBusState extends State<TestEventBus> {
+
+  UserLoginInfoEvent info;
+
+  @override
+  void initState() {
+    super.initState();
+    /// 在initState 方法中注册监听 对应类型的事件
+    listenUserInfoEvent();
+    listenAllEvent();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(getUserInfo(), style: TextStyle(fontSize: 20),);
+  }
+
+  /// 监听用户 信息 事件
+  void listenUserInfoEvent(){
+    /// 5. 通过EventBus 注册监听  UserLoginInfoEvent 类型的事件
+    eventBus.on<UserLoginInfoEvent>().listen((event) {
+      print('监听到事件, runtime type: ${event.runtimeType}');
+      setState(() {
+        info = event;
+      });
+    });
+  }
+
+  /// 监听事件总线上所有的事件
+  void listenAllEvent(){
+    /// 6. 监听事件总线上所有的事件
+    eventBus.on().listen((event) {
+      print('监听所有事件:  ${event.runtimeType}');
+    });
+  }
+
+  String getUserInfo(){
+    if(info == null){
+      return '当前用户信息, nickname:无名氏, age: 0';
+    }
+    return '当前用户信息, nickname:${info.nickName}, age: ${info.age}';
+  }
+}
+
+```
+
+
+
+
+
+# 二三、路由导航
+
+## 1、路由相关介绍
+
+### 1、路由管理
+
+路由的概念由来已久, 包括: `网络路由` 、`后端路由`、到现在广为流传的`前端路由`
+
+- 无论路由的概念如何应用, 它的核心是一个`路由映射表`
+
+- 比如: 名字`detail` 映射到 `detailPage` 页面等
+
+- 有了这个映射表之后, 我们就可以方便的根据名字来完成路由的转发
+
+  (路由转发, 在前端表现出来的就是页面跳转) 
+
+**在flutter中, 路由管理主要有两个类: Route 和 Navigator** (即,路由和导航)
+
+
+
+### 2、Route
+
+**Route: **一个页面想要被路由统一管理, 必须包装为Route
+
+- 官方的说法很清楚: An abstraction for an managed by a Navigator
+
+  > 但是,Navigator 是一个抽象类,所以它不能实例化
+
+  ```
+  // 我们发现 Route 是一个抽象类
+  /// See [MaterialPageRoute] for a route that replaces the entire screen with a platform-adaptive transition.
+  abstract class Route<T> {
+  
+  ```
+
+  在上面有一段注释, 让我们查看 MaterialPageRoute来使用
+
+**MaterialPageRoute** 
+
+事实上MaterialPageRoute并不是Route 的直接子类:
+
+- MaterialPageRoute 在不同的平台上有不同的表现
+
+- 对Android平台, 打开一个页面会从屏幕底部滑动到顶部, 关闭页面时从顶部滑动到底部消失
+
+- 对于iOS 平台, 打开一个页面会从屏幕右侧滑动到屏幕的左侧, 关闭页面时从左侧滑动到右侧消失
+
+  > 当然, iOS平台我们也可以使用CupertinoPageRoute
+
+MaterialPageRoute 的继承链:
+
+```
+class MaterialPageRoute<T> extends PageRoute<T> {
+}
+
+abstract class PageRoute<T> extends ModalRoute<T> {
+}
+
+abstract class ModalRoute<T> extends TransitionRoute<T> with LocalHistoryRoute<T> {
+}
+
+abstract class TransitionRoute<T> extends OverlayRoute<T> {
+}
+
+abstract class OverlayRoute<T> extends Route<T> {
+```
+
+
+
+### 3、Navigator
+
+Navigator: 是管理所有的Route的一个Widget, 是通过一个Stack来管理的`(在navigator里面维护了一个栈Stack 数据结构)
+
+> 官方的解释:
+>
+> A widget that manages a set of child widgets with a stack discipline.
+
+
+
+在开发中, 我们需要手动创建一个Navigator 吗? 
+
+- 在开发中我们并不需要手动去创建一个Navigator
+- 在开发中, 我们使用`MaterialApp`、`CupertinoApp`、 `WidgetsApp` 他们默认是有插入Navigator的
+- 所以在开发中, 我们需要使用的时候, 只需要直接使用即可
+
+```
+// 在开发时, 我们只需要从上下文 中获取navigator即可
+Navigator.of(context);
+```
+
+在我们 app 中, navigator 是通过InheritedWidget来管理的. 本质上都是通过Element tree 来查找的.
+
+
+
+Navigator 有几个最常用的方法:
+
+```
+//1. 路由跳转: 传入一个路由对象
+Future <T> push<T extends Object>(Route<T> route);
+
+//2. 路由跳转: 传入一个名称(命名路由) 
+Future<T> pushName<T extends Object>(String routeName, {Object arguments});
+
+//3. 路由返回: 可传入一个参数
+bool pop<T extends Object>([T result]);
+```
+
+
+
+## 2、路由的基本使用
+
+### 1、普通的路由跳转
+
+上面我们已经介绍了, 在开发中, 我们使用 **Navigator**(一种继承自StatefulWidget的widget) 来管理所有的路由**Route** .
+
+**使用Navigator 管理route 注意点:**
+
+- 在开发中, 默认`MaterialApp` 或者 `CupertinaApp` 是自动插入了**Navigator** 对象, 因此我们在使用Navigator 在项目中管理Route 是一般都是不会手动再创建的
+
+- 以内`MaterialApp` 或者`CupertinaApp` 是通过 **InheritedWidget** 的方式来管理(共享)Navigator 的, 因此在项目中我们通过**上下文BuildContext** (其实, BuildContext就代表的是Element tree中的一个Element 节点node.
+
+  ```
+  我们通过 Navigator.of(Context); 就可以获取NavigatorState
+  NavigatorState 就是 Navigator 对应的State (一个StatefulWidget 有一个与之对应的State)
+  ```
+
+- 应为Route 是抽象类我们不能直接使用, 一般我们在开发中使用Route 的子类 **MaterialPageRoute** , 在MaterialPageRoute 中帮我们做了很多的事情
+
+  >  比如: iOS 和 android 平台的差异处理等等
+
+
+
+- 跳转到指定页面
+
+  使用 Navigator.of(context).push(route)
+
+  ````
+  class HomeContent extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      Navigator.of(context);
+  
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Text('luyou he dao hang'),
+            RaisedButton(
+              child: Text('点击跳转到 detail'),
+              onPressed: (){
+              	/// 跳转到指定的页面
+                _jumpToDetailPage1(context);
+              },
+            ),
+          ],
+        ),
+      );
+      
+    // 路由跳转方式1
+    void _jumpToDetailPage(BuildContext context){
+    	// 1. 跳转到 指定的route
+      Navigator.of(context).push(
+      	// 2. 创建 MaterialPageRoute
+        MaterialPageRoute(
+          builder: (context){
+          
+          	// DetailPageWidget 就是我们的一个新页面
+            return DetailPageWidget();
+          }
+        )
+      );
+    }
+  }
+  ````
+
+  > 其实除了使用 Navigator.of(context).push(route)实现页面跳转
+  >
+  > 我们也可以使用 Navigator.push(context, route).
+  >
+  > 其实现原理是一样的
+
+- 返回上一个页面
+
+  ```
+  Navigator.of(context).pop();
+  // 或者
+  Navigator.pop(context);
+  ```
+
+  
+
+### 2、普通的路由跳转 携带参数
+
+#### 1、push 时, 正向传递参数
+
+push 时, 通过构造函数携带参数
+
+```
+// 因为我们在构造MaterialPageRoute 时, 有个 builder参数
+// builder 参数对应的是一个 回调函数, 让我们返回一个 widget, 因此我们就可以在构造widget
+// 时传递对应的参数
+
+void _jumpToDetailPage(BuildContext context){
+  // 1. 跳转到 指定的route
+  Navigator.of(context).push(
+    // 2. 创建 MaterialPageRoute
+    MaterialPageRoute(
+      builder: (context){
+      	// 构造函数传递参数
+        return DetailPageWidget(name:'张三');
+      }
+    )
+  );
+}
+```
+
+
+
+#### 2、pop 时, 反向回传参数 
+
+除了我们在push 进入某一个页面时, 可能需要传递参数, 其实有时我们在从某个页面 pop() 返回时
+
+也需要回传一个参数给前一个页面, 这时我们需要怎么做呢? 
+
+其实我们在查看`Navigator.pop()`源码时发现,pop() 方法内其实是有个result 的可选参数的, 其定义如下: 
+
+```
+// Navigator 中的pop方法定义如下:
+class Navigator extends StatefulWidget {
+
+	// 有个可选的result 参数
+  static void pop<T extends Object>(BuildContext context, [ T result ]) {
+    Navigator.of(context).pop<T>(result);
+  }
+}
+
+// NavigatorState 中的pop方法定义如下:
+class NavigatorState extends State<Navigator> with TickerProviderStateMixin {
+	
+	// 有个可选的result 参数
+	void pop<T extends Object>([ T result ]) {
+    
+    // 省略...
+  }
+}
+```
+
+因此我们就可以在 pop是给返回的页面传递一个数据, 如下:
+
+```
+// 1. 方式1 pop
+void _doPop1(BuildContext context){
+  Navigator.of(context).pop('pop返回参数');
+}
+
+/// 2. 方式2 pop
+void _doPop2(BuildContext context){
+  Navigator.pop(context, 'pop返回参数');
+}
+```
+
+虽然从上面的我们发现, 在pop时可以传递参数, 但是外面如何接收我们pop时的参数呢? 
+
+是这样的, 我们查看 push 的源码时发现, 其实我们在通过 **Navigator** push到指定的页面时, 其实有给我们返回一个**future** 对象,  当我们再通过**Navigator.pop(参数)** 时, push之前的页面是可以通过future 拿到我们pop返回的参数的
+
+push 源码如下:
+
+```
+class Navigator extends StatefulWidget {
+
+	// push 方法定义如下, 当我们push后, 其实返回了一个 future, 在pop时会返回future的结果
+  @optionalTypeArgs
+  static Future<T> push<T extends Object>(BuildContext context, Route<T> route) {
+    return Navigator.of(context).push(route);
+  }
+  
+  @optionalTypeArgs
+  static void pop<T extends Object>(BuildContext context, [ T result ]) {
+    Navigator.of(context).pop<T>(result);
+  }
+}
+```
+
+
+
+pop 时反向传递参数示例:
+
+```
+// push 代码
+void _jumpToNavDetail(BuildContext ctx){
+    // 当外面 pop 会来是可以通过 popFuture 拿到pop的返回值
+    Future<String> popFuture = Navigator.of(ctx).push<String>(MaterialPageRoute(
+      builder: (ctx){
+        return NavDetail();
+      }
+    ));
+
+    popFuture.then((value){
+      print('接收到pop 的返回数据: \n ${value.runtimeType}, \n ${value}');
+    });
+  }
+  
+// pop 时代码
+  void _doPop(BuildContext context){
+    Navigator.pop(context, '123');
+  }
+```
+
+
+
+#### 3、拦截导航栏的返回
+
+![](images/navleftpop.png) 
+
+拦截导航栏 leftItem 的点击有两种方式:
+
+**方式1**:
+
+ 我们自己实现导航条的 leftItem 覆盖系统默认的leftItem, 自己实现点击事件, 示例代码如下:
+
+```
+class NavDetail extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('nav detail'),
+        /// appBar 里面的leading 就是用来设置 leftItem的
+        leading: IconButton(
+          icon: Icon(Icons.backspace),
+          onPressed: (){
+            _doPop2(context);
+          }, 
+        ),
+      ),
+      body: Container(
+       
+      ),
+    );
+  }
+  
+  void _doPop2(BuildContext context){
+    Navigator.pop(context, '123');
+  }
+}
+
+```
+
+
+
+**方式2:**
+
+需要手动再给**Scaffold** 包裹一个**WillPopScope** , 我们在使用willPopScope 拦截flutter的导航栏的 leftItem 返回时, 也是有两种情况
+
+- 情况1, 允许flutter 帮助我们自动完成返回, 我们不做任何是, 示例代码如下:
+
+  ```
+  class NavDetail extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+    	// 使用willPopScope 包裹Scaffold 拦截 nav 的leftItem点击
+      return WillPopScope(
+        onWillPop: (){ 
+        	//返回ture 的future, 允许flutter自动帮助我们实现pop
+  				return Future.value(true); 
+        },
+  
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('nav detail'),
+          ),
+          body: Container(
+  
+          ),
+        ),
+      );
+    }
+  }
+  ```
+
+- 情况2, 不允许flutter帮助我们完成pop返回动作, 我们自己实现返回, 示例代码如下:
+
+  ```
+  class NavDetail extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+    	// 使用willPopScope 包裹Scaffold 拦截flutter的nav 的leftItem 点击
+      return WillPopScope(
+        onWillPop: (){
+          _doPop2(context);  // 自己实现返回
+          return Future.value(false); // 不允许flutter自动返回
+        },
+  
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('nav detail'),
+          ),
+          body: Container(
+  
+          ),
+        ),
+      );
+    }
+  
+    void _doPop2(BuildContext context){
+      Navigator.pop(context, '1234');
+    }
+  }
+  ```
+
+  
+
+### 3、命名路由 
+
+像我们前面提到的使用`Navigator.of(context).push(route)`  或者是 `Navigator.push(context, route)` 这种方式的路由跳转, 我们都称为是普通路由跳转, 普通的路由跳转在我们实际开发过程中用的比较少. 
+
+为什么说普通的路由跳转在开发中,我们用的比较少,这是因为普通的路由跳转是有缺陷的, 比如: 我们有A、B、C、D... 等多个页面, 都需要调到 详情页面, 我们就需要在分别在A、B、C、D... 等多个页面里面写 `Navigator.of(context).push(route)` 或者 `Navigator.push(context, route)` 来进行页面的跳转, 一旦页面多了这个代码也很冗余.  太麻烦了. 
+
+那么, 我们可以怎么办更简洁呢? 
+
+更简单的方式就是**命名路由**
+
+命名路由是通过名字跳转的一种路由方式, 在我们的**MaterialApp** 中除了有我们平时用的`home` 外还有一个`routes` 属性(一个Map) 用来记录我们的路由表, 我们在使用命名路由的时候就会用到MaterialApp 中的routes属性
+
+**命名路由** 的跳转与我们的普通路由跳转在使用上是大同小异的, 命名路由跳转主要分两步:
+
+1. 在MaterialApp 中配置**命名路由映射表** 一个Map
+
+   ```
+   // materialApp 中配置命名路由映射表
+   class MyApp extends StatelessWidget {
+     @override
+     Widget build(BuildContext context) {
+       return MaterialApp(
+       	// 命名路由映射表, 一个名字对应一个路由的 builder 回调函数
+         routes:{
+           '/about': (context)=>AboutPage() , // 关于页面
+           '/': (context) => AppHome()
+         } ,
+   				
+   			// 指定初始化路由, 替代原来的home属性
+         initialRoute: '/',
+       );
+     }
+   }
+   
+   // MaterialApp 中routes 属性的定义, 如下: 
+   class MaterialApp extends StatefulWidget {
+   	// 命名路由映射表
+     final Map<String, WidgetBuilder> routes;
+     // 初始化路由
+     final String initialRoute;
+   }
+   ```
+
+2. 在需要跳转的地方使用 路由表中的名字即可实现路由跳转
+
+   ```
+   RaisedButton(
+     child: Text('点击 命名路由跳转 about', style: TextStyle(fontSize: 25),),
+     onPressed: (){
+     	Navigator.of(context).pushNamed('/about');
+     },
+   )
+   ```
+
+> 其实命名路由和 普通路由都是一样的, 命名路由是一个名字对应一样 builder
+>
+> 而普通路由是将 builder 包装到 MaterialPageRoute 中
+
+
+
+### 4、命名路由 (路由名规范改进)!
+
+我们在前面已经介绍过了什么是命名路由, 以及命名路由的使用方法步骤.
+
+但是我们前面这种使用命名路由的方式容易出现笔误问题, 为什么呢? 
+
+是这样的, 原来我们在MaterialApp 中定义命名路由的映射表和在需要使用命名路由跳转的使用都是用字符串, 如果我们在程序中的多个地方拼写同一个字符串的话容易拼写错误, 导致程序bug, 如下:
+
+```
+// 定义路由表示, 写的是字符串
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      // 路由表 手写字符串, 容易拼错
+      routes:{
+        '/about': (context)=>AboutPage() , // 关于页面
+        '/': (context) => AppHome()
+      } , 
+      initialRoute: '/',
+    );
+  }
+}
+
+// 使用命名路由, 拼写字符串容易写出
+RaisedButton(
+  child: Text('点击 命名路由跳转 about', style: TextStyle(fontSize: 25),),
+  onPressed: (){
+  	// 路由名, 使用字符串容易拼错
+  	Navigator.of(context).pushNamed('/about');
+  },
+)
+```
+
+
+
+我们的改进方法是在定义路由页面时, 在`StatelessWidget` 或者`StatefulWidget` 的类中直接定义一个 静态常量的路由名, 这样在定义路由表和路由跳转是都是用 静态常量的路由名即可, 如下;
+
+```
+// 我们定义一个Profile 的页面
+class YRProfilePage extends StatelessWidget {
+	// 指定路由名字, 供外部统一使用
+  static final String routeName = '/profile';
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('profile page'),
+      ),
+      body: Center(child: Text('profile page content')),
+    );
+  }
+}
+
+
+// 使用定义的路由名, 记录路由表
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      routes:{ 
+      	// 使用指定的路由名
+        YRProfilePage.routeName: (context)=>YRProfilePage()
+      },
+			home: AppHome(), 
+    );
+  }
+}
+
+// 使用指定的路由名跳转
+RaisedButton(
+  child: Text('点击 jump to profile', style: TextStyle(fontSize: 25),),
+  onPressed: (){
+  	Navigator.of(context).pushNamed(YRProfilePage.routeName);
+  },
+)
+```
+
+
+
+### 5、命名路由(参数传递与接收)!
+
+我们在使用 `Navigator.of(context).pushNamed(routeName)` 进行路由跳转的时候, 其实还可以传递一个参数 `arguments` 这其实在方法定义里面有, 如下:
+
+```
+class NavigatorState extends State<Navigator> with TickerProviderStateMixin {
+
+@optionalTypeArgs
+  Future<T> pushNamed<T extends Object>(
+    String routeName, {
+    Object arguments,
+  }) {
+    return push<T>(_routeNamed<T>(routeName, arguments: arguments));
+  }
+  
+}
+```
+
+那我们通过命名路由传递的路由参数, 在哪里怎么去获取呢? 
+
+是这样的, 当我们通过命名路由的 `arguments` 参数传递路由参数时, 在被跳转的页面中我们可以通过 `BuildContext` 获取到, 如下: 
+
+```
+// 1. 定义路由表
+// 使用定义的路由名, 记录路由表
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      routes:{ 
+      	// 使用指定的路由名
+        YRProfilePage.routeName: (context)=>YRProfilePage()
+      },
+			home: AppHome(), 
+    );
+  }
+}
+
+// 2. 使用命令路由跳转路由并传递参数
+// 使用指定的路由名跳转
+RaisedButton(
+  child: Text('点击 jump to profile', style: TextStyle(fontSize: 25),),
+  onPressed: (){
+  	Navigator.of(context).pushNamed(
+  	YRProfilePage.routeName, 		
+  	arguments: '我的名字叫张三');  // 路由传递的参数
+  },
+)
+
+// 3. 在被跳转的页面, 通过 BuildContext 获取路由参数
+import 'package:flutter/material.dart';
+class YRProfilePage extends StatelessWidget {
+
+	// 定义路由名
+  static final String routeName = '/profile';
+  
+  @override
+  Widget build(BuildContext context) {
+		// 获取路由参数
+    final msg =  ModalRoute.of(context).settings.arguments as String;
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('profile'),
+      ),
+      body: Center(child: Text('msg: ${msg}', style: TextStyle(fontSize: 20),)),
+    );
+  }
+}
+```
+
+
+
+### 6、命名路由onGestureRoute钩子函数
+
+有时我们有这样的一个需求, 我们跳转到的一个新页面, 在构建Widget时需要传递一个参数, 这时我们就不能直接使用上面介绍的命名路由的跳转方式了, 因为默认的命名路由跳转时, 被跳转的页面是在build方法中通过 BuildContext获取跳转路由参数的, 但是这时如果我们在跳转路由是就是想使用命名路由的方式跳转, 我们要怎么办呢? 
+
+- 需要跳转的页面的定义如下:
+
+  ```
+  import 'package:flutter/material.dart';
+  
+  class UserInfo extends StatelessWidget {
+  
+    static final String routeName = '/userInfo';
+    
+    final String name;
+    // 构造函数需要外部传递参数
+    UserInfo(this.name);
+  
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('user info'),
+        ),
+        body: Center(
+          child: Container(
+            color: Colors.green.withAlpha(125), 
+            child: Text('用户名: ${name}', style: TextStyle(fontSize: 20),)),
+        ),
+      );
+    }
+  }
+  ```
+
+- 在`MaterialApp` 中需要配置 `onGenerateRoute` 参数, 动态生成路由
+
+  ```
+  class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        // 1. 配置命名 路由
+        routes:{
+          '/about': (context)=>AboutPage() , // 关于页面
+          '/': (context) => AppHome(),
+          YRProfilePage.routeName: (context)=>YRProfilePage()
+        } ,
+        
+        // 2. 初始化页面显示的是 '/' home 页面
+        initialRoute: '/',
+  
+        /// 当我们使用命名路由跳转时, 如果在命名路由中没有对应的路由名时, 就会来到这个钩子函数
+        /// 让我们根据 RouteSettings 信息, 创建一MaterialRoute
+        onGenerateRoute: (RouteSettings settings){
+        
+        	// 根据命名路由 创建具体的路由 route
+          if(settings.name == UserInfo.routeName){
+            return MaterialPageRoute(
+              builder: (context){
+              	// 如果外部在使用 命名路由方式跳转路由是 有传递参数, 那么就可以通过
+              	// settings.arguments 获取命名路由的参数
+                final String name = settings.arguments as String;
+                return UserInfo(name);
+              }
+            );
+          }
+          return null;
+        },
+      );
+    }
+  }
+  ```
+
+- 外部使用命名 路由跳转到 没有配置路由表的路由, 并传递了参数
+
+  ```
+  RaisedButton(
+    child: Text('点击 jump to userinfo', style: TextStyle(fontSize: 25),),
+    onPressed: (){
+      Navigator.of(context).pushNamed(UserInfo.routeName, arguments: 'zhangsan');
+    },
+  )
+  ```
+
+  > 说明:
+  >
+  > 之所以在MaterialApp 中, 设置`onGestureRoute` , 是为了让我们仍然以`命名路由`方式跳转的方式的情况下
+  >
+  > 使用构造函数传递参数.
+  >
+  > 当然, 在这种情况下仍然以命名路由方式跳转, 显得代码稍微复杂点, 这种情况下我们使用普通路由跳转可能更简单点.
+
+  说白了, onGestureRoute就是命名路由的一个钩子函数. 
+
+
+
+### 7、命名路由 onUnknownRoute 钩子函数
+
+我们在开发中, 有时在通过`命名方式` 进行路由跳转时, 难免会跳转到一个不存在的路由上去
+
+或者在开发时因为手误, 将路由的名字写错了, 根据路由的名字压根找不到要跳转的路由
+
+> 比如: 我要要跳转到 路由名为 'bb' 的页面, 如下:
+>
+> ```
+> RaisedButton(
+>   child: Text('点击 jump to userinfo', style: TextStyle(fontSize: 25),),
+>   onPressed: (){
+>     Navigator.of(context).pushNamed('bb', arguments: 'zhangsan');
+>   },
+> )
+> ```
+>
+> 但是我们在MaterialApp 的routes 和 onGenerateRoute 中都没有找到对应的路由信息, 
+>
+> 这时, 就会触发 MaterialApp中 onUnknownRoute 属性对应的回调函数, 如果没有设置 onUnknownRoute 对应的回调函数程序就会报错, 一般我们是这样处理的, 如下:
+
+```
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      //1. 定义命名路由表
+      routes:{
+        '/about': (context)=>AboutPage() , // 关于页面
+        '/': (context) => AppHome(),
+        YRProfilePage.routeName: (context)=>YRProfilePage()
+      } ,
+      // 2. 指定初始化路由页面
+      initialRoute: '/',
+
+      // 3. 如果命名路由表中没有找到, 就来这里动态生成 路由
+      onGenerateRoute: (RouteSettings settings){
+        if(settings.name == UserInfo.routeName){
+          return MaterialPageRoute(
+            builder: (context){
+            	// 命名路由参数
+              final String name = settings.arguments as String;
+              return UserInfo(name);
+            }
+          );
+        }
+        return null;
+      },
+      // 4. 如果命名路由和动态路由都没有找到对应的路由, 就来这里处理未知路由
+      onUnknownRoute: (RouteSettings settings){
+        return MaterialPageRoute(
+          builder: (context){
+            return UnkonwnPgae();
+          }
+        );
+      },
+    );
+  }
+}
+
+
+// 跳转到未知路由页面, 如果MaterialApp 中没有对未知路由做处理程序就会崩溃
+RaisedButton(
+  child: Text('点击 jump to userinfo', style: TextStyle(fontSize: 25),),
+  onPressed: (){
+    Navigator.of(context).pushNamed('bb', arguments: 'zhangsan');
+  },
+)
+```
+
+
+
+## 3、路由跳转代码规范
+
+是这样的在开中, 如果我们将所有的命名路由等信息, 全部都写在MaterialApp中的话, 会让整个MaterialApp显得代码冗余, 可读性差, 不易于维护.
+
+一般我们在开发中会将MaterialApp 中所有的路由配置信息全部都抽到一个类中来统一的管理, 这样的话会显得功能职责更加单一化, 易于我们后面代码的维护和迭代, 示例如下: 
+
+- 我们定义一个`router.dart` 文件用来管理所有的 路由(命名路由), 代码如下:
+
+  ```
+  import 'package:flutter/material.dart';
+  
+  import '../main.dart';
+  import '../about.dart';
+  import '../detail.dart';
+  import '../unknown.dart';
+  
+  class HYRouter {
+  
+  	/// 1.命名路由映射表
+    static final Map<String, WidgetBuilder> routes = {
+      HYHomePage.routeName: (ctx) => HYHomePage(),
+      HYAboutPage.routeName: (ctx) => HYAboutPage()
+    };
+  
+  	/// 2.默认的初始化命名路由名字
+    static final String initialRoute = HYHomePage.routeName;
+  
+  	/// 3. 动态适配命名路由(主要是适配命名路由传递构造参数)
+    static final RouteFactory generateRoute = (settings) {
+      if (settings.name == HYDetailPage.routeName) {
+        return MaterialPageRoute(
+            builder: (ctx) {
+              return HYDetailPage(settings.arguments);
+            }
+        );
+      }
+      return null;
+    };
+  
+  	/// 4. 适配未知命名 路由, 避免程序crash
+    static final RouteFactory unknownRoute = (settings) {
+      return MaterialPageRoute(
+          builder: (ctx) {
+            return HYUnknownPage();
+          }
+      );
+    };
+  }
+  ```
+
+- 在MaterialApp中的其它代码就很精简了, 如下:
+
+  ```
+  import 'package:flutter/material.dart';
+  import 'about.dart';
+  import 'router/router.dart';
+  import 'unknown.dart';
+  import 'detail.dart';
+  
+  void main() => runApp(MyApp());
+  
+  class MyApp extends StatelessWidget {
+  
+    // This widget is the root of your application.
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            primarySwatch: Colors.blue, splashColor: Colors.transparent),
+            
+        /// 下面就是路由相关配置信息    
+        routes: HYRouter.routes,
+        initialRoute: HYRouter.initialRoute,
+        onGenerateRoute: HYRouter.generateRoute,
+        onUnknownRoute: HYRouter.unknownRoute,
+      );
+    }
+  }
+  ```
 
 
 
@@ -8532,6 +11079,810 @@ flutter 中的 `InheritedWidget`  和 React中的`context` 功能是类似的.�
 
 
 
+# 二五、主题Theme
+
+## 1、Theme 介绍
+
+1. 在flutter开发中, 可以通过设置主题Theme的方式来给某一类组件预先定义一些列的UI样式, 这样的话在后续整个App 开发中同一类想的UI组件就可以不用在每个使用的地方再单独的设置UI样式了, 这样的话整个app 的开发风格更统一. 
+
+   > 比如: 
+   >
+   > - 我们可以设置 文本的主题 TextTheme,  这样文本就有默认的统一的样式了
+   > - 我们可以设置 按钮的主题 ButtonThemeData, 这样按钮就有统一的样式了
+
+2. flutter中的主题Theme 是分为:  **全局主题Global Theme** 和 **局部主题 local Theme** .
+
+3. 以前我们有说道, flutter 中有三棵树: **widget tree、Element Tree、RenderObject tree** 
+
+   >  树tree 有一个特点就是:
+   >
+   >  树中的任意一个节点可以沿着树中的节点一个个的往上找到祖先节点, 拿到祖先节点后可以获取祖先几点中的数据, 也可以一个个的往下查找子节点, 并获取子节点的数据
+
+   其实, flutter中的主题样式就是沿着树结构从上往下传递的, 这也是为什么我们创建了一个MaterialApp 后, 整个app 都有一个比较统一的风格的原因.
+
+4. 其实, 主题中的数据是通过InheritedWidget 的方式进行贡献的, 具体以后再说, 目前先了解
+
+
+
+
+
+## 2、全局主题 GlobalTheme
+
+### 1、全局主题GlobalTheme 介绍
+
+全局主题就是整个app 的主题, 如果设置了全局主题的话, 整个app的UI风格都会发生变化
+
+一般情况下, 我们是通过在MaterialApp 中的theme属性来设置全局的主题的, MateriApp中的theme属性是一个ThemeData的数据类型, 其定义如下:
+
+```
+factory ThemeData({
+    Brightness brightness,
+    VisualDensity visualDensity,
+    MaterialColor primarySwatch,
+    Color primaryColor,
+    Brightness primaryColorBrightness,
+    Color primaryColorLight,
+    Color primaryColorDark,
+    Color accentColor,
+    Brightness accentColorBrightness,
+    Color canvasColor,
+    Color scaffoldBackgroundColor,
+    Color bottomAppBarColor,
+    Color cardColor,
+    Color dividerColor,
+    Color focusColor,
+    Color hoverColor,
+    Color highlightColor,
+    Color splashColor,
+    InteractiveInkFeatureFactory splashFactory,
+    Color selectedRowColor,
+    Color unselectedWidgetColor,
+    Color disabledColor,
+    Color buttonColor,
+    ButtonThemeData buttonTheme,
+    ToggleButtonsThemeData toggleButtonsTheme,
+    Color secondaryHeaderColor,
+    Color textSelectionColor,
+    Color cursorColor,
+    Color textSelectionHandleColor,
+    Color backgroundColor,
+    Color dialogBackgroundColor,
+    Color indicatorColor,
+    Color hintColor,
+    Color errorColor,
+    Color toggleableActiveColor,
+    String fontFamily,
+    TextTheme textTheme,
+    TextTheme primaryTextTheme,
+    TextTheme accentTextTheme,
+    InputDecorationTheme inputDecorationTheme,
+    IconThemeData iconTheme,
+    IconThemeData primaryIconTheme,
+    IconThemeData accentIconTheme,
+    SliderThemeData sliderTheme,
+    TabBarTheme tabBarTheme,
+    TooltipThemeData tooltipTheme,
+    CardTheme cardTheme,
+    ChipThemeData chipTheme,
+    TargetPlatform platform,
+    MaterialTapTargetSize materialTapTargetSize,
+    bool applyElevationOverlayColor,
+    PageTransitionsTheme pageTransitionsTheme,
+    AppBarTheme appBarTheme,
+    BottomAppBarTheme bottomAppBarTheme,
+    ColorScheme colorScheme,
+    DialogTheme dialogTheme,
+    FloatingActionButtonThemeData floatingActionButtonTheme,
+    NavigationRailThemeData navigationRailTheme,
+    Typography typography,
+    CupertinoThemeData cupertinoOverrideTheme,
+    SnackBarThemeData snackBarTheme,
+    BottomSheetThemeData bottomSheetTheme,
+    PopupMenuThemeData popupMenuTheme,
+    MaterialBannerThemeData bannerTheme,
+    DividerThemeData dividerTheme,
+    ButtonBarThemeData buttonBarTheme,
+  })
+```
+
+> 从上面的 ThemeData的定义我们就可以知道, 在flutter 中大致有那些Widget组件是可以通过 主题来设置统一的风格的. 
+
+### 2、常用的全局主题的使用
+
+1、ThemeData 中的`Brightness brightness` 属性是用哪个来设置黑暗模式的, 默认为亮色模式, 一般我们不用
+
+2、`Color primaryColor` 是用来单独设置导航条和tabar颜色的, `Color accentColor` 是用来设置 floatingActionButton Swatch 的颜色, `MaterialColor primarySwatch` 是用来同时设置`primaryColo 和 accentColor` 的, 也就是说如果你设置了 primarySwatch就相当于是同时设置`primaryColor` 和 `accentColor`, 
+
+但是如果单独设置`primaryColor` 或 `accentColor`的话优先级要比`primarySwatch`高.
+
+
+
+- 定义全局组件
+
+  ```
+  runApp(MaterialApp(
+        title: '安卓最近使用app title', // 这个属性只在android 上有效, 在iOS 上无效
+        theme: ThemeData(
+          // 1. 设置app 的黑暗模式, 默认为 light 模式
+          brightness: Brightness.light,
+  
+          // 2. 设置默认颜色的主题
+          ///  primarySwatch 是MaterialColor类型的,继承自Color, 不能直接使用Color
+          ///  Colors.green 返回的是 MaterialColor类型
+          ///  通过查看我们发现 MaterialColor 是一组颜色并不是一个颜色, 只是一般有默认的色
+          ///  当你再theme中设置了 primarySwatch后相当于设置了(primaryColor 和 accentColor)
+          ///  theme中的 primaryColor 主要使用来单独设置导航和 tabBar 颜色的
+          ///  theme中的 accentColor 主要使用来单独设置 floatingActionButton Swatch 的颜色
+          primarySwatch: Colors.green,
+  
+          primaryColor: Colors.pinkAccent,
+  //        accentColor: Colors.orange,
+  
+          // 3. 设置button 的主题
+          /// 修改button 默认的大小及默认的颜色
+          buttonTheme: ButtonThemeData(
+              minWidth: 10, height: 10, buttonColor: Colors.orange),
+  
+          // 4. 设置Card 的主题
+          /// 我们可以通过 cardTheme 给项目中所有的Card 设置主题, 这样默认情况下所有的card 都会有默认的样式了
+          cardTheme: CardTheme(
+            color: Colors.orange,
+            elevation: 10  // 设置阴影
+          ),
+  
+          // 5. 文字的主题
+          textTheme: TextTheme(
+            /// bodyText2 material 默认的文本使用的样式就是 textTheme 中bodyText2 的样式, 而Text 中的文本就是标准的 bodyText2
+            /// bodyText1 是 bodyText2 的粗体
+            bodyText2: TextStyle( fontSize: 14, color: Colors.red),
+            bodyText1: TextStyle( fontSize: 14, color: Colors.orange),
+  
+  
+            headline6: TextStyle( fontSize: 14, color: Colors.yellow),
+            headline5: TextStyle( fontSize: 16, color: Colors.green),
+            headline4: TextStyle( fontSize: 18, color: Colors.cyan),
+            headline3: TextStyle( fontSize: 20, color: Colors.cyan),
+            headline2: TextStyle( fontSize: 22, color: Colors.purple),
+            headline1: TextStyle( fontSize: 24, color: Colors.brown),
+  
+          )
+  
+  
+        ),
+        home: MyApp()));
+  ```
+
+  > 注意: 
+  >
+  > - 所有的文字主题, 都是通过 TextTheme 来设置的, 而且在TextTheme 中分的也很细, 不同地方用大的Text组件, 会使用TextTheme 中的不的主题
+  >
+  > - 虽然RaiseButton 中也可以使用Text , 但是RaiseButton中的文本样式, 要通过TextTheme中的button来设置才生效
+
+- 使用全局组件
+
+  ```
+  class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('my project 01'),
+        ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              /// 默认情况下, 所有的文本使用的都是 textTheme 中的 body1 的样式
+  
+              Text( 'bodyText2', style: Theme.of(context).textTheme.bodyText2,),
+              Text( 'bodyText1', style: Theme.of(context).textTheme.bodyText1,),
+              Text( 'headline6', style: Theme.of(context).textTheme.headline6,),
+              Text( 'headline5', style: Theme.of(context).textTheme.headline5,),
+              Text( 'headline4', style: Theme.of(context).textTheme.headline4,),
+              Text( 'headline3', style: Theme.of(context).textTheme.headline3,),
+              Text( 'headline2', style: Theme.of(context).textTheme.headline2,),
+              Text( 'headline1', style: Theme.of(context).textTheme.headline1,),
+  
+  
+              /// 可以同时使用在 android 和 ios 中, 是android 风格的
+              Switch(
+                value: true,
+                onChanged: (value) {},
+              ),
+  
+              /// CupertinoSwitch 是iOS 风格的switch, 不能像Switch 一样可以使用主题色等, 需要单独设置
+              CupertinoSwitch(
+                value: true,
+                activeColor: Colors.cyan,
+                trackColor: Colors.brown,
+                onChanged: (value) {},
+              ),
+  
+              /// 默认情况下, 是不能设置 很小很小的button 的
+              RaisedButton(
+                child: Text(
+                  'b',
+                  style: TextStyle(fontSize: 30),
+                ),
+                onPressed: () {
+  
+                  Theme.of(context);
+  
+                },
+              ),
+  
+              ///
+              Card(
+                child: Text('card 测试文字', style: TextStyle(fontSize: 30)),
+  
+              ),
+            ],
+          ),
+        ),
+  
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(title: Text('首页'), icon: Icon(Icons.home)),
+            BottomNavigationBarItem(
+                title: Text('我的'), icon: Icon(Icons.my_location))
+          ],
+        ),
+  
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {},
+        ),
+      );
+    }
+  ```
+
+  ![](images/globaltheme.png) 
+
+
+
+#### 1、primaryColor & accentColor &  primarySwatch
+
+- primaryColor 主要是用来单独设置 navBar 和 tabBar 的颜色的
+
+- accentColor 主要是用来单独设置 FloatingActionButton/ Switch 这类的颜色的
+
+- primarySwatch 相当于同时设置 primaryColor 和 accentColor
+
+> 这个知识点要注意下
+
+
+
+### 3、常用局部主题的使用
+
+在全局范围内使用主题, 我们只需要在 MaterialApp 中设置theme 即可, 这样整棵个都可以获取到相应的主题数据并应用到自己上. 
+
+我们知道在flutter中子节点只需要沿着父节点搜索, 就能找到对应的主题参数, 这样就可以设置自己的样式了. 
+
+```
+//像这样, 我们使用 Theme.of(context)即可获取父节点的主题信息
+Theme.of(context).textTheme.bodyText2
+```
+
+我们想要在局部使用我们自己的主题, 其实很简单, 我们只需要在需要共享局部子节点的公共节点上创建一个Theme节点即可, 这样当子节点在网上查询主题时就先找到我们的, 局部节点了
+
+一般我们是这样的使用的, 示例如下: 
+
+```
+class DetailPage extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    
+    /// 局部主题, 使用Theme包裹
+    /// 然后使用 Theme.of(context).copyWith() 修改部分要改的主题即可
+    return  Theme( 
+        data: Theme.of(context).copyWith(
+            textTheme: TextTheme(
+              bodyText2: TextStyle(fontSize: 15, color: Colors.pink)
+            ),
+        	),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('详情页面'),
+            backgroundColor: Colors.purple,
+          ),
+          body: Column(
+            children: <Widget>[
+              Card(
+                child: Text('cart 组件'),
+              ),
+              RaisedButton(
+                child: Text('Raisebtn 默认也是 bodyText2 style'),
+                textTheme:ButtonTextTheme.accent,
+                onPressed: () {},
+              ),
+              Text('测试文字')
+            ],
+          ),
+
+          /// 如果要修改 FloatingActionButton 的颜色, 必须这样做
+          ///  修改Theme 里面的 colorScheme
+          floatingActionButton: Theme(
+            data: Theme.of(context).copyWith(
+            // 这里很重要
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                secondary: Colors.cyan
+              )
+            ),
+            child: FloatingActionButton(
+              child: Icon(Icons.pets),
+              onPressed: (){
+              },
+            ),
+          )
+        )
+    );
+
+  }
+}
+```
+
+![](images/subtheme.png) 
+
+
+
+
+
+## 3、在组件中使用主题
+
+我们前面说过了, flutter 中有三棵树: widget tree, Element tree、RenderObject Tree, 而在StatelessWidget 或者是StatefulWidget 对应的State中的build方法中的 BuildContext 参数就是Element tree 中的Element节点, 且Widget 节点和 Element节点是一一对应的 有一个Widget节点就有一个与之对应的Element tree
+
+一般来说, 我们都是在 build方法中通过 buildContext 来获取到对应的 主题的, 如下: 
+
+```
+Widget build(BuildContext context) {
+  return Container(
+          child: Column(
+            children: <Widget>[
+              /// 默认情况下, 所有的文本使用的都是 textTheme 中的 bodyText2 的样式
+              Text( 'wo shi text',),
+              Text( 'wo shi text',  style: TextStyle(fontSize: 14),  ),
+              Text( 'wo shi text',  style: Theme.of(context).textTheme.display1,  ),
+            ]
+          )
+        );
+}
+```
+
+在build 方法中通过 BuildContext 方法获取主题的流程源码分析:
+
+-  Theme类中定义的一个静态方法 `Theme.of(BuildContext ctx)` 
+
+  ```
+   class Theme extends StatelessWidget { 
+    const Theme({
+      Key key,
+      @required this.data,		// 这个data 就是 ThemeData
+      this.isMaterialAppTheme = false,
+      @required this.child,
+    }) ;
+  
+    final ThemeData data;
+    
+    // 静态方法, 获取 themedata
+     static ThemeData of(BuildContext context, { bool shadowThemeOnly = false }) {
+      final _InheritedTheme inheritedTheme = context.dependOnInheritedWidgetOfExactType<_InheritedTheme>();
+      if (shadowThemeOnly) {
+        if (inheritedTheme == null || inheritedTheme.theme.isMaterialAppTheme)
+          return null;
+        return inheritedTheme.theme.data;
+      }
+  
+      final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+      final ScriptCategory category = localizations?.scriptCategory ?? ScriptCategory.englishLike;
+      final ThemeData theme = inheritedTheme?.theme?.data ?? _kFallbackTheme;
+      return ThemeData.localize(theme, theme.typography.geometryThemeFor(category));
+    }
+  
+   }
+  ```
+
+  相关类的定义
+
+  - InheritedTheme 类的定义
+
+    ```
+    class _InheritedTheme extends InheritedTheme {
+      const _InheritedTheme({
+        Key key,
+        @required this.theme,		// final Theme theme;  说明在
+        @required Widget child,
+      }) ;
+    }
+    ```
+
+  - InheritedTheme 类定义
+
+    ```
+    abstract class InheritedTheme extends InheritedWidget {
+    }
+    ```
+
+    
+
+  
+
+  ## 4、flutter中设配暗黑模式
+
+  在我们flutter中适配暗黑模式很简单
+
+  在flutter开中我们是不需要单独判断的
+
+  ```
+  
+  import 'package:flutter/material.dart';
+  
+  main(List<String> args){
+  
+    runApp(MaterialApp(
+      /// 设置 theme 属性来适配亮色模式
+      /// 我们将亮色模式的主题写在theme 中即可
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+        textTheme: TextTheme(
+          bodyText2: TextStyle(fontSize: 20, color: Colors.green),
+          button: TextStyle(fontSize: 40, color:Colors.blue, )
+        )
+      ),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.green,
+        textTheme: TextTheme(
+          bodyText2: TextStyle(fontSize: 30, color: Colors.blue),
+          button:  TextStyle(fontSize: 60, color:Colors.red)
+        )
+      ),
+      home: MyApp(),
+    ));
+  }
+  
+  
+  class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('暗黑模式适配'),
+        ),
+        body: HomePage(),
+      );
+    }
+  }
+  
+  
+  class HomePage extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Text('Text 测试文字'),
+            RaisedButton(
+              child: Text('我是Raise Button:', style: Theme.of(context).textTheme.button),
+              onPressed: (){
+                print('raise btn click');
+              },
+            )
+          ],
+        ),
+      );
+    }
+  }
+  
+  ```
+
+  ![](images/darktheme1.png)  ![](images/darktheme2.png) 
+
+  
+
+
+
+
+
+## 4、flutter 中的颜色(MaterialColor)
+
+我们平时在flutter项目开发中, 经常会使用 **Colors.red**  这种简单的颜色的获取方式, 可是我们很少去关注**Colors.red**  方法内的实现, 当我们仔细看时发现**Colors.red** 方法其实返回的是一个**MaterialColor** 类型的Color
+
+- **MaterialColor** 的继承链
+
+  ```
+  class MaterialColor extends ColorSwatch<int> {
+  
+   // 部分实现如下:
+   static const MaterialColor red = MaterialColor(
+      _redPrimaryValue,
+      <int, Color>{  /// 颜色的map
+         50: Color(0xFFFFEBEE),
+        100: Color(0xFFFFCDD2),
+        200: Color(0xFFEF9A9A),
+        300: Color(0xFFE57373),
+        400: Color(0xFFEF5350),
+        500: Color(_redPrimaryValue),
+        600: Color(0xFFE53935),
+        700: Color(0xFFD32F2F),
+        800: Color(0xFFC62828),
+        900: Color(0xFFB71C1C),
+      },
+    );
+    static const int _redPrimaryValue = 0xFFF44336;
+  }
+  ```
+
+- ColorSWatch 类的继承链
+
+  ```
+  class ColorSwatch<T> extends Color {
+  
+  	@protected
+    final Map<T, Color> _swatch;
+  }
+  
+  // 我们查看源码, 最后发现ColorSWatch 中一个最大的特点就是有个 Color 的map
+  // 这是普通Color 不具备的
+  ```
+
+- Color 类的继承链
+
+  ```
+  class Color {
+  
+    @pragma('vm:entry-point')
+    const Color(int value) : value = value & 0xFFFFFFFF;
+  }
+  ```
+
+  
+
+# 二六、屏幕适配
+
+
+
+## 1、flutter 中的单位
+
+在进行flutter开发时, 我们通常不需要传入尺寸单位, 那么flutter使用的是什么单位呢? 
+
+- flutter 使用的是类似iOS中的pt, 也就是point, 即 1pt真实表示的几个像素是不确定的, 根据实际的机型屏幕决定
+
+  > 我们通常说iPhone6的尺寸是375 * 667, 是的是pt单位, 它真实的分辨率是750 * 1334.
+
+  在flutter开发中, 我们使用的是逻辑分辨率单位(即pt) 而不是使用真实的分辨率单位
+
+  
+
+
+
+## 2、flutter 设备信息
+
+### 1、获取屏幕宽度
+
+- 获取物理设备分辨率
+
+  ```
+   /// 获取物理屏幕信息
+   final pWidth = window.physicalSize.width;
+   final pHeight = window.physicalSize.height;
+   print('当前手机分辨率: $pWidth * $pHeight');
+  ```
+
+- 获取设备分辨率比例 scale
+
+  ```
+  /// 获取设备的像素比
+  final scale = window.devicePixelRatio;
+  print('当前屏幕的比例scale: $scale');
+  
+  // 此处的scale 就相当于是 1pt 代表多少 个真实像素
+  ```
+
+- 自定义方法获取屏幕的逻辑分辨率
+
+  ```
+  /// 获取物理屏幕信息
+  final pWidth = window.physicalSize.width;
+  final pHeight = window.physicalSize.height;
+  print('当前手机分辨率: $pWidth * $pHeight');
+  
+  /// 获取设备的像素比
+  final scale = window.devicePixelRatio;
+  print('当前屏幕的比例scale: $scale');
+  
+  
+  /// 自定义获取当前手机屏幕的逻辑分辨率
+  final width = pWidth / scale;
+  final height = pHeight / scale;
+  print('方式1,自定义获取逻辑分辨率: width: $width, heigh: $height');
+  
+  // 因为Size这个类中 对 / 这个运算符进行了重载 我们可以直接让 Size / double
+  // 因此方式2, 也可以这样
+  final size = window.physicalSize / window.devicePixelRatio;
+  print('方式2,自定义获取逻辑分辨率: width: ${size.width}, height: ${size.height}');
+  ```
+
+- 通过系统提供的媒体查询方法获取当前手机的逻辑屏幕宽高
+
+  ```
+   /// 获取手机逻辑分辨率
+  final width = MediaQuery.of(context).size.width;
+  final height = MediaQuery.of(context).size.height;
+  print('MediaQuery 当前手机逻辑分辨率: $width * $height');
+  ```
+
+  > 媒体查询的这个方法有限制, 必须要等 BuildContext 初始化完毕才可以获取到
+  >
+  > 一般在MaterialApp 方法之后使用没有问
+
+
+
+### 2、获取屏幕刘海信息
+
+- 获取手机状态栏物理高度(刘海+状态栏)
+
+- 获取手机底部安全距离物理高度
+
+  ```
+  /// 获取屏幕真实状态栏高度(像素)
+  final pStatusH = window.padding.top;
+  print('手机状态栏物理高度: $pStatusH');
+  final pottomMargin = window.padding.bottom;
+  print('手机底部margin物理高度: $pottomMargin');
+  ```
+
+- 获取手机状态栏逻辑高度(刘海+状态栏)
+
+- 获取手机底部安全距离逻辑高度
+
+  ```
+  /// 获取状态栏的高度
+  final statusH = MediaQuery.of(context).padding.top;
+  print('手机状态栏逻辑高度: $statusH');
+  final bottomMargin = MediaQuery.of(context).padding.bottom;
+  print('手机底部margin逻辑高度: $bottomMargin');
+  ```
+
+  > 媒体查询的这个方法有限制, 必须要等 BuildContext 初始化完毕才可以获取到
+  >
+  > 一般在MaterialApp 方法之后使用没有问
+
+- 自定义方法获取手机状态栏逻辑高度(刘海+状态栏)
+
+- 自定义方法 获取手机底部安全距离逻辑高度
+
+  ```
+  /// 获取屏幕真实状态栏高度(像素)
+  final pStatusH = window.padding.top;
+  print('手机状态栏物理高度: $pStatusH');
+  final pottomMargin = window.padding.bottom;
+  print('手机底部margin物理高度: $pottomMargin');
+  /// 获取设备的像素比
+  final scale = window.devicePixelRatio;
+  
+  final status =  pStatusH / scale;
+  final margin =  pottomMargin / scale;
+  ```
+
+  
+
+## 3、flutter屏幕适配
+
+一般以iPhone6 屏幕的宽度来做为标准屏幕进行适配
+
+- 屏幕适配工具
+
+  ```
+  import 'dart:ui';
+  
+  class YRSizeFit {
+    // 1.基本信息
+    static double physicalWidth;
+    static double physicalHeight;
+    static double screenWidth;
+    static double screenHeight;
+    static double dpr;
+    static double statusHeight;
+  
+    static double rpx;
+    static double px;
+  
+  	/// 默认将iPhone6的宽度作为标准宽度
+    static void initialize({double standardSize = 750}) {
+      // 1.手机的物理分辨率
+      physicalWidth = window.physicalSize.width;
+      physicalHeight = window.physicalSize.height;
+  
+      // 2.获取dpr
+      dpr = window.devicePixelRatio;
+  
+      // 3.宽度和高度
+      screenWidth = physicalWidth / dpr;
+      screenHeight = physicalHeight / dpr;
+  
+      // 4.状态栏高度
+      statusHeight = window.padding.top / dpr;
+  
+      // 5.计算rpx的大小
+      rpx = screenWidth / standardSize;
+      px = screenWidth / standardSize * 2;
+    }
+  
+    static double setRpx(double size) {
+      return rpx * size;
+    }
+  
+    static double setPx(double size) {
+      return px * size;
+    }
+  }
+  ```
+
+  
+
+- 外部使用
+
+  ```
+  Container(
+    width: YRSizeFit.setPx(100),
+    height: YRSizeFit.setPx(100),
+    color: Colors.yellow,
+  )
+  ```
+
+> 也有一个第三库屏幕适配:**flutter_screenutil**
+>
+> https://github.com/OpenFlutter/flutter_screenutil
+
+
+
+
+
+## 2、自动压缩组件FittedBox
+
+我们先来介绍一个flutter开发中的 `Row` 和 `Column` 组件的特点: 
+
+- `Row` 和 `Column` 这两个Widget 组件都是继承自`Flex` 这个Widget组件的, 只是`Row` 的`direction` 属性为` Axis.horizontal` 而 `Column` 这个Widget组件的 `direction` 属性为` Axis.vertical` .
+- 因为`Row` 和`Column` 的主轴属性`mainAxisSize` 默认值都是`MainAxisSize.max`  表示的是在主轴方向上尽量占据较大的空间尺寸, 而这个主轴上的空间尺寸是根据父组件的`constraints` 属性来决定的,如果在`Row` 或者`Column` 内的子组件的尺寸之后超多了`Row` 或者`Column` 的尺寸时就会报错
+
+> 通常为了房子 Row 或者 Column 中子组件的尺寸超出Row和Column的尺寸越界, 我们一般使用**FittedBox** 组件进行包装适配, 这样当子组件的尺寸越界后就会自动进行压缩
+
+```
+class HomePageContent extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: 100,  height: 50, color: Colors.green,
+            child: Row(
+              children: <Widget>[
+                /// 通常为了防止Row或者Column中为了防止子组件 的尺寸呢超出越界, 我们可以使用 FittedBox 来对子组件内进行缩放控制
+                FittedBox(child: Icon(Icons.pets, size: 110,))
+              ],
+            ),
+          ),
+          SizedBox(height: 100,),
+          Container(
+            width: 100,  height: 50, color: Colors.green,
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.pets, size: 110,)
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+```
+
+![](images/fittedbox.png) 
 
 
 
@@ -8540,18 +11891,53 @@ flutter 中的 `InheritedWidget`  和 React中的`context` 功能是类似的.�
 
 
 
+# 项目实战
+
+设置appid
+
+设置 图标
+
+设置启动图
+
+
+# 二四、动画
 
 
 
+在flutter中做动画必须要使用到**Animation**类 ,Animation 类是一个抽象类, 里面有很多的东西:
+
+- 监听动画值的改变
+- 监听动画状态的改变
+- value 获取当前的值
+- status 获取当前的状态
+
+Animation 是非常重要的, 但是因为他是抽象类不能实例化.所以在开发中我们通常会使用另外一个类**AnimationController** , 因为AnimationController 是继承自Animation的, 所以Animation里面的方法它都有. # 二十、动画
 
 
 
+在flutter中做动画必须要使用到**Animation**类 ,Animation 类是一个抽象类, 里面有很多的东西:
+
+- 监听动画值的改变
+- 监听动画状态的改变
+- value 获取当前的值
+- status 获取当前的状态
+
+Animation 是非常重要的, 但是因为他是抽象类不能实例化.所以在开发中我们通常会使用另外一个类**AnimationController** , 因为AnimationController 是继承自Animation的, 所以Animation里面的方法它都有. 
 
 
 
+# 二七、flutter 国际化
 
 
 
+## 1、国际化的认识
 
+开发一个app, 如果我们的App需要面向不同的语种(比如: 中文,英文, 法文 等等), 那么我们需要对其进行国际化开发. 
 
+国际化的英文称呼: `internationalization` (简称 `i18n` , 取前后两个字母, 18表示前后中间省略的字母个数)
+
+App 的国际化开发, 主要包括: 文本国际化(包括文本的顺序), widget显示国际化.
+
+- 比如: 我们下面开发的这个App
+- 
 
