@@ -5113,6 +5113,25 @@ TextFormField(
 
 
 
+## 8、透明度widget
+
+在iOS 开发中, 我们是通过给view设置透明度的属性`alpha` 来改变view的透明度的, 但是在flutter 开发中我们不是通过设置属性来让widget组件改变透明度的, 我们是通过给组件包裹一个`Opacity` 的widget来改变组件的透明度的
+
+```
+Opacity(
+	opacity: 0.5,
+	child: Text('透明度50%')
+);
+```
+
+
+
+
+
+
+
+
+
 # 十三、flutter 布局
 
 在我们前面有用到的 `Button` 、`Image` 、`TextField` 、`Text` 、`Icon`  这些我们在flutter中一般称为叶子组件. 
@@ -11941,3 +11960,1325 @@ App 的国际化开发, 主要包括: 文本国际化(包括文本的顺序), wi
 - 比如: 我们下面开发的这个App
 - 
 
+
+
+
+
+# 二八、 flutter编译模式
+
+> 在android 和 iOS 开发中, 应用程序运行分为debug 和 release模式, 分别对应调试阶段和发布阶段
+>
+> 在flutter中, 应用程序分为debug, profile, release 三种模式, 下面我们具体看一下:
+
+
+
+## 1、flutter编译模式
+
+### 1、debug模式
+
+在debug模式下, app 可以被安装在真机, 模拟器, 仿真机上进行调试
+
+debug模式有如下特点: 
+
+- 断言是开启的(Assertions)
+
+- 服务扩展是开启的(Service extension)
+
+  - 这个可以从runApp 的源码查看你
+  - runApp -> WidgetsFlutterBinding -> initServiceExtension
+
+- 开启调试, 类似于DevTools的工具可以连接到应用程序中
+
+- 针对 快速开发 和 运行周期 进行了编译优化(但不是针对运行速度, 二进制文件大小 或者部署) 
+
+  - 比如: Dart是 JIT 模式(just in time, 即时编译, 也可以理解成边运行边编译) 
+
+  > 默认情况下, 运行`flutter run` 命令会使用debug 模式, 点击android studio run 按钮, 也是debug模式
+
+- 下面的情况会出现 debug 模式下: 
+
+  - 热重载(hot reload) , 功能仅在调试模式下运行
+  - 仿真器和模拟器仅能在调试模式下运行
+
+- 在debug模式下, 应用可能出现掉帧或者卡顿现象
+
+
+
+### 2、release 模式
+
+当我们要发布应用程序时, 总是希望最大化的优化性能和应用程序所占据的空间
+
+在release 模式下是不支持模拟器和仿真器的, 只能在真机上运行. 
+
+release模式有如下特点:
+
+- 断言是无效的
+
+- 服务扩展是无效的
+
+- debugging 是无效的
+
+- 编译针对快速启动, 快速执行和小的 package的大小进行了优化
+
+  - 比如: dart是AOT模式(Ahead Of Time, 预先编译)
+
+  ```
+  flutter run --release 
+  // 命令会使用release模式来进行编译, 也可以给android studio 进行配置
+  ```
+
+  下面我们通过在android studio 中通过设置, 开让flutter 执行release 模式
+
+  ![](images/release1.png) 
+
+  ![](images/release2.png) 
+
+  当在android studio 中设置了release模式后, 我们点击运行按钮就执行 release 模式了
+
+
+
+### 3、profile模式
+
+profile 模式和release 模式类似, 但是会保留一些信息方便我们对性能进行检测. 
+
+profile模式有如下特点:
+
+- 保留了一些扩展是开启的
+- DevTools的工具可以连接到应用程序的进程中
+
+profile模式重要的作用就是可以利用DevTools来测试应用的性能
+
+
+
+## 2、开发中模式区分
+
+在开发中, 我们可能想要对debug和release模式进行区分, 根据不同的模式进行不同的相关设置.
+
+- 比如: 网络请求的 baseURL
+
+如何进行区分呢? 常见的有两种方式:
+
+- 通过assert断言, 因为release模式下断言是无效的
+
+- 通过kReleaseMode常量来区分
+
+  
+
+> 在开发中, 我们可能会根据不同的模式做不同的配置, 比如: debug 模式和 release下同一个网络请求的地址可能是不同的, 当然, 我们可能不希望每次切换模式时都手动的再设置一次, 我们应当如何区分debug 模式和 release 模式呢? 
+>
+> 在flutter开中, 区分debug 模式和release模式, 常见的有两种处理方式:
+>
+> - 方式1:  因为在flutter开发中, release模式下断言是无效的, 所以我们可以通过断言来区分当前的模式是debug的还是release的
+>
+>   ```
+>   String baseUrl = 'release base url';
+>   /// 断言在release模式下是无效的
+>   assert((){
+>   	baseUrl = 'debug base url'; // 在debug 模式下就赋值一个新的值, 后面使用时就是debug的值
+>   	return true;
+>   }());
+>   print('baseurl: ${baseUrl}');
+>   ```
+>
+> - 方式2:  通过 flutter提供的一个常量来判断哪当前的模式, 根据模式做对应的事情
+>
+>   ```
+>   if(kReleaseMode == true){
+>   	print('当前是 release 模式');
+>   }
+>   else{
+>   	print('当前是 debug 模式');
+>   }
+>   
+>   String baseUrl = kReleaseMode ? 'product base Url' : 'development base Url';
+>   ```
+
+
+
+# 二九、flutter 打包和发布
+
+
+
+## 1、iOS 打包和发布
+
+
+
+## 2、android 打包和发布
+
+### 1、填写应用配置
+
+#### 1、基本信息
+
+在之前讲解一能用程序的配置信息时, 我们已经介绍过, 这里不再过多介绍
+
+- 应用的AppID 
+- 应用的名称
+- 应用的Icon
+- 应用的Launcher
+
+#### 2、版本信息
+
+flutter的版本信息在哪里填写呢? 在 `pubspec.yaml` 中
+
+```
+version: 1.0.0+1  
+```
+
+第一次见到这个会很疑惑, 后面的`+1` 是什么意思呢? 
+
+在android 中, 应用的版本分为: `versionCode` & `versionName` 
+
+- versionCode: 内部管理的版本号
+- versionName: 用户显示的版本号
+
+在iOS中, 应用的版本分为`version` & `build`
+
+- version: 用户显示的版本
+- build: 内部管理的版本
+
+flutter中我们如何管理这两个版本号呢? 
+
+- 1.0.0.0 用户显示的版本
+- 1: 年内部管理的版本
+
+
+
+#### 3、用户权限配置
+
+在Android 中某些用户权限需要在 AndroidManifest.xml 进行配置
+
+- 比如: 默认情况下应用程序是不能发送网络请求的, 如果之后App 中有用到网络请求, 那么需要在
+
+  在AndroidManifest.xml 中进行如下配置(默认debug 模式下有配置网络请求)
+
+- 比如, 我们需要访问用户的位置, 那么需要在AndroidManifest.xml 中进行如些设置
+
+
+
+// 省图
+
+
+
+### 2、应用程序签名
+
+
+
+Android 系统在安装Apk的时候, 首先会检验Apk签名, 如果发现签名文件不存在或者校验失败, 则会拒绝安装, 所以应用程序在发布之前一定要进行签名.
+
+
+
+#### 1、创建一个密钥库
+
+在macOS 或者 linux 系统上, 执行下面的命令:
+
+```
+keytool -genkey -v -keystore ~/key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+```
+
+在windows 系统上, 执行下面的命令:
+
+```
+keytool -genkey -v -keystore c:/Users/USER_NAME/key.jks - storetype JKS RSA -keysize 2048
+```
+
+
+
+#### 2、在app 中引用密钥库
+
+创建一个名为 `/android/key.properties` 的文件, 它包含了密钥库位置的定义
+
+```
+storePassword=<上一步中的密码>
+keyPassword=<上一步中的密钥>
+keyAlias=key
+storeFile=<密钥库的位置, eg: /Users/<用户名>/key.jks>
+```
+
+> 注意: 
+>
+> 这个文件一般不提交到 代码仓库
+
+- 修改gitignore
+
+  ```
+  # android ignore
+  /android/key.properties
+  ```
+
+
+
+#### 3、在gradle 中配置签名
+
+通过编译 `/android/app/build.gradle` 文件夹为我们的app 配置签名:
+
+在 `android` 代码块之前添加:
+
+```
+android{
+	...
+}
+```
+
+替换为密钥库信息
+
+
+
+将`key.properties` 文件加载到`keystoreProperties` 对象中
+
+```
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if(keystorePropertiesFile.exists()){
+	keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android{
+	... 
+}
+```
+
+
+
+替换下面的代码:
+
+`build.gradle` 文件中配置 `signingConfigs` 部分
+
+```
+signingConfigs{
+	release{
+		keyAlias keystoreProperties['keyAlias']
+		storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']:null)
+		storePassword keystoreProperties['storePassword']
+	}
+}
+
+buildTypes{
+	release{
+		signConfig signingConfigs.release
+	}
+}
+```
+
+现在我们发布的app 就会自动签名了
+
+
+
+### 3、打包应用程序
+
+目前android 支持两种打包应用程序: APK, AAB
+
+- APK文件
+
+  - Android Application package
+
+  - 目前几乎所有的应用市场都支持上传Apk文件
+
+  - 用户直接安装的就是apk文件
+
+    ```
+    # 运行 flutter build apk (flutter build 默认带有  --release 参数)
+    flutter build apk
+    ```
+
+- AAB 文件(推荐)
+
+  - Android App Bundle
+
+  - Google 推出的一种新的上传格式, 某些应用市场不支持
+
+    ```
+    # 运行 flutter build appbundle (运行 flutter build 默认构建内一个发布版本)
+    flutter build appbundle
+    ```
+
+    
+
+    
+
+### 4、发布应用程序
+
+android 应用程序可以发布到很多的平台, 包括国内的平台和国外的Google Play
+
+国内的应用市场非常的多, 包括360, 百度, 小米等
+
+- 可以根据不同的应用市场规则, 上传对应的Apk 或者AAB文件, 填写相关的应用程序审核即可
+
+国外的应用市场通常只有一个Google Play
+
+1. 需要申请一个Google Play 开发者账号
+   1. 需要支付25美元注册费用的信用卡, 信用卡需要支持Visa, Master Amex, Discover, JCB
+   2. Https://play.google.com/apps/publish/signup
+
+2. 进入到管理中心, 创建应用发布即可
+
+   1. 进入了Google Play console管理中心
+
+   
+
+
+
+# 三十、混合开发
+
+flutter有很多插件, 可以访问: pub.dev 查看
+
+## 1、调用原生功能
+
+### 1、Camera (借助第三方插件实现) 
+
+某些应用程序可能需要使用移动设备进行拍照或者选择相册中的照片，Flutter官方提供了插件：`image_picker` 
+
+
+
+#### 1、添加依赖
+
+添加对image_picker的依赖：
+
+- Https://pub.dev/packages/images_picker
+
+  ```
+  dependencies:
+    image_picker: ^0.6.5
+  ```
+
+#### 2、平台配置
+
+对iOS平台，想要访问相册或者相机，需要获取用户的允许：
+
+- 依然是修改info.plist文件：/ios/Runner/Info.plist
+
+- 添加对相册的访问权限：Privacy - Photo Library Usage Description
+
+- 添加对相机的访问权限：Privacy - Camera Usage Description
+
+  ![](images/mixios.jpg)  
+
+之后选择相册或者访问相机时，会弹出如下的提示框：
+
+![](images/imageprivice.jpg) 
+
+
+
+#### 3、代码实现
+
+image_picker的核心代码是pickImage方法：
+
+- 可以传入数据源、图片的大小、质量、前置后置摄像头等
+
+- 数据源是必传参数：ImageSource枚举类型
+
+- - camera：相机
+  - gallery：相册
+
+```
+static Future<File> pickImage(
+      {@required ImageSource source,
+      double maxWidth,
+      double maxHeight,
+      int imageQuality,
+      CameraDevice preferredCameraDevice = CameraDevice.rear}) async;
+
+```
+
+示例:
+
+```
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
+class HYCameraScreen extends StatefulWidget {
+  static const String routeName = "/camera";
+
+  @override
+  _HYCameraScreenState createState() => _HYCameraScreenState();
+}
+
+class _HYCameraScreenState extends State<HYCameraScreen> {
+  File _image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Camera"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _image == null ? Text("未选择图片"): Image.file(_image),
+            RaisedButton(
+              child: Text("选择照片"),
+              onPressed: _pickImage,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _pickImage() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+}
+```
+
+![](images/imagepick.jpg) 
+
+
+
+
+
+### 2、电池信息 (自己实现原生混合)
+
+某些原生的信息，如果没有很好的插件，我们可以通过platform channels（平台通道）来获取信息。
+
+
+
+#### 1、平台通道介绍 
+
+平台通过是如何工作的呢？
+
+- 消息使用platform channels（平台通道）在客户端（UI）和宿主（平台）之间传递；
+
+- 消息和响应以`异步`的形式进行传递，以确保用户界面能够保持响应；
+
+  ![](images/mixchannel.jpg) 
+
+  调用过程大致如下：
+
+  - 1.客户端（Flutter端）发送与方法调用相对应的消息
+
+  - 2.平台端（iOS、Android端）接收方法，并返回结果；
+
+  - - iOS端通过`FlutterMethodChannel`做出响应；
+    - Android端通过`MethodChannel`做出响应；
+
+  Flutter、iOS、Android端数据类型的对应关系：
+
+
+
+![](images/flutternativetype.jpg) 
+
+
+
+#### 2、创建测试项目
+
+我们这里创建一个获取电池电量信息的项目，分别通过iOS和Android原生代码来获取对应的信息：
+
+创建方式一：默认创建方式
+
+- 目前默认创建的Flutter项目，对应iOS的编程语言是Swift，对应Android的编程语言是kotlin
+
+  ```
+  flutter create batterylevel
+  ```
+
+创建方式二：指定编程语言
+
+- 如果我们希望指定编程语言，比如iOS编程语言为Objective-C，Android的编程语言为Java
+
+  ```
+  flutter create -i objc -a java batterylevel2
+  ```
+
+#### 3、编写Dart代码
+
+在Dart代码中，我们需要创建一个MethodChannel对象：
+
+- 创建该对象时，需要传入一个name，该name是区分多个通信的名称
+
+- 可以通过调用该对象的invokeMethod来给对应的平台发送消息进行通信
+
+  - 该调用是异步操作，需要通过await获取then回调来获取结果
+
+  ```
+  import 'package:flutter/material.dart';
+  import 'package:flutter/services.dart';
+  
+  void main() => runApp(MyApp());
+  
+  
+  class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            primarySwatch: Colors.blue, splashColor: Colors.transparent),
+        home: HYBatteryScreen(),
+      );
+    }
+  }
+  
+  class HYBatteryScreen extends StatefulWidget {
+    static const String routeName = "/battery";
+  
+    @override
+    _HYBatteryScreenState createState() => _HYBatteryScreenState();
+  }
+  
+  class _HYBatteryScreenState extends State<HYBatteryScreen> {
+    
+    // 核心代码一：
+    // 根据唯一的名字创建一个method channel
+    static const platform = const MethodChannel("coderwhy.com/battery");
+    int _result = 0;
+  
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Battery"),
+        ),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Text("当前电池信息: $_result"),
+              RaisedButton(
+                child: Text("获取电池信息"),
+                onPressed: getBatteryInfo,
+              )
+            ],
+          ),
+        ),
+      );
+    }
+  
+    void getBatteryInfo() async {
+      // 核心代码二
+      // 给平台发送方法消息, 获取对应的原生能力数据
+      final int result = await platform.invokeMethod("getBatteryInfo");
+      setState(() {
+        _result = result;
+      });
+    }
+  }
+  ```
+
+  当我们通过 `platform.invokeMethod` 调用对应平台方法时，需要在对应的平台实现其操作：
+
+  - iOS中可以通过Objective-C或Swift来实现
+  - Android中可以通过Java或者Kotlin来实现
+
+#### 4、编写iOS代码
+
+##### 1、swift代码实现
+
+代码相关的操作步骤如下：
+
+- 1.获取FlutterViewController(是应用程序的默认Controller)
+
+- 2.获取MethodChannel(方法通道)
+
+- - 注意：这里需要根据我们创建时的名称来获取
+
+- 3.监听方法调用(会调用传入的回调函数)
+
+- - iOS中获取信息的方式
+  - 如果没有获取到,那么返回给Flutter端一个异常
+  - 通过result将结果回调给Flutter端
+  - 3.1.判断是否是getBatteryInfo的调用,告知Flutter端没有实现对应的方法
+  - 3.2.如果调用的是getBatteryInfo的方法, 那么通过封装的另外一个方法实现回调
+
+```
+import UIKit
+import Flutter
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    
+    // 1.获取FlutterViewController(是应用程序的默认Controller)
+    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+    
+    // 2.获取MethodChannel(方法通道)
+    let batteryChannel = FlutterMethodChannel(name: "coderwhy.com/battery",
+                                              binaryMessenger: controller.binaryMessenger)
+    
+    // 3.监听方法调用(会调用传入的回调函数)
+    batteryChannel.setMethodCallHandler({
+      [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
+      // 3.1.判断是否是getBatteryInfo的调用,告知Flutter端没有实现对应的方法
+      guard call.method == "getBatteryInfo" else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
+      // 3.2.如果调用的是getBatteryInfo的方法, 那么通过封装的另外一个方法实现回调
+      self?.receiveBatteryLevel(result: result)
+    })
+    
+    GeneratedPluginRegistrant.register(with: self)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+    
+  private func receiveBatteryLevel(result: FlutterResult) {
+    // 1.iOS中获取信息的方式
+    let device = UIDevice.current
+    device.isBatteryMonitoringEnabled = true
+    
+    // 2.如果没有获取到,那么返回给Flutter端一个异常
+    if device.batteryState == UIDevice.BatteryState.unknown {
+      result(FlutterError(code: "UNAVAILABLE",
+                          message: "Battery info unavailable",
+                          details: nil))
+    } else {
+      // 3.通过result将结果回调给Flutter端
+      result(Int(device.batteryLevel * 100))
+    }
+  }
+}
+```
+
+
+
+##### 2、OC 实现
+
+实现思路和上面是一致的，只是使用了Objective-C来实现：
+
+- 可以参考注释内容
+
+
+
+```
+#import <Flutter/Flutter.h>
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
+
+@implementation AppDelegate
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
+
+  // 1.获取FlutterViewController(是应用程序的默认Controller)
+  FlutterViewController* controller = (FlutterViewController*)self.window.rootViewController;
+
+  // 2.获取MethodChannel(方法通道)
+  FlutterMethodChannel* batteryChannel = [FlutterMethodChannel
+                                          methodChannelWithName:@"coderwhy.com/battery"
+                                          binaryMessenger:controller.binaryMessenger];
+  
+  // 3.监听方法调用(会调用传入的回调函数)
+  __weak typeof(self) weakSelf = self;
+  [batteryChannel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
+    // 3.1.判断是否是getBatteryInfo的调用
+    if ([@"getBatteryInfo" isEqualToString:call.method]) {
+      // 1.iOS中获取信息的方式
+      int batteryLevel = [weakSelf getBatteryLevel];
+      // 2.如果没有获取到,那么返回给Flutter端一个异常
+      if (batteryLevel == -1) {
+        result([FlutterError errorWithCode:@"UNAVAILABLE"
+                                   message:@"Battery info unavailable"
+                                   details:nil]);
+      } else {
+        // 3.通过result将结果回调给Flutter端
+        result(@(batteryLevel));
+      }
+    } else {
+      // 3.2.如果调用的是getBatteryInfo的方法, 那么通过封装的另外一个方法实现回调
+      result(FlutterMethodNotImplemented);
+    }
+  }];
+
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (int)getBatteryLevel {
+  // 获取信息的方法
+  UIDevice* device = UIDevice.currentDevice;
+  device.batteryMonitoringEnabled = YES;
+  if (device.batteryState == UIDeviceBatteryStateUnknown) {
+    return -1;
+  } else {
+    return (int)(device.batteryLevel * 100);
+  }
+}
+
+@end
+```
+
+#### 5、编写android 代码
+
+##### 1、Kotlin代码实现
+
+实现思路和上面是一致的，只是使用了Kotlin来实现：
+
+- 可以参考注释内容
+
+```
+import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+
+class MainActivity: FlutterActivity() {
+    private val CHANNEL = "coderwhy.com/battery"
+
+    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        // 1.创建MethodChannel对象
+        val methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL) 
+        
+        // 2.添加调用方法的回调
+        methodChannel.setMethodCallHandler {
+            // Note: this method is invoked on the main thread.
+            call, result ->
+            // 2.1.如果调用的方法是getBatteryInfo,那么正常执行
+            if (call.method == "getBatteryInfo") {
+                // 2.1.1.调用另外一个自定义方法回去电量信息
+                val batteryLevel = getBatteryLevel()
+                
+                // 2.1.2. 判断是否正常获取到
+                if (batteryLevel != -1) {
+                    // 获取到返回结果
+                    result.success(batteryLevel)
+                } else {
+                    // 获取不到抛出异常
+                    result.error("UNAVAILABLE", "Battery level not available.", null)
+                }
+            } else {
+                // 2.2.如果调用的方法是getBatteryInfo,那么正常执行
+                result.notImplemented()
+            }
+        }
+    }
+
+    private fun getBatteryLevel(): Int {
+        val batteryLevel: Int
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            val batteryManager = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+            batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+        } else {
+            val intent = ContextWrapper(applicationContext).registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            batteryLevel = intent!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100 / intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+        }
+
+        return batteryLevel
+    }
+}
+```
+
+![](images/androidmix.jpg) 
+
+
+
+##### 2、 Java代码实现
+
+实现思路和上面是一致的，只是使用了Java来实现：
+
+- 可以参考注释内容
+
+```
+package com.example.batterylevel2;
+
+import androidx.annotation.NonNull;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.GeneratedPluginRegistrant;
+import io.flutter.plugin.common.MethodChannel;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+import android.os.Bundle;
+
+public class MainActivity extends FlutterActivity {
+  private static final String CHANNEL = "coderwhy.com/battery";
+
+  @Override
+  public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+    // 1.创建MethodChannel对象
+    MethodChannel methodChannel = new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL);
+
+    // 2.添加调用方法的回调
+    methodChannel.setMethodCallHandler(
+        (call, result) -> {
+          // 2.1.如果调用的方法是getBatteryInfo,那么正常执行
+          if (call.method.equals("getBatteryInfo")) {
+
+            // 2.1.1.调用另外一个自定义方法回去电量信息
+            int batteryLevel = getBatteryLevel();
+
+            // 2.1.2. 判断是否正常获取到
+            if (batteryLevel != -1) {
+              // 获取到返回结果
+              result.success(batteryLevel);
+            } else {
+              // 获取不到抛出异常
+              result.error("UNAVAILABLE", "Battery level not available.", null);
+            }
+          } else {
+            // 2.2.如果调用的方法是getBatteryInfo,那么正常执行
+            result.notImplemented();
+          }
+        }
+      );
+  }
+
+  private int getBatteryLevel() {
+    int batteryLevel = -1;
+    if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+      BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+      batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+    } else {
+      Intent intent = new ContextWrapper(getApplicationContext()).
+              registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+      batteryLevel = (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100) /
+              intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+    }
+
+    return batteryLevel;
+  }
+}
+```
+
+
+
+
+
+## 2、嵌入原有(native)项目
+
+> 首先，我们先明确一点：Flutter设计初衷并不是为了和其它平台进行混合开发，它的目的是为了打造一个完整的跨平台应用程序。
+>
+> 但是，实际开发中，**原有项目**完全使用Flutter进行重构并不现实，对于**原有项目**我们更多可能采用混合开发的方式。
+
+
+
+### 1、创建flutter模块
+
+对于需要进行混合开发的原有项目，Flutter可以作为一个库或者模块，集成进现有项目中。
+
+- 模块引入到你的Android或iOS应用中，以使用Flutter渲染一部分的UI，或者共享的Dart代码。
+- **在Flutter v1.12中，添加到现有应用的基本场景已经被支持，每个应用在同一时间可以集成一个全屏幕的Flutter实例。** 
+
+但是，目前一些场景依然是有限制的：
+
+- 运行多个Flutter实例，或在屏幕局部上运行Flutter可能会导致不可以预测的行为；
+- 在后台模式使用Flutter的能力还在开发中（目前不支持）；
+- 将Flutter库打包到另一个可共享的库或将多个Flutter库打包到同一个应用中，都不支持；
+- 添加到应用在Android平台的实现基于 FlutterPlugin 的 API，一些不支持 `FlutterPlugin` 的插件可能会有不可预知的行为。
+
+
+
+创建Flutter Module
+
+```
+flutter create --template module my_flutter
+```
+
+创建完成后，该模块和普通的Flutter项目一致，可以通过Android Studio或VSCode打开、开发、运行；
+
+目录结构如下：
+
+- 和之前项目不同的iOS和Android项目是一个隐藏文件，并且我们通常不会单独打开它们再来运行；
+- 它们的作用是将Flutter Module进行编译，之后继承到现有的项目中
+
+```
+my_flutter/
+├── .ios/
+├── .android/
+├── lib/
+│   └── main.dart
+├── test/
+└── pubspec.yaml
+```
+
+
+
+### 2、嵌入iOS项目
+
+嵌入到现有iOS项目有多种方式：
+
+- 可以使用 CocoaPods 依赖管理和已安装的 Flutter SDK ；
+- 也可以通过手动编译 Flutter engine 、你的 dart 代码和所有 Flutter plugin 成 framework ，用 Xcode 手动集成到你的应用中，并更新编译设置；
+
+目前iOS项目几乎都已经使用Cocoapods进行管理，所以推荐使用第一种CocoaPods方式；
+
+**我们按照如下的方式，搭建一个需要继承的iOS项目：**
+
+1.为了进行测试，我们这里创建一个默认的iOS项目：使用Xcode创建即可
+
+![](images/xcodeproject.jpg) 
+
+2.将项目加入CocoaPods进行管理
+
+> 电脑上需要安装了CocoaPods
+
+- 初始化CocoaPods：
+
+  ```
+  pod init
+  ```
+
+- 安装CocoaPods的依赖：
+
+  ```
+  pod install
+  ```
+
+- 编译podfile 文件:
+
+  ```
+  # Uncomment the next line to define a global platform for your project
+  # platform :ios, '9.0'
+  
+  # 添加模块所在路径
+  flutter_application_path = '../my_flutter'
+  load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+  
+  target 'ios_my_test' do
+    # Comment the next line if you don't want to use dynamic frameworks
+    use_frameworks!
+    
+    # 安装Flutter模块
+    install_all_flutter_pods(flutter_application_path)
+    
+    # Pods for ios_my_test
+  
+  end
+  ```
+
+- 重新执行安装CocoaPods的依赖：	
+
+  ```
+  pod install
+  ```
+
+#### 1、Swift代码
+
+为了在既有的iOS应用中展示Flutter页面，需要启动 `Flutter Engine`和 `FlutterViewController`。
+
+通常建议为我们的应用预热一个 `长时间存活` 的FlutterEngine：
+
+- 我们将在应用启动的 app delegate 中创建一个 `FlutterEngine`，并作为属性暴露给外界。
+
+  ```
+  import UIKit
+  import FlutterPluginRegistrant
+  
+  @UIApplicationMain
+  class AppDelegate: UIResponder, UIApplicationDelegate {
+     // 1.创建一个FlutterEngine对象
+      lazy var flutterEngine = FlutterEngine(name: "my flutter engine")
+      
+      func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+         // 2.启动flutterEngine
+          flutterEngine.run()
+          return true
+      }
+  }
+  ```
+
+- 在启动的ViewController中，创建一个UIButton，并且点击这个Button时，弹出FlutterViewController
+
+  ```
+  import UIKit
+  import Flutter
+  
+  class ViewController: UIViewController {
+  
+      override func viewDidLoad() {
+          super.viewDidLoad()
+          
+         // 1.创建一个按钮
+          let button = UIButton(type: UIButton.ButtonType.custom)
+          button.addTarget(self, action: #selector(showFlutter), for: .touchUpInside)
+          button.setTitle("Show Flutter", for: .normal)
+          button.frame = CGRect(x: 80, y: 210, width: 160, height: 40)
+          button.backgroundColor = UIColor.blue
+          self.view.addSubview(button)
+      }
+      
+      @objc func showFlutter() {
+          // 2.创建FlutterViewController对象（需要先获取flutterEngine）
+          let flutterEngine = (UIApplication.shared.delegate as! AppDelegate).flutterEngine;
+          let flutterViewController = FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil);
+          navigationController?.pushViewController(flutterViewController, animated: true);
+      }
+  }
+  ```
+
+  ![](images/inserflutter.jpg) 
+
+我们也可以省略预先创建的 `FlutterEngine` ：
+
+- 不推荐这样来做，因为在第一针图像渲染完成之前，可能会出现明显的延迟。
+
+  ```
+  func showFlutter() {
+    let flutterViewController = FlutterViewController(project: nil, nibName: nil, bundle: nil)
+    present(flutterViewController, animated: true, completion: nil)
+  }
+  ```
+
+#### 2、Objective-C代码
+
+如果上面的代码希望使用Objective-C也是可以实现的：
+
+- 代码的逻辑是完成一直的
+
+AppDelegate.h代码：
+
+```
+@import UIKit;
+@import Flutter;
+
+@interface AppDelegate : FlutterAppDelegate 
+@property (nonatomic,strong) FlutterEngine *flutterEngine;
+@end
+```
+
+AppDelegate.m代码：
+
+```
+#import <FlutterPluginRegistrant/GeneratedPluginRegistrant.h> // Used to connect plugins.
+
+#import "AppDelegate.h"
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions {
+      
+  self.flutterEngine = [[FlutterEngine alloc] initWithName:@"my flutter engine"];
+  [self.flutterEngine run];
+      
+  [GeneratedPluginRegistrant registerWithRegistry:self.flutterEngine];
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+@end
+```
+
+ViewController.m代码：
+
+```
+@import Flutter;
+#import "AppDelegate.h"
+#import "ViewController.h"
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // Make a button to call the showFlutter function when pressed.
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self
+               action:@selector(showFlutter)
+     forControlEvents:UIControlEventTouchUpInside];
+    [button setTitle:@"Show Flutter!" forState:UIControlStateNormal];
+    button.backgroundColor = UIColor.blueColor;
+    button.frame = CGRectMake(80.0, 210.0, 160.0, 40.0);
+    [self.view addSubview:button];
+}
+
+- (void)showFlutter {
+    FlutterEngine *flutterEngine =
+        ((AppDelegate *)UIApplication.sharedApplication.delegate).flutterEngine;
+    FlutterViewController *flutterViewController =
+        [[FlutterViewController alloc] initWithEngine:flutterEngine nibName:nil bundle:nil];
+    [self presentViewController:flutterViewController animated:YES completion:nil];
+}
+@end
+```
+
+
+
+### 3、嵌入android 项目
+
+嵌入到现有Android项目有多种方式：
+
+- 编译为AAR文件（Android Archive）
+
+- - 通过Flutter编译为aar，添加相关的依赖
+
+- 依赖模块的源码方式，在gradle进行配置
+
+**这里我们采用第二种方式**
+
+1.创建一个Android的测试项目
+
+- 使用Android Studio创建
+
+  ![](images/insertanndroid.jpg) 
+
+2.添加相关的依赖
+
+修改Android项目中的settings.gradle文件:
+
+```
+// Include the host app project.
+include ':app'                                     // assumed existing content
+setBinding(new Binding([gradle: this]))                                 // new
+evaluate(new File(                                                      // new
+  settingsDir.parentFile,                                               // new
+  'my_flutter/.android/include_flutter.groovy'                          // new
+))  
+```
+
+另外，我们需要在Android项目工程的build.gradle中添加依赖：
+
+```
+dependencies {
+  implementation project(':flutter')
+}
+```
+
+编译代码，可能会出现如下错误：
+
+- 这是因为从Java8开始才支持接口方法
+
+- Flutter Android引擎使用了该Java8的新特性
+
+  ![](images/androidalert.jpg) 
+
+解决办法：通过设置Android项目工程的build.gradle配置使用Java8编译：
+
+```
+compileOptions {
+  sourceCompatibility 1.8
+  targetCompatibility 1.8
+}
+```
+
+接下来，我们这里尝试添加一个Flutter的screen到Android应用程序中
+
+Flutter提供了一个FlutterActivity来展示Flutter界面在Android应用程序中，我们需要先对FlutterActivity进行注册：
+
+- 在AndroidManifest.xml中进行注册
+
+  ```
+  <activity
+    android:name="io.flutter.embedding.android.FlutterActivity"
+    android:theme="@style/AppTheme"
+    android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+    android:hardwareAccelerated="true"
+    android:windowSoftInputMode="adjustResize"
+  />
+  ```
+
+
+
+#### 1、java代码
+
+```
+package com.coderwhy.testandroid;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import io.flutter.embedding.android.FlutterActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+        startActivity(
+            FlutterActivity.createDefaultIntent(this)
+        );
+    }
+}
+```
+
+也可以在创建时，传入默认的路由：
+
+```
+package com.coderwhy.testandroid;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import io.flutter.embedding.android.FlutterActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+        startActivity(
+          FlutterActivity
+          .withNewEngine()
+          .initialRoute("/my_route")
+          .build(currentActivity)
+        );
+    }
+}
+```
+
+![](images/androidjava.jpg) 
+
+
+
+#### 2、Kotlin代码
+
+```
+package com.coderwhy.test_demo_a_k
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+        startActivity(
+            FlutterActivity.createDefaultIntent(this)
+        )
+    }
+}
+```
+
+也可以在创建时指定路由：
+
+```
+package com.coderwhy.test_demo_a_k
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+        startActivity(
+            FlutterActivity
+                .withNewEngine()
+                .initialRoute("/my_route")
+                .build(this)
+        );
+    }
+}
+```
+
+
+
+# 三一、flutter 模块调试
+
+一旦将Flutter模块继承到你的项目中，并且使用Flutter平台的API运行Flutter引擎或UI，那么就可以像普通的Android或者iOS一样来构建自己的Android或者iOS项目了
+
+但是Flutter的有一个非常大的优势是其快速开发，也就是hot reload。
+
+那么对应Flutter模块，我们如何使用hot reload加速我们的调试速度呢？
+
+- 可以使用flutter attach
+
+  ```
+  # --app-id是指定哪一个应用程序
+  # -d是指定连接哪一个设备
+  flutter attach --app-id com.coderwhy.ios-my-test -d 3D7A877C-B0DD-4871-8D6E-0C5263B986CD
+  ```
+
+  ![](images/flutterdebug.jpg) 
