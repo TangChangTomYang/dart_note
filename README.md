@@ -117,7 +117,7 @@ Flutter is Google's UI toolkit for building beautiful, natively compiled applica
     - 使用flutter 内置的Material Design 和 Cupertino widget、丰富的motion API、平滑而自然的滑动效果和平台感知, 为用户带来全新体验. 
   - **快速**:
     - Flutter 的UI渲染性能很好, 在生产环境下, Flutter将代码编译成机器码执行, 并且充分利用GPU的图形加速能力, 因此使用Flutter开发的移动端应用, 即使在低配手机上也能实现每秒60帧的UI渲染能力. 
-    - Flutter引擎使用C++代码编写, 包括高校的Skia 2D渲染引擎, Dart运行时和文本渲染库. 
+    - Flutter引擎使用C++代码编写, 包括高效的Skia 2D渲染引擎, Dart运行时和文本渲染库. 
   - **高校**:
     - Hot  Reload(热重载), 在前端已经不是什么新鲜的东西了, 但在移动端之前一直是没有的. 
   - **开放**:
@@ -150,7 +150,7 @@ Flutter is Google's UI toolkit for building beautiful, natively compiled applica
 ## 4、渲染引擎Skia
 
 - Skia就是Flutter向GPU提供数据的途径
-- Skia(全称 skia Graphics Library (SGL)), 是一个又C/C++ 编写的开源图形处理库. 
+- Skia(全称 skia Graphics Library (SGL)), 是一个由C/C++ 编写的开源图形处理库. 
 - 能在低端手机上呈现高质量的2D图形, 最初由Skia公司开发, 后来被Google 收购. 
 
 - 应用于Android、Google Chrome、 Chrome OS 等当中
@@ -207,7 +207,7 @@ Flutter is Google's UI toolkit for building beautiful, natively compiled applica
 
 - **安装Flutter** 
 
-  解压下载好的Flutter SDK, 在Windows 和macOS 都是一样的(选择一个自己想要安装的目录即可), 但是在macOS中, 我们通常会将flutter拖入到当前用户的资源库路径中`/Users/edz/Library` 
+  解压下载好的Flutter SDK, 在Windows 和macOS 都是一样的(选择一个自己想要安装的目录即可), 但是在macOS中, 我们通常会将flutter拖入到当前用户的资源库路径中`/Users/edz/Library`  (这是我的做法, 你也可以选择其它地址)
 
 - **环境变量配置**(flutter 和 dart)
 
@@ -224,9 +224,11 @@ Flutter is Google's UI toolkit for building beautiful, natively compiled applica
     > 注意:
     >
     > 因为macOS 10.15.4 之后命令终端默认不在使用bash, 而是使用的是zsh, 在zsh 中配置环境变量和bash中是不一样了的.`zsh` 需要在`~/.zshrc` 文件中配置. zsh 中的`.zshrc` 文件与bash中的`.bash_profile` 文件功能与配置方式都一样, 只是文件名不同. 
-  
-  - **Window 环境变量配置**
+    >
+    > 新版的MacOS 操作系统和旧版的MacOS 使用的 shell 不同, 可能配置环境变量的方式有差异, 百度一下即可.
 
+  - **Window 环境变量配置**
+  
     点击计算机图标 -- 属性 -- 高级系统设置 -- 高级 -- 环境变量,找到path, 在其中添加Flutter SDK目录下bin目录以及Dart的目录
   
   - **检查Flutter配置成功** 
@@ -434,9 +436,7 @@ flutter doctor
 
 ## 1、认识Dart
 
-
-
-Google为Flutter选择 了Dart是既定的事实, 无论你多么的想使用你熟悉 的语言, 比如: java, javaScript 等等来开发flutter, 至少目前是不可以的.
+Google为Flutter选择了Dart是既定的事实, 无论你多么的想使用你熟悉的语言, 比如: java, javaScript 等等来开发flutter, 至少目前是不可以的.
 
 
 
@@ -540,7 +540,7 @@ main(List<String> args){
 
 4、在Dart 中, 我们定义字符串可以使用单引号, 也可以使用双引号.
 
-> 其实在Dart 中一种有三种方式可以定义字符串, 还有一种 是使用 `""" """` 3个双引号, 使用3个双引号定义的字符串就可以换行多行书写, 这时 单引号和双引号不具备的特点.
+> 其实在Dart 中一种有三种方式可以定义字符串, 还有一种 是使用 `""" """` 3个双引号, 使用3个双引号定义的字符串就可以换行多行书写, 这是单引号和双引号不具备的特点.
 
 5、在Dart 中语句使用分号`;` 结尾,  有很多语言在语句结尾处并不需要分号`;` 比如: swift 和 javaScript , 但是在Dart 中语句结束需要使用`;` 结尾.
 
@@ -602,11 +602,19 @@ var name = 'zhangsan';
 print(name.runtimeType); // String
 ```
 
+> java中获取类的名字:
+>
+> Person person = new Person();
+>
+> System.out.println(person.getClass().getName());
+
+
+
 var 的错误用法
 
 ```
-var age = 18; // var 定义的变量一旦赋值, 变量的类型就确定了
-age = 'zhangsan';
+var age = 18; 
+age = 'zhangsan'; // var 定义的变量一旦赋值, 变量的类型就确定了
 ```
 
 
@@ -651,7 +659,7 @@ age = 20;			// 错误
 
 - 不同点:
 
-  - const 在定义常量时,  赋值的内容必须在编译期就定下来
+  - **const 在定义常量时,  赋值的内容必须在编译期就定下来** 
 
   - final 在赋值时, 可以动态获取, 比如 赋值一个函数
 
@@ -927,7 +935,7 @@ print('${infoMap2}, ${infoMap2.runtimeType}');
   print('infoMap_length: ${infoMap.length}');
   ```
 
-- **List, Set**b 添加/ 删除/ 包含 操作
+- **List, Set**   添加/ 删除/ 包含 操作
 
   并且, 对于`List` 来说, 由于它的元素是有序的, 因此它还提供了删除指定索引位置的元素. 
 
@@ -4076,6 +4084,69 @@ class TextContent extends StatelessWidget {
 > 
 > 而在WidgetSpan中只有一个 Widget类型的child 属性用来接收其它要显示的 widget
 > ```
+
+
+
+### 3、Text 计算文字宽高
+
+首先要说明, 我们在使用呢Text 组件时, 没有直接找到计算文字的宽高的方法, 但是我们在使用Text 组件时, 其实它内部是有通过某种方法计算Text组件需要显示的宽高的
+
+具体思路, 我们参照网友的一片文章, 如下:
+
+**场景**
+
+在某些业务上，可能我们需要计算多段文字的高度，达到动态适配ListView高度的目的，满足我们产品的优（bian）秀（tai）需求。在android原生层大家都知道有各种手段可以计算文字的宽、高等，例如paint.layout等等手段。但在flutter中，虽然并没有直接提供API供开发者使用，但和android原生一样，只有看下RichText的源码就可以发现其中奥妙。
+
+**源码分析**
+
+**RichText分析(Text等文本实现都一致)**
+
+1. 文本实现最重要的是RenderParagraph类，官网备注 A render object that displays a paragraph of text，大概意思就是这个类用作文案展示的。再继续看构造函数发现了我们非常熟悉的老朋友TextPainter（和Android老朋友是不是也差不多），那么我们的TextPainter是否也有layout函数呢？let me see。
+
+![](images/richtextlayout.png) 
+
+2. 上面我们可以看到，layout函数里面主要做的事情：一、构建好开发者定义的Text。二、根据开发者传入的maxWidth做限宽操作。三、把所有参数与计算交给ui.Paragraph（ParagraphXXX开头都是native C++代码）C++来做跨平台处理了。
+
+3. 看下TextPainter的height是怎么来的？由下图可以看出还是离不开ui.Paragraph变量。所以上面第一、第二步只是把参数告知Paragraph的native层，然后委托flutter engine进行计算。最后我们flutter通过painter直接访问Paragraph的各种属性变量。
+
+ ![](images/getheight.png) 
+
+**如何计算文字高度（本文重点）**
+
+```
+/**
+ * 根据文本内容, 字体大小, 字体粗细, 最大宽度计算文本的显示尺寸
+ */
+Size calculateSize(String txt,            // 文本文字
+                  double fontSize,        // 文本字体大小
+                  FontWeight fontWeight,  // 文本的粗细
+                  int maxLines,           // 文本的行数
+                  double maxWidth){       // 文本最大宽度
+
+  // fontFamily:
+  TextStyle txtStyle = TextStyle( fontSize: fontSize,  fontWeight:fontWeight);
+
+  TextSpan txtSpan = TextSpan(
+    text: txt,
+    style: txtStyle
+  );
+
+  ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
+  //locale: Localizations.localeOf(GlobalStatic.context, nullOk: true),
+  Locale locale = Locale('zh','CH');
+  TextPainter txtPainter = TextPainter(
+    text: txtSpan,
+    
+    locale: locale,
+    maxLines: maxLines,
+    textDirection: TextDirection.ltr
+  );
+
+  txtPainter.layout(minWidth: 0, maxWidth: maxWidth);
+   print("text size: ${txtPainter.size}");
+  return txtPainter.size;
+}
+```
 
 
 
