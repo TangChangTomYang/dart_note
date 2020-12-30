@@ -60,9 +60,15 @@
 
   flutterchina.club
 
-- 查询flutter文档的网站
+- 查询flutter文档的网站 (api 文档)
 
   https://api.flutter.dev 进入到网站后直接输入 类名搜索即可
+
+- flutter文档
+
+  https://flutter.dev/docs
+
+  ![](images/flutterapi.jpg)  
 
 - 查看第三方库安装方式
 
